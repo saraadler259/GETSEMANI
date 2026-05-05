@@ -286,8 +286,14 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 
 <!-- ══ PRESENÇA ══ -->
 <div id="page-presencas" class="page">
-  <div class="topbar"><div><div class="page-title">✅ Presença do Dia</div><div class="page-sub" id="pres-date-lbl"></div></div>
-  <div class="topbar-right"><button class="btn btn-ghost" onclick="filtrarPresenca('todos')">Todos</button><button class="btn btn-ghost" onclick="filtrarPresenca('pendentes')">Pendentes</button><button class="btn btn-outline" onclick="marcarTodos()">Marcar todos ✔</button></div></div>
+  <div class="topbar"><div><div class="page-title">✅ Presenças</div><div class="page-sub" id="pres-date-lbl"></div></div>
+  <div class="topbar-right">
+    <input type="date" id="pres-data-sel" style="background:var(--navy);border:1px solid var(--border);border-radius:8px;padding:7px 12px;color:var(--white);font-family:Sora;font-size:12px;cursor:pointer" onchange="presencaDataChanged()">
+    <button class="btn btn-ghost" onclick="filtrarPresenca('todos')">Todos</button>
+    <button class="btn btn-ghost" onclick="filtrarPresenca('pendentes')">Pendentes</button>
+    <button class="btn btn-ghost" onclick="abrirHistoricoPresencas()">📅 Histórico</button>
+    <button class="btn btn-outline" onclick="marcarTodos()">Marcar todos ✔</button>
+  </div></div>
   <div class="stats3" id="pres-stats"></div>
   <div id="pres-grid" class="pres-grid"></div>
 </div>
@@ -601,6 +607,55 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
     </div>
   </div>
 </div>
+
+<div class="ov" id="m-hist-presencas">
+  <div class="modal modal-lg">
+    <div class="mh"><h3>📅 Histórico de Presenças</h3><button class="mclose" onclick="closeModal('m-hist-presencas')">✕</button></div>
+    <div class="mb">
+      <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+        <div class="fg" style="flex:1;margin:0"><label>Filtrar por aluno</label><input id="hist-srch-aluno" placeholder="Nome do aluno..." style="background:var(--navy);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--white);font-family:Sora;font-size:12px;width:100%" oninput="renderHistoricoPresencas()"></div>
+        <div class="fg" style="margin:0"><label>Mês</label><select id="hist-mes" style="background:var(--navy);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--white);font-family:Sora;font-size:12px" onchange="renderHistoricoPresencas()">
+          <option value="">Todos</option>
+          <option value="01">Janeiro</option><option value="02">Fevereiro</option><option value="03">Março</option>
+          <option value="04">Abril</option><option value="05">Maio</option><option value="06">Junho</option>
+          <option value="07">Julho</option><option value="08">Agosto</option><option value="09">Setembro</option>
+          <option value="10">Outubro</option><option value="11">Novembro</option><option value="12">Dezembro</option>
+        </select></div>
+      </div>
+      <div id="hist-presencas-content"></div>
+    </div>
+    <div class="mf"><button class="btn btn-ghost" onclick="closeModal('m-hist-presencas')">Fechar</button></div>
+  </div>
+</div>
+
+<div class="ov" id="m-editar-aluno"><div class="modal modal-lg"><div class="mh"><h3>✏️ Editar Aluno</h3><button class="mclose" onclick="closeModal('m-editar-aluno')">✕</button></div><div class="mb">
+  <div class="sec-title">📋 Identificação</div><div class="form2">
+  <div class="fg full"><label>Nome Completo *</label><input id="ed-nome" placeholder="Nome completo"></div>
+  <div class="fg"><label>Data Nascimento</label><input id="ed-nasc" type="date"></div>
+  <div class="fg"><label>Sexo</label><select id="ed-sexo"><option value="">—</option><option>Masculino</option><option>Feminino</option></select></div>
+  <div class="fg"><label>CPF</label><input id="ed-cpf" placeholder="000.000.000-00"></div>
+  <div class="fg"><label>Status</label><select id="ed-status"><option>Ativo</option><option>Inativo</option></select></div></div>
+  <div class="sec-title">📱 Contato</div><div class="form2">
+  <div class="fg"><label>Celular</label><input id="ed-cel" placeholder="(51) 99999-9999"></div>
+  <div class="fg"><label>E-mail</label><input id="ed-email" type="email"></div>
+  <div class="fg full"><label>Endereço</label><input id="ed-end" placeholder="Rua, número, bairro, cidade"></div></div>
+  <div class="sec-title">👨‍👩‍👦 Responsáveis</div><div class="form2">
+  <div class="fg"><label>Responsável 1 — Nome</label><input id="ed-r1n"></div>
+  <div class="fg"><label>Responsável 1 — Celular</label><input id="ed-r1t"></div>
+  <div class="fg"><label>Responsável 2 — Nome</label><input id="ed-r2n"></div>
+  <div class="fg"><label>Responsável 2 — Celular</label><input id="ed-r2t"></div></div>
+  <div class="sec-title">🩺 Saúde</div><div class="form3">
+  <div class="fg"><label>TEA/Autismo</label><select id="ed-tea"><option>Não</option><option>Sim</option></select></div>
+  <div class="fg"><label>TDAH</label><select id="ed-tdah"><option>Não</option><option>Sim</option></select></div>
+  <div class="fg"><label>Medicação</label><select id="ed-med"><option>Não</option><option>Sim</option></select></div>
+  <div class="fg full"><label>Observações de Saúde</label><textarea id="ed-obs" rows="2"></textarea></div></div>
+  <div class="sec-title">🏫 Turma & Atividade</div><div class="form2">
+  <div class="fg"><label>Turma</label><select id="ed-turma"><option value="">Auto (pela idade)</option><option value="Kids">🟣 Kids (3-10 anos)</option><option value="Teens">🔵 Teens (11-18 anos)</option><option value="Adultos">🟡 Adultos (19+)</option></select></div>
+  <div class="fg"><label>Faixa</label><select id="ed-faixa"><option>Branca</option><option>Cinza</option><option>Azul</option><option>Roxa</option><option>Marrom</option><option>Preta</option></select></div>
+  <div class="fg"><label>Atividade</label><select id="ed-ativ"><option>Jiu-jitsu</option><option>Capoeira</option><option>Karatê</option><option>Judô</option></select></div>
+  <div class="fg"><label>Escola</label><input id="ed-escola"></div></div>
+  <input type="hidden" id="ed-id">
+</div><div class="mf"><button class="btn btn-ghost" onclick="closeModal('m-editar-aluno')">Cancelar</button><button class="btn btn-primary" onclick="salvarEdicaoAluno()">💾 Salvar alterações</button></div></div></div>
 <div class="toast-box" id="toast-box"></div>
 <script>
 
@@ -1208,7 +1263,7 @@ function verFicha(id){
     </div>
     ${a.obs?`<div style="background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.2);border-radius:9px;padding:12px;margin-bottom:14px"><div style="font-size:10px;color:var(--gold);font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:5px">📝 Observações de Saúde</div><div style="font-size:12px;line-height:1.6">${saudeObs}</div></div>`:''}
     <div><div style="font-size:10px;color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">📋 Histórico de Anotações</div>${notasHtml}</div>`;
-  document.getElementById('ficha-actions').innerHTML=`<button class="btn btn-ghost" onclick="closeModal('m-ficha')">Fechar</button><button class="btn btn-green btn-sm" onclick="closeModal('m-ficha');registrarPresenca('${id}')">✅ Presença</button><button class="btn btn-purple btn-sm" onclick="closeModal('m-ficha');abrirAvalAluno('${id}')">📋 Avaliar</button><button class="btn btn-gold btn-sm" onclick="closeModal('m-ficha');abrirGrad('${id}')">🎖️ Graduar</button><button class="btn btn-ghost btn-sm" onclick="closeModal('m-ficha');abrirNotaAluno('${id}')">📝 Nota</button><button class="btn btn-ghost btn-sm" onclick="closeModal('m-ficha');abrirWppAluno('${id}')">💬 WPP</button><button class="btn btn-outline btn-sm" onclick="exportarRelatorioIndividualAluno('${id}')">📄 PDF</button>`;
+  document.getElementById('ficha-actions').innerHTML=`<button class="btn btn-ghost" onclick="closeModal('m-ficha')">Fechar</button><button class="btn btn-outline btn-sm" onclick="abrirEditarAluno('${id}')">✏️ Editar</button><button class="btn btn-green btn-sm" onclick="closeModal('m-ficha');registrarPresenca('${id}')">✅ Presença</button><button class="btn btn-purple btn-sm" onclick="closeModal('m-ficha');abrirAvalAluno('${id}')">📋 Avaliar</button><button class="btn btn-gold btn-sm" onclick="closeModal('m-ficha');abrirGrad('${id}')">🎖️ Graduar</button><button class="btn btn-ghost btn-sm" onclick="closeModal('m-ficha');abrirNotaAluno('${id}')">📝 Nota</button><button class="btn btn-ghost btn-sm" onclick="closeModal('m-ficha');abrirWppAluno('${id}')">💬 WPP</button><button class="btn btn-outline btn-sm" onclick="exportarRelatorioIndividualAluno('${id}')">📄 PDF</button>`;
   document.getElementById('m-ficha').classList.add('open');
 }
 
@@ -1544,6 +1599,10 @@ function verificarAlertas(){
 //  INIT
 // ═══════════════════════════════════════════════
 if(!localStorage.getItem('gwpp')){localStorage.setItem('gwpp',JSON.stringify({numero:'51989520485',assinatura:'Projeto Getsêmani - Portão/RS'}));}
+// Pre-configure Google Sheets URL
+if(!localStorage.getItem('gsheets')||JSON.parse(localStorage.getItem('gsheets')||'{}').url!=='https://script.google.com/macros/s/AKfycbzbVjDFrbxievnkJCfsRsllahuvyZlqkzEjEsuBifSnq3qr1hxGKcUG2kpyXJnaxElp/exec'){
+  localStorage.setItem('gsheets',JSON.stringify({url:'https://script.google.com/macros/s/AKfycbzbVjDFrbxievnkJCfsRsllahuvyZlqkzEjEsuBifSnq3qr1hxGKcUG2kpyXJnaxElp/exec',lastSync:''}));
+}
 loadDB();
 recalc();
 renderDashboard();
@@ -1661,6 +1720,7 @@ renderAlunos = function(){
         <button class="btn btn-gold btn-sm" onclick="abrirGrad('${a.id}')">🎖️</button>
         <button class="btn btn-ghost btn-sm" onclick="verCarteirinhaAluno('${a.id}')">🪪</button>
         <button class="btn btn-ghost btn-sm" onclick="verFicha('${a.id}')">👁</button>
+        <button class="btn btn-outline btn-sm" onclick="abrirEditarAluno('${a.id}')">✏️</button>
         <button class="btn btn-danger btn-sm" onclick="removerAluno('${a.id}')">🗑</button>
       </div></td>
     </tr>`;
@@ -1978,6 +2038,290 @@ setFilter = function(type,val,btn){
     _setFilterOrig(type,val,btn);
   }
 };
+
+
+// ══════════════════════════════════════════════════════════
+//  DATA DE PRESENÇA SELECIONÁVEL
+// ══════════════════════════════════════════════════════════
+let presencaDataAtual = today();
+
+function initPresencaData(){
+  const sel = document.getElementById('pres-data-sel');
+  if(sel){
+    sel.value = presencaDataAtual;
+  }
+}
+
+function presencaDataChanged(){
+  const sel = document.getElementById('pres-data-sel');
+  if(sel&&sel.value){
+    presencaDataAtual = sel.value;
+    renderPresencas();
+    toast('📅 Data alterada para '+fmtDate(presencaDataAtual),'info');
+  }
+}
+
+// Override today() usage in presencas to use selected date
+const _origMarcarP = marcarP;
+marcarP = function(id, val){
+  const t = presencaDataAtual || today();
+  const ex = db.presencas.find(p=>p.aluno===id&&p.data===t);
+  const a = db.alunos.find(x=>x.id===id);
+  if(ex) ex.presente=val;
+  else {
+    const row={id:nextId('PRE',db.presencas),aluno:id,data:t,presente:val,ativ:(a?a.ativ:''),prof:'',comp:'',obs:''};
+    db.presencas.push(row);
+    saveRowToSheets('presencas',row);
+  }
+  recalc();saveDB();renderPresencas();
+};
+
+const _origDesmarcarPresenca = desmarcarPresenca;
+desmarcarPresenca = function(id){
+  const t = presencaDataAtual || today();
+  db.presencas = db.presencas.filter(p=>!(p.aluno===id&&p.data===t));
+  recalc();saveDB();renderPresencas();
+};
+
+const _origMarcarTodos = marcarTodos;
+marcarTodos = function(){
+  const t = presencaDataAtual || today();
+  db.alunos.filter(a=>a.status==='Ativo').forEach(a=>{
+    if(!db.presencas.find(p=>p.aluno===a.id&&p.data===t)){
+      const row={id:nextId('PRE',db.presencas),aluno:a.id,data:t,presente:'Sim',ativ:a.ativ||'',prof:'',comp:'',obs:''};
+      db.presencas.push(row);
+    }
+  });
+  recalc();saveDB();renderPresencas();
+  toast('Todos marcados como presentes em '+fmtDate(t),'ok');
+};
+
+// Override renderPresencas to use selected date
+const _presBaseOrig = renderPresencas;
+renderPresencas = function(){
+  // Init date selector
+  initPresencaData();
+  recalc();
+  const now = new Date(presencaDataAtual+'T12:00:00');
+  const meses=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  const lbl=document.getElementById('pres-date-lbl');
+  const isToday = presencaDataAtual === today();
+  if(lbl) lbl.textContent = isToday
+    ? 'Hoje — '+now.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'})
+    : '📅 '+now.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+
+  const t = presencaDataAtual;
+  const ativos=db.alunos.filter(a=>a.status==='Ativo');
+  const ph=db.presencas.filter(p=>p.data===t);
+  const pres=ph.filter(p=>p.presente==='Sim').length;
+  const aus=ph.filter(p=>p.presente!=='Sim').length;
+  const pend=ativos.length-ph.length;
+
+  document.getElementById('pres-stats').innerHTML=`
+    <div class="stat-card" style="--sc:var(--green)"><div class="stat-emoji">✅</div><div class="stat-val">${pres}</div><div class="stat-lbl">Presentes</div><div class="stat-sub">${fmtDate(t)}</div></div>
+    <div class="stat-card" style="--sc:var(--red)"><div class="stat-emoji">❌</div><div class="stat-val">${aus}</div><div class="stat-lbl">Ausentes</div></div>
+    <div class="stat-card" style="--sc:var(--gold)"><div class="stat-emoji">⏳</div><div class="stat-val">${pend}</div><div class="stat-lbl">Pendentes</div></div>`;
+
+  // Add camera button
+  const tr=document.querySelector('#page-presencas .topbar-right');
+  if(tr&&!tr.querySelector('.btn-camera-qr')){
+    const btn=document.createElement('button');
+    btn.className='btn btn-purple btn-camera-qr';
+    btn.innerHTML='📷 Ler QR';btn.onclick=abrirCamera;
+    tr.insertBefore(btn,tr.firstChild);
+  }
+
+  let lista=ativos;
+  if(presFilter==='pendentes')lista=ativos.filter(a=>!ph.find(p=>p.aluno===a.id));
+
+  // Group by turma
+  const ordemTurmas=['Kids','Teens','Adultos',''];
+  const labelTurmas={Kids:'🟣 Kids (3-10 anos)',Teens:'🔵 Teens (11-18 anos)',Adultos:'🟡 Adultos (19+)','':'⬜ Sem turma'};
+  let html='';
+  ordemTurmas.forEach(turma=>{
+    const grp=lista.filter(a=>(a.turma||autoTurma(a.nasc)||'')===(turma));
+    if(!grp.length)return;
+    const presT=grp.filter(a=>{const r=ph.find(p=>p.aluno===a.id);return r&&r.presente==='Sim';}).length;
+    html+=`<div style="margin-bottom:18px">
+      <div style="font-size:13px;font-weight:700;padding:8px 14px;background:var(--navy2);border-radius:9px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between">
+        <span>${labelTurmas[turma]}</span>
+        <span style="font-size:11px;font-weight:400;color:var(--muted)">${presT}/${grp.length} presentes</span>
+      </div><div class="pres-grid">`;
+    html+=grp.map(a=>{
+      const reg=ph.find(p=>p.aluno===a.id);
+      const cls=reg?(reg.presente==='Sim'?'pres':'aus'):'';
+      return`<div class="pres-card ${cls}">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">${fotoHTML(a,32)}<div><h4 style="font-size:12px">${a.nome.split(' ').slice(0,2).join(' ')}</h4><div style="font-size:10px;color:var(--muted)">${beltChip(a.faixa)}</div></div></div>
+        ${reg?`<div style="margin-top:4px;font-size:12px;font-weight:700;color:${reg.presente==='Sim'?'var(--green)':'var(--red)'}">${reg.presente==='Sim'?'✔ Presente':'✖ Ausente'}</div><button class="btn btn-ghost btn-sm" style="margin-top:5px;width:100%" onclick="desmarcarPresenca('${a.id}')">Desfazer</button>`:`<div class="mark-btns"><button class="mbtn mbtn-p" onclick="marcarP('${a.id}','Sim')">✔</button><button class="mbtn mbtn-a" onclick="marcarP('${a.id}','Não')">✖</button></div>`}
+      </div>`;
+    }).join('');
+    html+='</div></div>';
+  });
+  document.getElementById('pres-grid').innerHTML=html;
+};
+
+// ══════════════════════════════════════════════════════════
+//  HISTÓRICO DE PRESENÇAS
+// ══════════════════════════════════════════════════════════
+function abrirHistoricoPresencas(){
+  openModal('m-hist-presencas');
+  renderHistoricoPresencas();
+}
+
+function renderHistoricoPresencas(){
+  const q = (document.getElementById('hist-srch-aluno')||{}).value||'';
+  const mes = (document.getElementById('hist-mes')||{}).value||'';
+
+  // Get all unique dates with presencas
+  let presencas = [...db.presencas];
+  if(mes) presencas = presencas.filter(p=>p.data&&p.data.split('-')[1]===mes);
+
+  // Group by date
+  const byDate = {};
+  presencas.forEach(p=>{
+    if(!byDate[p.data])byDate[p.data]=[];
+    byDate[p.data].push(p);
+  });
+
+  const datas = Object.keys(byDate).sort((a,b)=>b.localeCompare(a));
+
+  if(!datas.length){
+    document.getElementById('hist-presencas-content').innerHTML='<div class="empty-state"><div class="ei">📅</div><h3>Nenhuma presença registrada</h3></div>';
+    return;
+  }
+
+  const content = datas.map(data=>{
+    const regs = byDate[data];
+    const pres = regs.filter(r=>r.presente==='Sim').length;
+    const aus = regs.filter(r=>r.presente!=='Sim').length;
+    const isHoje = data === today();
+
+    // Filter by aluno name if searching
+    let alunosList = regs;
+    if(q){
+      alunosList = regs.filter(r=>{
+        const a = db.alunos.find(x=>x.id===r.aluno);
+        return a&&a.nome.toLowerCase().includes(q.toLowerCase());
+      });
+      if(!alunosList.length) return '';
+    }
+
+    return`<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <div>
+          <span style="font-size:14px;font-weight:800">${fmtDate(data)}</span>
+          ${isHoje?'<span class="chip chip-green" style="margin-left:8px">Hoje</span>':''}
+          <button class="btn btn-ghost btn-sm" style="margin-left:8px" onclick="irParaData('${data}')">📝 Editar</button>
+        </div>
+        <div style="display:flex;gap:8px">
+          <span style="font-size:12px;color:var(--green);font-weight:700">✅ ${pres}</span>
+          <span style="font-size:12px;color:var(--red);font-weight:700">❌ ${aus}</span>
+          <span style="font-size:12px;color:var(--muted)">${Math.round(pres/(pres+aus)*100)||0}%</span>
+        </div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">
+        ${alunosList.map(r=>{
+          const a=db.alunos.find(x=>x.id===r.aluno);
+          return`<span style="background:${r.presente==='Sim'?'rgba(46,204,143,.15)':'rgba(232,77,106,.1)'};color:${r.presente==='Sim'?'var(--green)':'var(--red)'};border-radius:20px;padding:2px 8px;font-size:11px">${a?a.nome.split(' ')[0]:r.aluno}</span>`;
+        }).join('')}
+      </div>
+    </div>`;
+  }).filter(Boolean).join('');
+
+  document.getElementById('hist-presencas-content').innerHTML = content ||
+    '<div class="empty-state"><div class="ei">🔍</div><h3>Nenhum resultado</h3></div>';
+}
+
+function irParaData(data){
+  closeModal('m-hist-presencas');
+  presencaDataAtual = data;
+  const sel = document.getElementById('pres-data-sel');
+  if(sel) sel.value = data;
+  renderPresencas();
+  toast('📅 Editando presenças de '+fmtDate(data),'info');
+}
+
+
+// Pre-fill sheets URL in config page
+setTimeout(function(){
+  const inp = document.getElementById('sheets-url');
+  if(inp && !inp.value) inp.value = 'https://script.google.com/macros/s/AKfycbzbVjDFrbxievnkJCfsRsllahuvyZlqkzEjEsuBifSnq3qr1hxGKcUG2kpyXJnaxElp/exec';
+  if(typeof sheetsConfig !== 'undefined' && !sheetsConfig.url) {
+    sheetsConfig.url = 'https://script.google.com/macros/s/AKfycbzbVjDFrbxievnkJCfsRsllahuvyZlqkzEjEsuBifSnq3qr1hxGKcUG2kpyXJnaxElp/exec';
+    localStorage.setItem('gsheets', JSON.stringify(sheetsConfig));
+  }
+}, 500);
+
+
+// ══════════════════════════════════════════════════════════
+//  EDITAR ALUNO
+// ══════════════════════════════════════════════════════════
+function abrirEditarAluno(id){
+  const a = db.alunos.find(x=>x.id===id);
+  if(!a){toast('Aluno não encontrado','err');return;}
+  // Fill form
+  document.getElementById('ed-id').value = a.id;
+  document.getElementById('ed-nome').value = a.nome||'';
+  document.getElementById('ed-nasc').value = a.nasc||'';
+  document.getElementById('ed-sexo').value = a.sexo||'';
+  document.getElementById('ed-cpf').value = a.cpf||'';
+  document.getElementById('ed-status').value = a.status||'Ativo';
+  document.getElementById('ed-cel').value = a.celular||'';
+  document.getElementById('ed-email').value = a.email||'';
+  document.getElementById('ed-end').value = a.end||'';
+  document.getElementById('ed-r1n').value = a.resp1Nome||'';
+  document.getElementById('ed-r1t').value = a.resp1Tel||'';
+  document.getElementById('ed-r2n').value = a.resp2Nome||'';
+  document.getElementById('ed-r2t').value = a.resp2Tel||'';
+  document.getElementById('ed-tea').value = a.autismo||'Não';
+  document.getElementById('ed-tdah').value = a.tdah||'Não';
+  document.getElementById('ed-med').value = a.medicacao||'Não';
+  document.getElementById('ed-obs').value = a.obs||'';
+  document.getElementById('ed-turma').value = a.turma||'';
+  document.getElementById('ed-faixa').value = a.faixa||'Branca';
+  document.getElementById('ed-ativ').value = a.ativ||'Jiu-jitsu';
+  document.getElementById('ed-escola').value = a.escola||'';
+  // Close ficha if open
+  closeModal('m-ficha');
+  document.getElementById('m-editar-aluno').classList.add('open');
+}
+
+function salvarEdicaoAluno(){
+  const id = document.getElementById('ed-id').value;
+  const nome = document.getElementById('ed-nome').value.trim();
+  if(!nome){toast('Informe o nome','warn');return;}
+  const a = db.alunos.find(x=>x.id===id);
+  if(!a){toast('Aluno não encontrado','err');return;}
+  // Update fields
+  a.nome = nome;
+  a.nasc = document.getElementById('ed-nasc').value;
+  a.sexo = document.getElementById('ed-sexo').value;
+  a.cpf = document.getElementById('ed-cpf').value;
+  a.status = document.getElementById('ed-status').value;
+  a.celular = document.getElementById('ed-cel').value;
+  a.email = document.getElementById('ed-email').value;
+  a.end = document.getElementById('ed-end').value;
+  a.resp1Nome = document.getElementById('ed-r1n').value;
+  a.resp1Tel = document.getElementById('ed-r1t').value;
+  a.resp2Nome = document.getElementById('ed-r2n').value;
+  a.resp2Tel = document.getElementById('ed-r2t').value;
+  a.autismo = document.getElementById('ed-tea').value;
+  a.tdah = document.getElementById('ed-tdah').value;
+  a.medicacao = document.getElementById('ed-med').value;
+  a.obs = document.getElementById('ed-obs').value;
+  a.turma = document.getElementById('ed-turma').value;
+  a.faixa = document.getElementById('ed-faixa').value;
+  a.ativ = document.getElementById('ed-ativ').value;
+  a.escola = document.getElementById('ed-escola').value;
+  closeModal('m-editar-aluno');
+  saveDB();
+  recalc();
+  renderAlunos();
+  // Sync to sheets
+  saveRowToSheets('alunos_updates',{id:a.id,faixa:a.faixa,status:a.status,turma:a.turma||'',comportamento:a.comportamento||0,disciplina:a.disciplina||0,participacao:a.participacao||0,evolucao:a.evolucao||0,score:a.score||0});
+  toast('✅ '+nome+' atualizado!','ok');
+  addNotif('Aluno editado',nome,'ok');
+}
 
 </script>
 </body>
