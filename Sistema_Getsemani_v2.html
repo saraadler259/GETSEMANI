@@ -255,7 +255,16 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
   </div>
   <div class="two-col">
     <div class="card"><div class="card-header"><h3>⚡ Saúde & Necessidades</h3></div><div class="card-body"><div class="chart-wrap"><canvas id="chart-saude"></canvas></div></div></div>
-    <div class="card"><div class="card-header"><h3>🏆 Top 5 Desempenho</h3></div><div class="card-body" id="dash-top5"></div></div>
+    <div class="card"><div class="card-header"><h3>🏆 Top 5 Geral</h3></div><div class="card-body" id="dash-top5"></div></div>
+  </div>
+  <div class="three-col">
+    <div class="card"><div class="card-header"><h3>🟣 Top Kids</h3></div><div class="card-body" id="dash-top-kids"></div></div>
+    <div class="card"><div class="card-header"><h3>🔵 Top Teens</h3></div><div class="card-body" id="dash-top-teens"></div></div>
+    <div class="card"><div class="card-header"><h3>🟡 Top Adultos</h3></div><div class="card-body" id="dash-top-adultos"></div></div>
+  </div>
+  <div class="two-col">
+    <div class="card"><div class="card-header"><h3>📊 Frequência por Turma</h3></div><div class="card-body"><div class="chart-wrap"><canvas id="chart-freq-turma"></canvas></div></div></div>
+    <div class="card"><div class="card-header"><h3>⭐ Score Médio por Turma</h3></div><div class="card-body"><div class="chart-wrap"><canvas id="chart-score-turma"></canvas></div></div></div>
   </div>
 </div>
 
@@ -627,6 +636,35 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
     <div class="mf"><button class="btn btn-ghost" onclick="closeModal('m-hist-presencas')">Fechar</button></div>
   </div>
 </div>
+
+<div class="ov" id="m-editar-aluno"><div class="modal modal-lg"><div class="mh"><h3>✏️ Editar Aluno</h3><button class="mclose" onclick="closeModal('m-editar-aluno')">✕</button></div><div class="mb">
+  <div class="sec-title">📋 Identificação</div><div class="form2">
+  <div class="fg full"><label>Nome Completo *</label><input id="ed-nome" placeholder="Nome completo"></div>
+  <div class="fg"><label>Data Nascimento</label><input id="ed-nasc" type="date"></div>
+  <div class="fg"><label>Sexo</label><select id="ed-sexo"><option value="">—</option><option>Masculino</option><option>Feminino</option></select></div>
+  <div class="fg"><label>CPF</label><input id="ed-cpf" placeholder="000.000.000-00"></div>
+  <div class="fg"><label>Status</label><select id="ed-status"><option>Ativo</option><option>Inativo</option></select></div></div>
+  <div class="sec-title">📱 Contato</div><div class="form2">
+  <div class="fg"><label>Celular</label><input id="ed-cel" placeholder="(51) 99999-9999"></div>
+  <div class="fg"><label>E-mail</label><input id="ed-email" type="email"></div>
+  <div class="fg full"><label>Endereço</label><input id="ed-end" placeholder="Rua, número, bairro, cidade"></div></div>
+  <div class="sec-title">👨‍👩‍👦 Responsáveis</div><div class="form2">
+  <div class="fg"><label>Responsável 1 — Nome</label><input id="ed-r1n"></div>
+  <div class="fg"><label>Responsável 1 — Celular</label><input id="ed-r1t"></div>
+  <div class="fg"><label>Responsável 2 — Nome</label><input id="ed-r2n"></div>
+  <div class="fg"><label>Responsável 2 — Celular</label><input id="ed-r2t"></div></div>
+  <div class="sec-title">🩺 Saúde</div><div class="form3">
+  <div class="fg"><label>TEA/Autismo</label><select id="ed-tea"><option>Não</option><option>Sim</option></select></div>
+  <div class="fg"><label>TDAH</label><select id="ed-tdah"><option>Não</option><option>Sim</option></select></div>
+  <div class="fg"><label>Medicação</label><select id="ed-med"><option>Não</option><option>Sim</option></select></div>
+  <div class="fg full"><label>Observações de Saúde</label><textarea id="ed-obs" rows="2"></textarea></div></div>
+  <div class="sec-title">🏫 Turma & Atividade</div><div class="form2">
+  <div class="fg"><label>Turma</label><select id="ed-turma"><option value="">Auto (pela idade)</option><option value="Kids">🟣 Kids (3-10 anos)</option><option value="Teens">🔵 Teens (11-18 anos)</option><option value="Adultos">🟡 Adultos (19+)</option></select></div>
+  <div class="fg"><label>Faixa</label><select id="ed-faixa"><option>Branca</option><option>Cinza</option><option>Azul</option><option>Roxa</option><option>Marrom</option><option>Preta</option></select></div>
+  <div class="fg"><label>Atividade</label><select id="ed-ativ"><option>Jiu-jitsu</option><option>Capoeira</option><option>Karatê</option><option>Judô</option></select></div>
+  <div class="fg"><label>Escola</label><input id="ed-escola"></div></div>
+  <input type="hidden" id="ed-id">
+</div><div class="mf"><button class="btn btn-ghost" onclick="closeModal('m-editar-aluno')">Cancelar</button><button class="btn btn-primary" onclick="salvarEdicaoAluno()">💾 Salvar alterações</button></div></div></div>
 <div class="toast-box" id="toast-box"></div>
 <script>
 
@@ -1234,7 +1272,7 @@ function verFicha(id){
     </div>
     ${a.obs?`<div style="background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.2);border-radius:9px;padding:12px;margin-bottom:14px"><div style="font-size:10px;color:var(--gold);font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:5px">📝 Observações de Saúde</div><div style="font-size:12px;line-height:1.6">${saudeObs}</div></div>`:''}
     <div><div style="font-size:10px;color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">📋 Histórico de Anotações</div>${notasHtml}</div>`;
-  document.getElementById('ficha-actions').innerHTML=`<button class="btn btn-ghost" onclick="closeModal('m-ficha')">Fechar</button><button class="btn btn-green btn-sm" onclick="closeModal('m-ficha');registrarPresenca('${id}')">✅ Presença</button><button class="btn btn-purple btn-sm" onclick="closeModal('m-ficha');abrirAvalAluno('${id}')">📋 Avaliar</button><button class="btn btn-gold btn-sm" onclick="closeModal('m-ficha');abrirGrad('${id}')">🎖️ Graduar</button><button class="btn btn-ghost btn-sm" onclick="closeModal('m-ficha');abrirNotaAluno('${id}')">📝 Nota</button><button class="btn btn-ghost btn-sm" onclick="closeModal('m-ficha');abrirWppAluno('${id}')">💬 WPP</button><button class="btn btn-outline btn-sm" onclick="exportarRelatorioIndividualAluno('${id}')">📄 PDF</button>`;
+  document.getElementById('ficha-actions').innerHTML=`<button class="btn btn-ghost" onclick="closeModal('m-ficha')">Fechar</button><button class="btn btn-outline btn-sm" onclick="abrirEditarAluno('${id}')">✏️ Editar</button><button class="btn btn-green btn-sm" onclick="closeModal('m-ficha');registrarPresenca('${id}')">✅ Presença</button><button class="btn btn-purple btn-sm" onclick="closeModal('m-ficha');abrirAvalAluno('${id}')">📋 Avaliar</button><button class="btn btn-gold btn-sm" onclick="closeModal('m-ficha');abrirGrad('${id}')">🎖️ Graduar</button><button class="btn btn-ghost btn-sm" onclick="closeModal('m-ficha');abrirNotaAluno('${id}')">📝 Nota</button><button class="btn btn-ghost btn-sm" onclick="closeModal('m-ficha');abrirWppAluno('${id}')">💬 WPP</button><button class="btn btn-outline btn-sm" onclick="exportarRelatorioIndividualAluno('${id}')">📄 PDF</button>`;
   document.getElementById('m-ficha').classList.add('open');
 }
 
@@ -1691,6 +1729,7 @@ renderAlunos = function(){
         <button class="btn btn-gold btn-sm" onclick="abrirGrad('${a.id}')">🎖️</button>
         <button class="btn btn-ghost btn-sm" onclick="verCarteirinhaAluno('${a.id}')">🪪</button>
         <button class="btn btn-ghost btn-sm" onclick="verFicha('${a.id}')">👁</button>
+        <button class="btn btn-outline btn-sm" onclick="abrirEditarAluno('${a.id}')">✏️</button>
         <button class="btn btn-danger btn-sm" onclick="removerAluno('${a.id}')">🗑</button>
       </div></td>
     </tr>`;
@@ -2221,6 +2260,154 @@ setTimeout(function(){
     localStorage.setItem('gsheets', JSON.stringify(sheetsConfig));
   }
 }, 500);
+
+
+// ══════════════════════════════════════════════════════════
+//  EDITAR ALUNO
+// ══════════════════════════════════════════════════════════
+function abrirEditarAluno(id){
+  const a = db.alunos.find(x=>x.id===id);
+  if(!a){toast('Aluno não encontrado','err');return;}
+  // Fill form
+  document.getElementById('ed-id').value = a.id;
+  document.getElementById('ed-nome').value = a.nome||'';
+  document.getElementById('ed-nasc').value = a.nasc||'';
+  document.getElementById('ed-sexo').value = a.sexo||'';
+  document.getElementById('ed-cpf').value = a.cpf||'';
+  document.getElementById('ed-status').value = a.status||'Ativo';
+  document.getElementById('ed-cel').value = a.celular||'';
+  document.getElementById('ed-email').value = a.email||'';
+  document.getElementById('ed-end').value = a.end||'';
+  document.getElementById('ed-r1n').value = a.resp1Nome||'';
+  document.getElementById('ed-r1t').value = a.resp1Tel||'';
+  document.getElementById('ed-r2n').value = a.resp2Nome||'';
+  document.getElementById('ed-r2t').value = a.resp2Tel||'';
+  document.getElementById('ed-tea').value = a.autismo||'Não';
+  document.getElementById('ed-tdah').value = a.tdah||'Não';
+  document.getElementById('ed-med').value = a.medicacao||'Não';
+  document.getElementById('ed-obs').value = a.obs||'';
+  document.getElementById('ed-turma').value = a.turma||'';
+  document.getElementById('ed-faixa').value = a.faixa||'Branca';
+  document.getElementById('ed-ativ').value = a.ativ||'Jiu-jitsu';
+  document.getElementById('ed-escola').value = a.escola||'';
+  // Close ficha if open
+  closeModal('m-ficha');
+  document.getElementById('m-editar-aluno').classList.add('open');
+}
+
+function salvarEdicaoAluno(){
+  const id = document.getElementById('ed-id').value;
+  const nome = document.getElementById('ed-nome').value.trim();
+  if(!nome){toast('Informe o nome','warn');return;}
+  const a = db.alunos.find(x=>x.id===id);
+  if(!a){toast('Aluno não encontrado','err');return;}
+  // Update fields
+  a.nome = nome;
+  a.nasc = document.getElementById('ed-nasc').value;
+  a.sexo = document.getElementById('ed-sexo').value;
+  a.cpf = document.getElementById('ed-cpf').value;
+  a.status = document.getElementById('ed-status').value;
+  a.celular = document.getElementById('ed-cel').value;
+  a.email = document.getElementById('ed-email').value;
+  a.end = document.getElementById('ed-end').value;
+  a.resp1Nome = document.getElementById('ed-r1n').value;
+  a.resp1Tel = document.getElementById('ed-r1t').value;
+  a.resp2Nome = document.getElementById('ed-r2n').value;
+  a.resp2Tel = document.getElementById('ed-r2t').value;
+  a.autismo = document.getElementById('ed-tea').value;
+  a.tdah = document.getElementById('ed-tdah').value;
+  a.medicacao = document.getElementById('ed-med').value;
+  a.obs = document.getElementById('ed-obs').value;
+  a.turma = document.getElementById('ed-turma').value;
+  a.faixa = document.getElementById('ed-faixa').value;
+  a.ativ = document.getElementById('ed-ativ').value;
+  a.escola = document.getElementById('ed-escola').value;
+  closeModal('m-editar-aluno');
+  saveDB();
+  recalc();
+  renderAlunos();
+  // Sync to sheets
+  saveRowToSheets('alunos_updates',{id:a.id,faixa:a.faixa,status:a.status,turma:a.turma||'',comportamento:a.comportamento||0,disciplina:a.disciplina||0,participacao:a.participacao||0,evolucao:a.evolucao||0,score:a.score||0});
+  toast('✅ '+nome+' atualizado!','ok');
+  addNotif('Aluno editado',nome,'ok');
+}
+
+
+// ══════════════════════════════════════════════════════════
+//  TOP DESEMPENHO POR TURMA
+// ══════════════════════════════════════════════════════════
+function renderTopTurma(turmaId, elementId, max=5){
+  const el = document.getElementById(elementId);
+  if(!el) return;
+  const ativos = db.alunos.filter(a=>{
+    if(a.status!=='Ativo') return false;
+    const t = a.turma||autoTurma(a.nasc)||'';
+    return t===turmaId;
+  });
+  if(!ativos.length){
+    el.innerHTML='<div style="color:var(--muted);font-size:12px;text-align:center;padding:12px">Nenhum aluno nessa turma</div>';
+    return;
+  }
+  const ranked = [...ativos]
+    .filter(a=>a.presentes+a.ausentes>0||a.score>0)
+    .sort((a,b)=>{
+      const pa=(b.score||0)*0.4+freqPct(b)*0.006;
+      const pb=(a.score||0)*0.4+freqPct(a)*0.006;
+      return pa-pb;
+    }).slice(0,max);
+  const medals=['🥇','🥈','🥉','4️⃣','5️⃣'];
+  el.innerHTML = ranked.map((a,i)=>`
+    <div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border)">
+      <span style="font-size:16px;flex-shrink:0">${medals[i]||i+1}</span>
+      ${fotoHTML(a,28)}
+      <div style="flex:1;min-width:0">
+        <div style="font-size:11px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${a.nome.split(' ').slice(0,2).join(' ')}</div>
+        <div style="font-size:10px;color:var(--muted)">${beltChip(a.faixa)}</div>
+      </div>
+      <div style="text-align:right">
+        ${a.score>0?`<div style="font-size:12px;font-weight:800;color:${a.score>=3.5?'var(--green)':'var(--gold)'}">⭐${a.score}</div>`:''}
+        <div style="font-size:10px;color:${freqPct(a)>=70?'var(--green)':'var(--red)'}">${freqPct(a)}%</div>
+      </div>
+    </div>`).join('') || '<div style="color:var(--muted);font-size:12px;text-align:center;padding:8px">Sem dados ainda</div>';
+}
+
+function renderGraficosTurmas(ativos){
+  // Freq por turma
+  ['chart-freq-turma','chart-score-turma'].forEach(id=>{const c=Chart.getChart(id);if(c)c.destroy();});
+  const turmas=['Kids','Teens','Adultos'];
+  const cores=['rgba(139,92,246,.7)','rgba(6,182,212,.7)','rgba(79,127,250,.7)'];
+  const co={responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#7A8BB0',font:{size:10}}}}};
+
+  // Frequência média por turma
+  const freqData = turmas.map(t=>{
+    const grp=ativos.filter(a=>(a.turma||autoTurma(a.nasc))===t);
+    if(!grp.length)return 0;
+    return Math.round(grp.reduce((s,a)=>s+freqPct(a),0)/grp.length);
+  });
+  const freqCanvas=document.getElementById('chart-freq-turma');
+  if(freqCanvas) new Chart(freqCanvas,{type:'bar',data:{labels:['🟣 Kids','🔵 Teens','🟡 Adultos'],datasets:[{label:'Freq. Média %',data:freqData,backgroundColor:cores,borderRadius:8}]},options:{...co,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#7A8BB0'}},y:{min:0,max:100,ticks:{color:'#7A8BB0'},grid:{color:'rgba(79,127,250,.07)'}}}}});
+
+  // Score médio por turma
+  const scoreData = turmas.map(t=>{
+    const grp=ativos.filter(a=>(a.turma||autoTurma(a.nasc))===t&&a.score>0);
+    if(!grp.length)return 0;
+    return Math.round(grp.reduce((s,a)=>s+a.score,0)/grp.length*10)/10;
+  });
+  const scoreCanvas=document.getElementById('chart-score-turma');
+  if(scoreCanvas) new Chart(scoreCanvas,{type:'bar',data:{labels:['🟣 Kids','🔵 Teens','🟡 Adultos'],datasets:[{label:'Score Médio',data:scoreData,backgroundColor:cores,borderRadius:8}]},options:{...co,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#7A8BB0'}},y:{min:0,max:5,ticks:{color:'#7A8BB0'},grid:{color:'rgba(79,127,250,.07)'}}}}});
+}
+
+// Override renderDashboard to include turma rankings
+const _origRenderDashboard = renderDashboard;
+renderDashboard = function(){
+  _origRenderDashboard.call(this);
+  // Render turma top lists
+  const ativos=db.alunos.filter(a=>a.status==='Ativo');
+  renderTopTurma('Kids','dash-top-kids',5);
+  renderTopTurma('Teens','dash-top-teens',5);
+  renderTopTurma('Adultos','dash-top-adultos',5);
+  renderGraficosTurmas(ativos);
+};
 
 </script>
 </body>
