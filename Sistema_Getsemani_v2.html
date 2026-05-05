@@ -286,8 +286,14 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 
 <!-- ══ PRESENÇA ══ -->
 <div id="page-presencas" class="page">
-  <div class="topbar"><div><div class="page-title">✅ Presença do Dia</div><div class="page-sub" id="pres-date-lbl"></div></div>
-  <div class="topbar-right"><button class="btn btn-ghost" onclick="filtrarPresenca('todos')">Todos</button><button class="btn btn-ghost" onclick="filtrarPresenca('pendentes')">Pendentes</button><button class="btn btn-outline" onclick="marcarTodos()">Marcar todos ✔</button></div></div>
+  <div class="topbar"><div><div class="page-title">✅ Presenças</div><div class="page-sub" id="pres-date-lbl"></div></div>
+  <div class="topbar-right">
+    <input type="date" id="pres-data-sel" style="background:var(--navy);border:1px solid var(--border);border-radius:8px;padding:7px 12px;color:var(--white);font-family:Sora;font-size:12px;cursor:pointer" onchange="presencaDataChanged()">
+    <button class="btn btn-ghost" onclick="filtrarPresenca('todos')">Todos</button>
+    <button class="btn btn-ghost" onclick="filtrarPresenca('pendentes')">Pendentes</button>
+    <button class="btn btn-ghost" onclick="abrirHistoricoPresencas()">📅 Histórico</button>
+    <button class="btn btn-outline" onclick="marcarTodos()">Marcar todos ✔</button>
+  </div></div>
   <div class="stats3" id="pres-stats"></div>
   <div id="pres-grid" class="pres-grid"></div>
 </div>
@@ -599,6 +605,26 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
         <button class="btn btn-primary btn-sm" onclick="buscarAlunoManual()">Buscar</button>
       </div>
     </div>
+  </div>
+</div>
+
+<div class="ov" id="m-hist-presencas">
+  <div class="modal modal-lg">
+    <div class="mh"><h3>📅 Histórico de Presenças</h3><button class="mclose" onclick="closeModal('m-hist-presencas')">✕</button></div>
+    <div class="mb">
+      <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+        <div class="fg" style="flex:1;margin:0"><label>Filtrar por aluno</label><input id="hist-srch-aluno" placeholder="Nome do aluno..." style="background:var(--navy);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--white);font-family:Sora;font-size:12px;width:100%" oninput="renderHistoricoPresencas()"></div>
+        <div class="fg" style="margin:0"><label>Mês</label><select id="hist-mes" style="background:var(--navy);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--white);font-family:Sora;font-size:12px" onchange="renderHistoricoPresencas()">
+          <option value="">Todos</option>
+          <option value="01">Janeiro</option><option value="02">Fevereiro</option><option value="03">Março</option>
+          <option value="04">Abril</option><option value="05">Maio</option><option value="06">Junho</option>
+          <option value="07">Julho</option><option value="08">Agosto</option><option value="09">Setembro</option>
+          <option value="10">Outubro</option><option value="11">Novembro</option><option value="12">Dezembro</option>
+        </select></div>
+      </div>
+      <div id="hist-presencas-content"></div>
+    </div>
+    <div class="mf"><button class="btn btn-ghost" onclick="closeModal('m-hist-presencas')">Fechar</button></div>
   </div>
 </div>
 <div class="toast-box" id="toast-box"></div>
@@ -1544,6 +1570,10 @@ function verificarAlertas(){
 //  INIT
 // ═══════════════════════════════════════════════
 if(!localStorage.getItem('gwpp')){localStorage.setItem('gwpp',JSON.stringify({numero:'51989520485',assinatura:'Projeto Getsêmani - Portão/RS'}));}
+// Pre-configure Google Sheets URL
+if(!localStorage.getItem('gsheets')||JSON.parse(localStorage.getItem('gsheets')||'{}').url!=='https://script.google.com/macros/s/AKfycbzbVjDFrbxievnkJCfsRsllahuvyZlqkzEjEsuBifSnq3qr1hxGKcUG2kpyXJnaxElp/exec'){
+  localStorage.setItem('gsheets',JSON.stringify({url:'https://script.google.com/macros/s/AKfycbzbVjDFrbxievnkJCfsRsllahuvyZlqkzEjEsuBifSnq3qr1hxGKcUG2kpyXJnaxElp/exec',lastSync:''}));
+}
 loadDB();
 recalc();
 renderDashboard();
@@ -1978,6 +2008,219 @@ setFilter = function(type,val,btn){
     _setFilterOrig(type,val,btn);
   }
 };
+
+
+// ══════════════════════════════════════════════════════════
+//  DATA DE PRESENÇA SELECIONÁVEL
+// ══════════════════════════════════════════════════════════
+let presencaDataAtual = today();
+
+function initPresencaData(){
+  const sel = document.getElementById('pres-data-sel');
+  if(sel){
+    sel.value = presencaDataAtual;
+  }
+}
+
+function presencaDataChanged(){
+  const sel = document.getElementById('pres-data-sel');
+  if(sel&&sel.value){
+    presencaDataAtual = sel.value;
+    renderPresencas();
+    toast('📅 Data alterada para '+fmtDate(presencaDataAtual),'info');
+  }
+}
+
+// Override today() usage in presencas to use selected date
+const _origMarcarP = marcarP;
+marcarP = function(id, val){
+  const t = presencaDataAtual || today();
+  const ex = db.presencas.find(p=>p.aluno===id&&p.data===t);
+  const a = db.alunos.find(x=>x.id===id);
+  if(ex) ex.presente=val;
+  else {
+    const row={id:nextId('PRE',db.presencas),aluno:id,data:t,presente:val,ativ:(a?a.ativ:''),prof:'',comp:'',obs:''};
+    db.presencas.push(row);
+    saveRowToSheets('presencas',row);
+  }
+  recalc();saveDB();renderPresencas();
+};
+
+const _origDesmarcarPresenca = desmarcarPresenca;
+desmarcarPresenca = function(id){
+  const t = presencaDataAtual || today();
+  db.presencas = db.presencas.filter(p=>!(p.aluno===id&&p.data===t));
+  recalc();saveDB();renderPresencas();
+};
+
+const _origMarcarTodos = marcarTodos;
+marcarTodos = function(){
+  const t = presencaDataAtual || today();
+  db.alunos.filter(a=>a.status==='Ativo').forEach(a=>{
+    if(!db.presencas.find(p=>p.aluno===a.id&&p.data===t)){
+      const row={id:nextId('PRE',db.presencas),aluno:a.id,data:t,presente:'Sim',ativ:a.ativ||'',prof:'',comp:'',obs:''};
+      db.presencas.push(row);
+    }
+  });
+  recalc();saveDB();renderPresencas();
+  toast('Todos marcados como presentes em '+fmtDate(t),'ok');
+};
+
+// Override renderPresencas to use selected date
+const _presBaseOrig = renderPresencas;
+renderPresencas = function(){
+  // Init date selector
+  initPresencaData();
+  recalc();
+  const now = new Date(presencaDataAtual+'T12:00:00');
+  const meses=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  const lbl=document.getElementById('pres-date-lbl');
+  const isToday = presencaDataAtual === today();
+  if(lbl) lbl.textContent = isToday
+    ? 'Hoje — '+now.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'})
+    : '📅 '+now.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+
+  const t = presencaDataAtual;
+  const ativos=db.alunos.filter(a=>a.status==='Ativo');
+  const ph=db.presencas.filter(p=>p.data===t);
+  const pres=ph.filter(p=>p.presente==='Sim').length;
+  const aus=ph.filter(p=>p.presente!=='Sim').length;
+  const pend=ativos.length-ph.length;
+
+  document.getElementById('pres-stats').innerHTML=`
+    <div class="stat-card" style="--sc:var(--green)"><div class="stat-emoji">✅</div><div class="stat-val">${pres}</div><div class="stat-lbl">Presentes</div><div class="stat-sub">${fmtDate(t)}</div></div>
+    <div class="stat-card" style="--sc:var(--red)"><div class="stat-emoji">❌</div><div class="stat-val">${aus}</div><div class="stat-lbl">Ausentes</div></div>
+    <div class="stat-card" style="--sc:var(--gold)"><div class="stat-emoji">⏳</div><div class="stat-val">${pend}</div><div class="stat-lbl">Pendentes</div></div>`;
+
+  // Add camera button
+  const tr=document.querySelector('#page-presencas .topbar-right');
+  if(tr&&!tr.querySelector('.btn-camera-qr')){
+    const btn=document.createElement('button');
+    btn.className='btn btn-purple btn-camera-qr';
+    btn.innerHTML='📷 Ler QR';btn.onclick=abrirCamera;
+    tr.insertBefore(btn,tr.firstChild);
+  }
+
+  let lista=ativos;
+  if(presFilter==='pendentes')lista=ativos.filter(a=>!ph.find(p=>p.aluno===a.id));
+
+  // Group by turma
+  const ordemTurmas=['Kids','Teens','Adultos',''];
+  const labelTurmas={Kids:'🟣 Kids (3-10 anos)',Teens:'🔵 Teens (11-18 anos)',Adultos:'🟡 Adultos (19+)','':'⬜ Sem turma'};
+  let html='';
+  ordemTurmas.forEach(turma=>{
+    const grp=lista.filter(a=>(a.turma||autoTurma(a.nasc)||'')===(turma));
+    if(!grp.length)return;
+    const presT=grp.filter(a=>{const r=ph.find(p=>p.aluno===a.id);return r&&r.presente==='Sim';}).length;
+    html+=`<div style="margin-bottom:18px">
+      <div style="font-size:13px;font-weight:700;padding:8px 14px;background:var(--navy2);border-radius:9px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between">
+        <span>${labelTurmas[turma]}</span>
+        <span style="font-size:11px;font-weight:400;color:var(--muted)">${presT}/${grp.length} presentes</span>
+      </div><div class="pres-grid">`;
+    html+=grp.map(a=>{
+      const reg=ph.find(p=>p.aluno===a.id);
+      const cls=reg?(reg.presente==='Sim'?'pres':'aus'):'';
+      return`<div class="pres-card ${cls}">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">${fotoHTML(a,32)}<div><h4 style="font-size:12px">${a.nome.split(' ').slice(0,2).join(' ')}</h4><div style="font-size:10px;color:var(--muted)">${beltChip(a.faixa)}</div></div></div>
+        ${reg?`<div style="margin-top:4px;font-size:12px;font-weight:700;color:${reg.presente==='Sim'?'var(--green)':'var(--red)'}">${reg.presente==='Sim'?'✔ Presente':'✖ Ausente'}</div><button class="btn btn-ghost btn-sm" style="margin-top:5px;width:100%" onclick="desmarcarPresenca('${a.id}')">Desfazer</button>`:`<div class="mark-btns"><button class="mbtn mbtn-p" onclick="marcarP('${a.id}','Sim')">✔</button><button class="mbtn mbtn-a" onclick="marcarP('${a.id}','Não')">✖</button></div>`}
+      </div>`;
+    }).join('');
+    html+='</div></div>';
+  });
+  document.getElementById('pres-grid').innerHTML=html;
+};
+
+// ══════════════════════════════════════════════════════════
+//  HISTÓRICO DE PRESENÇAS
+// ══════════════════════════════════════════════════════════
+function abrirHistoricoPresencas(){
+  openModal('m-hist-presencas');
+  renderHistoricoPresencas();
+}
+
+function renderHistoricoPresencas(){
+  const q = (document.getElementById('hist-srch-aluno')||{}).value||'';
+  const mes = (document.getElementById('hist-mes')||{}).value||'';
+
+  // Get all unique dates with presencas
+  let presencas = [...db.presencas];
+  if(mes) presencas = presencas.filter(p=>p.data&&p.data.split('-')[1]===mes);
+
+  // Group by date
+  const byDate = {};
+  presencas.forEach(p=>{
+    if(!byDate[p.data])byDate[p.data]=[];
+    byDate[p.data].push(p);
+  });
+
+  const datas = Object.keys(byDate).sort((a,b)=>b.localeCompare(a));
+
+  if(!datas.length){
+    document.getElementById('hist-presencas-content').innerHTML='<div class="empty-state"><div class="ei">📅</div><h3>Nenhuma presença registrada</h3></div>';
+    return;
+  }
+
+  const content = datas.map(data=>{
+    const regs = byDate[data];
+    const pres = regs.filter(r=>r.presente==='Sim').length;
+    const aus = regs.filter(r=>r.presente!=='Sim').length;
+    const isHoje = data === today();
+
+    // Filter by aluno name if searching
+    let alunosList = regs;
+    if(q){
+      alunosList = regs.filter(r=>{
+        const a = db.alunos.find(x=>x.id===r.aluno);
+        return a&&a.nome.toLowerCase().includes(q.toLowerCase());
+      });
+      if(!alunosList.length) return '';
+    }
+
+    return`<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <div>
+          <span style="font-size:14px;font-weight:800">${fmtDate(data)}</span>
+          ${isHoje?'<span class="chip chip-green" style="margin-left:8px">Hoje</span>':''}
+          <button class="btn btn-ghost btn-sm" style="margin-left:8px" onclick="irParaData('${data}')">📝 Editar</button>
+        </div>
+        <div style="display:flex;gap:8px">
+          <span style="font-size:12px;color:var(--green);font-weight:700">✅ ${pres}</span>
+          <span style="font-size:12px;color:var(--red);font-weight:700">❌ ${aus}</span>
+          <span style="font-size:12px;color:var(--muted)">${Math.round(pres/(pres+aus)*100)||0}%</span>
+        </div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">
+        ${alunosList.map(r=>{
+          const a=db.alunos.find(x=>x.id===r.aluno);
+          return`<span style="background:${r.presente==='Sim'?'rgba(46,204,143,.15)':'rgba(232,77,106,.1)'};color:${r.presente==='Sim'?'var(--green)':'var(--red)'};border-radius:20px;padding:2px 8px;font-size:11px">${a?a.nome.split(' ')[0]:r.aluno}</span>`;
+        }).join('')}
+      </div>
+    </div>`;
+  }).filter(Boolean).join('');
+
+  document.getElementById('hist-presencas-content').innerHTML = content ||
+    '<div class="empty-state"><div class="ei">🔍</div><h3>Nenhum resultado</h3></div>';
+}
+
+function irParaData(data){
+  closeModal('m-hist-presencas');
+  presencaDataAtual = data;
+  const sel = document.getElementById('pres-data-sel');
+  if(sel) sel.value = data;
+  renderPresencas();
+  toast('📅 Editando presenças de '+fmtDate(data),'info');
+}
+
+
+// Pre-fill sheets URL in config page
+setTimeout(function(){
+  const inp = document.getElementById('sheets-url');
+  if(inp && !inp.value) inp.value = 'https://script.google.com/macros/s/AKfycbzbVjDFrbxievnkJCfsRsllahuvyZlqkzEjEsuBifSnq3qr1hxGKcUG2kpyXJnaxElp/exec';
+  if(typeof sheetsConfig !== 'undefined' && !sheetsConfig.url) {
+    sheetsConfig.url = 'https://script.google.com/macros/s/AKfycbzbVjDFrbxievnkJCfsRsllahuvyZlqkzEjEsuBifSnq3qr1hxGKcUG2kpyXJnaxElp/exec';
+    localStorage.setItem('gsheets', JSON.stringify(sheetsConfig));
+  }
+}, 500);
 
 </script>
 </body>
