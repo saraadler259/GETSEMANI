@@ -202,6 +202,47 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 
 /* TURMAS */
 .pres-turma-section{margin-bottom:18px}
+
+/* ── INDICADOR DE SAVE ── */
+.save-indicator{position:fixed;bottom:70px;right:22px;z-index:9998;display:flex;flex-direction:column;gap:6px;pointer-events:none}
+.save-item{background:var(--navy2);border:1px solid var(--border);border-radius:10px;padding:8px 14px;font-size:12px;font-weight:600;display:flex;align-items:center;gap:8px;opacity:0;transform:translateX(20px);transition:all .3s;box-shadow:var(--shadow)}
+.save-item.show{opacity:1;transform:translateX(0)}
+.save-item.saving{border-left:3px solid var(--gold)}
+.save-item.saved{border-left:3px solid var(--green)}
+.save-item.error{border-left:3px solid var(--red)}
+.save-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.save-dot.saving{background:var(--gold);animation:pulse .6s infinite}
+.save-dot.saved{background:var(--green)}
+.save-dot.error{background:var(--red)}
+
+/* ── SISTEMA DE SELOS ── */
+.selo{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;font-size:14px;font-weight:800;cursor:pointer;transition:transform .15s;flex-shrink:0;border:2px solid rgba(255,255,255,.15)}
+.selo:hover{transform:scale(1.15)}
+.selo-azul{background:rgba(59,130,246,.9);color:#fff;box-shadow:0 2px 8px rgba(59,130,246,.4)}
+.selo-vermelho{background:rgba(239,68,68,.9);color:#fff;box-shadow:0 2px 8px rgba(239,68,68,.4)}
+.selo-verde{background:rgba(34,197,94,.9);color:#fff;box-shadow:0 2px 8px rgba(34,197,94,.4)}
+.selo-amarelo{background:rgba(234,179,8,.9);color:#000;box-shadow:0 2px 8px rgba(234,179,8,.4)}
+.selo-wrap{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.selo-count{font-size:10px;font-weight:800;position:absolute;top:-4px;right:-4px;background:#fff;color:#000;border-radius:50%;width:14px;height:14px;display:flex;align-items:center;justify-content:center;line-height:1}
+.selo-container{position:relative;display:inline-block}
+.selos-bar{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.selo-item{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:48px}
+.selo-item .selo-label{font-size:9px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.3px;text-align:center}
+.selo-item .selo-num{font-size:16px;font-weight:800;font-family:'JetBrains Mono';line-height:1}
+.selo-progress{width:100%;height:4px;background:rgba(255,255,255,.1);border-radius:2px;margin-top:2px}
+.selo-progress-fill{height:100%;border-radius:2px;transition:width .3s}
+.modal-selos{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.modal-selo-card{background:var(--navy);border-radius:10px;padding:12px;text-align:center;cursor:pointer;transition:all .2s;border:2px solid transparent}
+.modal-selo-card:hover{transform:translateY(-2px)}
+.modal-selo-card.azul:hover{border-color:rgba(59,130,246,.5)}
+.modal-selo-card.vermelho:hover{border-color:rgba(239,68,68,.5)}
+.modal-selo-card.verde:hover{border-color:rgba(34,197,94,.5)}
+.modal-selo-card.amarelo:hover{border-color:rgba(234,179,8,.5)}
+.selo-big{font-size:36px;margin-bottom:6px}
+.selo-card-num{font-size:28px;font-weight:800;font-family:'JetBrains Mono'}
+.selo-card-label{font-size:11px;color:var(--muted);margin-top:3px}
+.selo-card-desc{font-size:10px;color:var(--muted);margin-top:4px;line-height:1.4}
+.selo-meta{font-size:10px;margin-top:4px}
 </style>
 </head>
 <body>
@@ -290,7 +331,7 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
     <button class="fchip" onclick="setFilter('turma','Teens',this)">🔵 Teens</button>
     <button class="fchip" onclick="setFilter('turma','Adultos',this)">🟡 Adultos</button>
   </div>
-  <div class="card"><div class="tbl-wrap"><table><thead><tr><th>Aluno</th><th>Contato / Endereço</th><th>Responsáveis</th><th>Faixa</th><th>Desempenho</th><th>Frequência</th><th>Situação</th><th class="actions-col">Ações</th></tr></thead><tbody id="tbody-alunos"></tbody></table></div></div>
+  <div class="card"><div class="tbl-wrap"><table><thead><tr><th>Aluno</th><th>Contato / Endereço</th><th>Responsáveis</th><th>Faixa</th><th>Desempenho</th><th>⭐ Graus</th><th>🏅 Selos</th><th>Frequência</th><th>Situação</th><th class="actions-col">Ações</th></tr></thead><tbody id="tbody-alunos"></tbody></table></div></div>
 </div>
 
 <!-- ══ PRESENÇA ══ -->
@@ -316,13 +357,13 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
     <div class="card"><div class="card-header"><h3>📊 Média por Critério</h3></div><div class="card-body"><div class="chart-wrap"><canvas id="chart-criterios"></canvas></div></div></div>
     <div class="card"><div class="card-header"><h3>🎯 Distribuição de Scores</h3></div><div class="card-body"><div class="chart-wrap"><canvas id="chart-scores-dist"></canvas></div></div></div>
   </div>
-  <div class="card"><div class="card-header"><h3>Alunos — Score de Desempenho</h3><span style="font-size:11px;color:var(--muted)">Critério de graduação: Score ≥ 3.5 + Freq. ≥ 70% + Aulas ≥ 10</span></div>
+  <div class="card"><div class="card-header"><h3>Alunos — Score de Desempenho</h3><span style="font-size:11px;color:var(--muted)">Critério: Score ≥3.5 · Freq. ≥70% · Até 14a: ≥10 aulas · 15-18a: ≥30 aulas</span></div>
   <div class="tbl-wrap"><table><thead><tr><th>Aluno</th><th>Comport.</th><th>Disciplina</th><th>Particip.</th><th>Evolução</th><th>Score</th><th>Frequência</th><th>Situação</th><th class="actions-col">Ações</th></tr></thead><tbody id="tbody-aval"></tbody></table></div></div>
 </div>
 
 <!-- ══ GRADUAÇÕES ══ -->
 <div id="page-graduacoes" class="page">
-  <div class="topbar"><div><div class="page-title">🎖️ Graduações</div><div class="page-sub">Critérios: ≥10 aulas · Freq. ≥70% · Score ≥3.5</div></div><div class="topbar-right"><button class="btn btn-primary" onclick="openModal('m-grad')">+ Registrar</button></div></div>
+  <div class="topbar"><div><div class="page-title">🎖️ Graduações</div><div class="page-sub">Até 14a: 10 aulas/grau · 15+a: 30 aulas/grau · 4 graus = troca faixa</div></div><div class="topbar-right"><button class="btn btn-primary" onclick="openModal('m-grad')">+ Registrar</button></div></div>
   <div class="card" style="margin-bottom:14px"><div class="card-header"><h3>🏅 Prontos para Colação</h3><span id="prontos-count" class="chip chip-gold"></span></div><div class="card-body" id="prontos-list"></div></div>
   <div class="card"><div class="card-header"><h3>Histórico de Graduações</h3></div><div class="tbl-wrap"><table><thead><tr><th>Aluno</th><th>Data</th><th>De</th><th>Para</th><th>Score</th><th>Freq.</th><th>Professor</th></tr></thead><tbody id="tbody-grad"></tbody></table></div></div>
 </div>
@@ -665,7 +706,35 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
   <div class="fg"><label>Escola</label><input id="ed-escola"></div></div>
   <input type="hidden" id="ed-id">
 </div><div class="mf"><button class="btn btn-ghost" onclick="closeModal('m-editar-aluno')">Cancelar</button><button class="btn btn-primary" onclick="salvarEdicaoAluno()">💾 Salvar alterações</button></div></div></div>
+
+<div class="ov" id="m-selos">
+  <div class="modal">
+    <div class="mh"><h3>🏅 Selos do Aluno</h3><button class="mclose" onclick="closeModal('m-selos')">✕</button></div>
+    <div class="mb">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--border)">
+        <div id="selos-modal-foto"></div>
+        <div><div id="selos-modal-nome" style="font-size:15px;font-weight:800"></div><div id="selos-modal-info" style="font-size:12px;color:var(--muted)"></div></div>
+      </div>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:14px">Clique em um selo para adicionar +1. Ao atingir 30 selos o sistema alerta automaticamente!</p>
+      <div class="modal-selos" id="selos-modal-grid"></div>
+      <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border)">
+        <div style="font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Legenda</div>
+        <div style="font-size:11px;color:var(--muted);line-height:1.7">
+          🔵 <strong>Presença</strong> — Frequência e comprometimento com as aulas<br>
+          🔴 <strong>Comportamento</strong> — Conduta dentro e fora do tatame/projeto<br>
+          🟢 <strong>Cooperação</strong> — Ajuda e apoio aos colegas<br>
+          🟡 <strong>Pontualidade</strong> — Chega no horário, respeita os compromissos
+        </div>
+      </div>
+    </div>
+    <div class="mf">
+      <button class="btn btn-ghost" onclick="closeModal('m-selos')">Fechar</button>
+      <button class="btn btn-danger btn-sm" onclick="resetarSelos()">Zerar selos</button>
+    </div>
+  </div>
+</div>
 <div class="toast-box" id="toast-box"></div>
+<div class="save-indicator" id="save-indicator"></div>
 <script>
 
 /* QRCode.js - MIT License */
@@ -1064,9 +1133,17 @@ function calcStatus(a){
   if(freq<80||(hasScore&&score<3.5))return{label:'ATENÇÃO',cls:'status-atencao',icon:'🟠',cor:'var(--orange)'};
   return{label:'OK',cls:'status-ok',icon:'🟢',cor:'var(--green)'};
 }
+function aulasNecessarias(a){
+  // Regra por idade
+  const idade = parseInt(calcIdade(a.nasc))||0;
+  if(idade>=15&&idade<=18) return 30; // Teens 15-18: 30 aulas
+  if(idade>=19) return 30; // Adultos: 30 aulas
+  return 10; // Kids e até 14 anos: 10 aulas
+}
 function aptaGraduacao(a){
   const freq=freqPct(a);const score=a.score||0;
-  return a.presentes>=10&&freq>=70&&(score===0||score>=3.5);
+  const minAulas=aulasNecessarias(a);
+  return a.presentes>=minAulas&&freq>=70&&(score===0||score>=3.5);
 }
 function statusChipAdv(a){const s=calcStatus(a);return`<span class="chip ${s.cls}">${s.icon} ${s.label}</span>`;}
 function scoreHTML(a){
@@ -1266,13 +1343,19 @@ function verFicha(id){
       </div>
       <div style="display:flex;align-items:center;justify-content:space-between">${scoreHTML(a)}${statusChipAdv(a)}</div>
     </div>
+    <div style="background:rgba(245,166,35,.06);border:1px solid rgba(245,166,35,.15);border-radius:10px;padding:14px;margin-bottom:14px">
+      <div style="font-size:10px;color:var(--gold);font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">🏅 Selos de Mérito</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+        ${SELOS_CONFIG.map(c=>{const num=a[c.key]||0;const pct=Math.min(num/c.meta*100,100);return`<div style="text-align:center;cursor:pointer" onclick="closeModal('m-ficha');abrirSelos('${a.id}')"><div style="font-size:22px">${c.emoji}</div><div style="font-size:18px;font-weight:800;font-family:'JetBrains Mono';color:${c.cor}">${num}</div><div style="font-size:9px;color:var(--muted)">${c.label}</div><div style="background:rgba(255,255,255,.1);border-radius:2px;height:3px;margin-top:4px"><div style="height:100%;border-radius:2px;background:${c.cor};width:${pct}%"></div></div><div style="font-size:9px;color:var(--muted)">${num}/${c.meta}</div></div>`;}).join('')}
+      </div>
+    </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
       <div style="background:var(--navy);border-radius:8px;padding:8px 11px"><div style="font-size:9px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">👨‍👩‍👦 Responsável 1</div><div style="font-size:12px;font-weight:600">${a.resp1Nome||'—'}</div>${a.resp1Tel?`<div style="font-size:11px;color:var(--muted)">${a.resp1Tel}</div>`:''}</div>
       <div style="background:var(--navy);border-radius:8px;padding:8px 11px"><div style="font-size:9px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">👤 Responsável 2</div><div style="font-size:12px;font-weight:600">${a.resp2Nome||'—'}</div>${a.resp2Tel?`<div style="font-size:11px;color:var(--muted)">${a.resp2Tel}</div>`:''}</div>
     </div>
     ${a.obs?`<div style="background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.2);border-radius:9px;padding:12px;margin-bottom:14px"><div style="font-size:10px;color:var(--gold);font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:5px">📝 Observações de Saúde</div><div style="font-size:12px;line-height:1.6">${saudeObs}</div></div>`:''}
     <div><div style="font-size:10px;color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">📋 Histórico de Anotações</div>${notasHtml}</div>`;
-  document.getElementById('ficha-actions').innerHTML=`<button class="btn btn-ghost" onclick="closeModal('m-ficha')">Fechar</button><button class="btn btn-outline btn-sm" onclick="abrirEditarAluno('${id}')">✏️ Editar</button><button class="btn btn-green btn-sm" onclick="closeModal('m-ficha');registrarPresenca('${id}')">✅ Presença</button><button class="btn btn-purple btn-sm" onclick="closeModal('m-ficha');abrirAvalAluno('${id}')">📋 Avaliar</button><button class="btn btn-gold btn-sm" onclick="closeModal('m-ficha');abrirGrad('${id}')">🎖️ Graduar</button><button class="btn btn-ghost btn-sm" onclick="closeModal('m-ficha');abrirNotaAluno('${id}')">📝 Nota</button><button class="btn btn-ghost btn-sm" onclick="closeModal('m-ficha');abrirWppAluno('${id}')">💬 WPP</button><button class="btn btn-outline btn-sm" onclick="exportarRelatorioIndividualAluno('${id}')">📄 PDF</button>`;
+  document.getElementById('ficha-actions').innerHTML=`<button class="btn btn-ghost" onclick="closeModal('m-ficha')">Fechar</button><button class="btn btn-outline btn-sm" onclick="abrirEditarAluno('${id}')">✏️ Editar</button><button class="btn btn-gold btn-sm" onclick="closeModal('m-ficha');abrirSelos('${id}')">🏅 Selos</button><button class="btn btn-green btn-sm" onclick="closeModal('m-ficha');registrarPresenca('${id}')">✅ Presença</button><button class="btn btn-purple btn-sm" onclick="closeModal('m-ficha');abrirAvalAluno('${id}')">📋 Avaliar</button><button class="btn btn-gold btn-sm" onclick="closeModal('m-ficha');abrirGrad('${id}')">🎖️ Graduar</button><button class="btn btn-ghost btn-sm" onclick="closeModal('m-ficha');abrirNotaAluno('${id}')">📝 Nota</button><button class="btn btn-ghost btn-sm" onclick="closeModal('m-ficha');abrirWppAluno('${id}')">💬 WPP</button><button class="btn btn-outline btn-sm" onclick="exportarRelatorioIndividualAluno('${id}')">📄 PDF</button>`;
   document.getElementById('m-ficha').classList.add('open');
 }
 
@@ -1365,12 +1448,12 @@ function renderGraduacoes(){
   const prontos=db.alunos.filter(a=>a.status==='Ativo'&&aptaGraduacao(a));
   document.getElementById('prontos-count').textContent=prontos.length+' aluno(s)';
   document.getElementById('prontos-list').innerHTML=prontos.length?prontos.map(a=>{
-    const freq=freqPct(a);
+    const freq=freqPct(a);const minAulas=aulasNecessarias(a);const idade=parseInt(calcIdade(a.nasc))||0;
     return`<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
       <div style="font-size:22px">🥋</div>
       <div style="flex:1"><strong style="font-size:13px">${a.nome}</strong><br>
       <span style="font-size:11px;color:var(--muted)">${a.presentes} aulas · ${freq}% freq.${a.score>0?' · Score: '+a.score:''} · ${beltChip(a.faixa)}</span>
-      <br><span style="font-size:10px">✅ ${a.presentes>=10?'Aulas OK':'—'} · ${freq>=70?'Freq. OK':'—'} · ${a.score>=3.5||a.score===0?'Score OK':'Score insuf.'}</span></div>
+      <br><span style="font-size:10px">✅ Aulas OK (${a.presentes}/${minAulas}) · ${freq>=70?'Freq. OK':'—'} · ${a.score>=3.5||a.score===0?'Score OK':'Score insuf.'} · ${idade}a</span></div>
       <button class="btn btn-primary btn-sm" onclick="abrirGrad('${a.id}')">Graduar</button>
     </div>`;}).join(''):`<div style="color:var(--muted);font-size:12px;padding:8px 0">Nenhum aluno atingiu todos os critérios ainda. (≥10 aulas + Freq. ≥70% + Score ≥3.5)</div>`;
   document.getElementById('tbody-grad').innerHTML=db.graduacoes.length?[...db.graduacoes].reverse().map(g=>{const a=db.alunos.find(x=>x.id===g.aluno);return`<tr><td><strong style="font-size:12px">${alunoNome(g.aluno)}</strong></td><td>${fmtDate(g.data)}</td><td>${beltChip(g.faixaAnt)}</td><td>${beltChip(g.faixaNova)}</td><td style="font-family:'JetBrains Mono';font-size:12px">${g.scoreGrad||'—'}</td><td style="font-size:12px">${g.freqGrad||'—'}%</td><td style="font-size:12px">${g.prof||'—'}</td></tr>`}).join(''):`<tr><td colspan="7"><div class="empty-state"><h3>Nenhuma graduação registrada</h3></div></td></tr>`;
@@ -1721,6 +1804,8 @@ renderAlunos = function(){
       <td style="font-size:11px;max-width:150px">${a.resp1Nome?`<strong>${a.resp1Nome}</strong>${a.resp1Tel?'<br><span style="color:var(--muted)">'+a.resp1Tel+'</span>':''}`:''}</td>
       <td>${beltChip(a.faixa)}</td>
       <td>${scoreHTML(a)}</td>
+      <td>${grauHTML(a)}</td>
+      <td><div class="selo-wrap">${selosHTML(a,true)}</div></td>
       <td style="min-width:90px"><span style="font-size:11px;font-weight:700;color:${freq<70?'var(--red)':freq<85?'var(--gold)':'var(--green)'}">${freq}%</span><div class="fbar"><div class="fbar-fill ${fc}" style="width:${Math.min(freq,100)}%"></div></div><span style="font-size:10px;color:var(--muted)">${a.presentes}P/${a.ausentes}F</span></td>
       <td>${statusChipAdv(a)}</td>
       <td class="actions-col"><div style="display:flex;gap:4px;flex-wrap:wrap">
@@ -1835,7 +1920,48 @@ function verCarteirinhaAluno(id){
   .badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;margin-top:5px}
   .kids{background:#ede9fe;color:#7c3aed}.teens{background:#cffafe;color:#0891b2}.adultos{background:#dbeafe;color:#1d4ed8}
   .footer{margin-top:12px;padding-top:8px;border-top:1px solid #e5e7eb;font-size:9px;color:#9ca3af;text-align:center}
-  @media print{body{background:white}.card{box-shadow:none}}</style></head>
+  @media print{body{background:white}.card{box-shadow:none}}
+/* ── INDICADOR DE SAVE ── */
+.save-indicator{position:fixed;bottom:70px;right:22px;z-index:9998;display:flex;flex-direction:column;gap:6px;pointer-events:none}
+.save-item{background:var(--navy2);border:1px solid var(--border);border-radius:10px;padding:8px 14px;font-size:12px;font-weight:600;display:flex;align-items:center;gap:8px;opacity:0;transform:translateX(20px);transition:all .3s;box-shadow:var(--shadow)}
+.save-item.show{opacity:1;transform:translateX(0)}
+.save-item.saving{border-left:3px solid var(--gold)}
+.save-item.saved{border-left:3px solid var(--green)}
+.save-item.error{border-left:3px solid var(--red)}
+.save-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.save-dot.saving{background:var(--gold);animation:pulse .6s infinite}
+.save-dot.saved{background:var(--green)}
+.save-dot.error{background:var(--red)}
+
+/* ── SISTEMA DE SELOS ── */
+.selo{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;font-size:14px;font-weight:800;cursor:pointer;transition:transform .15s;flex-shrink:0;border:2px solid rgba(255,255,255,.15)}
+.selo:hover{transform:scale(1.15)}
+.selo-azul{background:rgba(59,130,246,.9);color:#fff;box-shadow:0 2px 8px rgba(59,130,246,.4)}
+.selo-vermelho{background:rgba(239,68,68,.9);color:#fff;box-shadow:0 2px 8px rgba(239,68,68,.4)}
+.selo-verde{background:rgba(34,197,94,.9);color:#fff;box-shadow:0 2px 8px rgba(34,197,94,.4)}
+.selo-amarelo{background:rgba(234,179,8,.9);color:#000;box-shadow:0 2px 8px rgba(234,179,8,.4)}
+.selo-wrap{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.selo-count{font-size:10px;font-weight:800;position:absolute;top:-4px;right:-4px;background:#fff;color:#000;border-radius:50%;width:14px;height:14px;display:flex;align-items:center;justify-content:center;line-height:1}
+.selo-container{position:relative;display:inline-block}
+.selos-bar{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.selo-item{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:48px}
+.selo-item .selo-label{font-size:9px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.3px;text-align:center}
+.selo-item .selo-num{font-size:16px;font-weight:800;font-family:'JetBrains Mono';line-height:1}
+.selo-progress{width:100%;height:4px;background:rgba(255,255,255,.1);border-radius:2px;margin-top:2px}
+.selo-progress-fill{height:100%;border-radius:2px;transition:width .3s}
+.modal-selos{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.modal-selo-card{background:var(--navy);border-radius:10px;padding:12px;text-align:center;cursor:pointer;transition:all .2s;border:2px solid transparent}
+.modal-selo-card:hover{transform:translateY(-2px)}
+.modal-selo-card.azul:hover{border-color:rgba(59,130,246,.5)}
+.modal-selo-card.vermelho:hover{border-color:rgba(239,68,68,.5)}
+.modal-selo-card.verde:hover{border-color:rgba(34,197,94,.5)}
+.modal-selo-card.amarelo:hover{border-color:rgba(234,179,8,.5)}
+.selo-big{font-size:36px;margin-bottom:6px}
+.selo-card-num{font-size:28px;font-weight:800;font-family:'JetBrains Mono'}
+.selo-card-label{font-size:11px;color:var(--muted);margin-top:3px}
+.selo-card-desc{font-size:10px;color:var(--muted);margin-top:4px;line-height:1.4}
+.selo-meta{font-size:10px;margin-top:4px}
+</style></head>
   <body><div class="card">
     <div class="header">
       <div class="foto">${a.foto&&a.foto.startsWith('data:')?`<img src="${a.foto}">`:'<span>'+a.nome.charAt(0)+'</span>'}</div>
@@ -1988,24 +2114,77 @@ function scanFrameCanvas(){
 }
 function processarQRCode(data){
   if(!data)return;
-  let alunoId=null;
-  try{const p=JSON.parse(data);alunoId=p.id||p.ID||null;}
-  catch(e){const m=data.match(/ALU-\d+/i);if(m)alunoId=m[0].toUpperCase();else if(data.trim().length<20)alunoId=data.trim();}
-  if(!alunoId)return;
-  const aluno=db.alunos.find(a=>a.id.toLowerCase()===alunoId.toLowerCase());
-  if(!aluno){mostrarResultadoQR('❓ Aluno não encontrado: '+alunoId,'',null);return;}
+  data = data.trim();
+  let aluno = null;
+
+  // 1. JSON novo: {"id":"ALU-068",...}
+  try{
+    const p=JSON.parse(data);
+    const id=p.id||p.ID||p.aluno_id||null;
+    if(id) aluno=db.alunos.find(a=>a.id.toLowerCase()===id.toLowerCase());
+  }catch(e){}
+
+  // 2. ALU-XXX direto
+  if(!aluno){
+    const m=data.match(/ALU-\d+/i);
+    if(m) aluno=db.alunos.find(a=>a.id.toLowerCase()===m[0].toLowerCase());
+  }
+
+  // 3. URL do b2desk: https://alunosapp.b2desk.com/aluno/068
+  if(!aluno){
+    const m=data.match(/\/(\d+)\/?$/);
+    if(m){
+      const num=parseInt(m[1]);
+      const pad3=String(num).padStart(3,'0');
+      aluno=db.alunos.find(a=>a.id==='ALU-0'+pad3)||db.alunos.find(a=>a.id==='ALU-'+pad3);
+    }
+  }
+
+  // 4. Número de matrícula puro: 068, 68, 7
+  if(!aluno){
+    const nums=data.replace(/\D/g,'');
+    if(nums&&nums.length>=1&&nums.length<=4){
+      const num=parseInt(nums);
+      const pad3=String(num).padStart(3,'0');
+      aluno=db.alunos.find(a=>a.id==='ALU-0'+pad3)||
+            db.alunos.find(a=>a.id==='ALU-'+pad3)||
+            db.alunos.find(a=>a.id==='ALU-00'+num)||
+            db.alunos.find(a=>{
+              // Tenta qualquer ID que termine com o número
+              const idNum=parseInt(a.id.replace(/\D/g,''));
+              return idNum===num;
+            });
+    }
+  }
+
+  // 5. Nome do aluno
+  if(!aluno&&data.length>=3){
+    const nome=data.toLowerCase();
+    aluno=db.alunos.find(a=>
+      a.nome.toLowerCase()===nome||
+      a.nome.toLowerCase().includes(nome)||
+      nome.includes(a.nome.toLowerCase().split(' ')[0])
+    );
+  }
+
+  if(!aluno){
+    mostrarResultadoQR('❓ Não encontrado: '+data,'Verifique o número de matrícula',null);
+    return;
+  }
+
   const jaFeita=db.presencas.find(p=>p.aluno===aluno.id&&p.data===today()&&p.presente==='Sim');
   qrAlunoEncontrado=aluno;
   if(jaFeita){
     mostrarResultadoQR('✅ '+aluno.nome,'Presença já registrada hoje!',aluno);
     const btn=document.getElementById('btn-confirmar-qr');if(btn)btn.style.display='none';
     pararCamera();
-  } else {
-    mostrarResultadoQR('🎯 '+aluno.nome,(aluno.turma||autoTurma(aluno.nasc)||'')+' · '+aluno.faixa+' · '+freqPct(aluno)+'%',aluno);
+  }else{
+    mostrarResultadoQR('🎯 '+aluno.nome,(aluno.turma||autoTurma(aluno.nasc)||'')+' · '+aluno.faixa+' · '+freqPct(aluno)+'% freq.',aluno);
     const btn=document.getElementById('btn-confirmar-qr');if(btn)btn.style.display='flex';
     pararCamera();
   }
 }
+
 function mostrarResultadoQR(nome,info,aluno){
   const box=document.getElementById('qr-result-box');if(!box)return;
   box.innerHTML=`<div style="display:flex;align-items:center;gap:12px;padding:4px 0">${aluno?fotoHTML(aluno,40):'<div style="font-size:28px">👤</div>'}<div><div style="font-size:14px;font-weight:800;color:var(--accent)">${nome}</div><div style="font-size:11px;color:var(--muted)">${info}</div></div></div>`;
@@ -2408,6 +2587,532 @@ renderDashboard = function(){
   renderTopTurma('Adultos','dash-top-adultos',5);
   renderGraficosTurmas(ativos);
 };
+
+
+// ══════════════════════════════════════════════════════════
+//  SISTEMA DE DADOS ROBUSTO — Sheets como banco principal
+// ══════════════════════════════════════════════════════════
+
+// Fila de operações pendentes para retry
+let _pendingOps = [];
+let _syncInProgress = false;
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzbVjDFrbxievnkJCfsRsllahuvyZlqkzEjEsuBifSnq3qr1hxGKcUG2kpyXJnaxElp/exec';
+
+// Garantir que sheetsConfig sempre tem a URL
+if(!sheetsConfig.url) {
+  sheetsConfig.url = SHEETS_URL;
+  localStorage.setItem('gsheets', JSON.stringify(sheetsConfig));
+}
+
+// ── SALVAR LINHA NO SHEETS (com retry automático) ──
+async function salvarNoSheets(sheetName, row) {
+  const url = sheetsConfig.url || SHEETS_URL;
+  if(!url) return;
+  const op = {sheetName, row, tentativas: 0};
+  try {
+    const r = await fetch(url, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({action:'saveRow', sheet:sheetName, row})
+    });
+    const d = await r.json();
+    if(!d.ok) throw new Error(d.error);
+    // Sucesso — remover da fila se estava lá
+    _pendingOps = _pendingOps.filter(p=>p!==op);
+    return true;
+  } catch(e) {
+    // Falhou — guardar na fila para tentar depois
+    op.tentativas++;
+    if(op.tentativas < 5) {
+      _pendingOps.push(op);
+      localStorage.setItem('_pendingOps', JSON.stringify(_pendingOps.slice(0,200)));
+    }
+    return false;
+  }
+}
+
+// Processar fila de operações pendentes
+async function processarFila() {
+  if(_syncInProgress || !_pendingOps.length) return;
+  _syncInProgress = true;
+  const url = sheetsConfig.url || SHEETS_URL;
+  for(let i=_pendingOps.length-1; i>=0; i--) {
+    const op = _pendingOps[i];
+    try {
+      const r = await fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({action:'saveRow', sheet:op.sheetName, row:op.row})});
+      const d = await r.json();
+      if(d.ok) _pendingOps.splice(i, 1);
+    } catch(e) {}
+  }
+  localStorage.setItem('_pendingOps', JSON.stringify(_pendingOps));
+  _syncInProgress = false;
+}
+
+// Override saveRowToSheets com versão robusta
+saveRowToSheets = salvarNoSheets;
+
+// ── CARREGAR DO SHEETS ──
+async function carregarDoSheets() {
+  const url = sheetsConfig.url || SHEETS_URL;
+  if(!url) return false;
+  setSyncStatus('syncing', 'Carregando dados...');
+  try {
+    const r = await fetch(url + '?action=getData', {mode:'cors'});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const d = await r.json();
+    if(!d.ok) throw new Error(d.error||'Erro desconhecido');
+    const data = d.data || {};
+    let alterou = false;
+    // Aplicar dados do Sheets no banco local
+    ['presencas','graduacoes','notas','ocorrencias','agenda','patrocinadores','historico','voluntarios'].forEach(k=>{
+      if(data[k]&&data[k].length) { db[k]=data[k]; alterou=true; }
+    });
+    if(data.wppLog&&data.wppLog.length) { db.wppLog=data.wppLog.slice(0,100); alterou=true; }
+    if(data.alunos_updates&&data.alunos_updates.length) {
+      data.alunos_updates.forEach(u=>{
+        const a=db.alunos.find(x=>x.id===u.id);
+        if(a){
+          if(u.faixa)a.faixa=u.faixa;
+          if(u.status)a.status=u.status;
+          if(u.turma)a.turma=u.turma;
+          a.comportamento=parseFloat(u.comportamento)||0;
+          a.disciplina=parseFloat(u.disciplina)||0;
+          a.participacao=parseFloat(u.participacao)||0;
+          a.evolucao=parseFloat(u.evolucao)||0;
+          a.score=parseFloat(u.score)||0;
+        }
+      });
+      alterou=true;
+    }
+    if(alterou) {
+      saveDB(); // atualiza cache local
+      recalc();
+      const now = new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+      sheetsConfig.lastSync = now;
+      localStorage.setItem('gsheets', JSON.stringify(sheetsConfig));
+      setSyncStatus('ok', 'Dados atualizados', now);
+    } else {
+      setSyncStatus('ok', 'Conectado', sheetsConfig.lastSync||'');
+    }
+    return true;
+  } catch(e) {
+    setSyncStatus('err', 'Offline — usando dados locais');
+    return false;
+  }
+}
+
+// Override syncAllToSheets para ser mais robusto (enviar tabela por tabela)
+syncAllToSheets = async function() {
+  const url = sheetsConfig.url || SHEETS_URL;
+  if(!url) { toast('URL não configurada','warn'); return; }
+  setSyncStatus('syncing', 'Sincronizando...');
+  toast('☁️ Enviando dados...','info');
+  let ok=0, fail=0;
+  const tabelas = [
+    ['presencas', db.presencas],
+    ['graduacoes', db.graduacoes],
+    ['notas', db.notas],
+    ['ocorrencias', db.ocorrencias],
+    ['agenda', db.agenda],
+    ['patrocinadores', db.patrocinadores],
+    ['historico', db.historico],
+    ['voluntarios', db.voluntarios],
+    ['alunos_updates', db.alunos.map(a=>({id:a.id,faixa:a.faixa,status:a.status,turma:a.turma||'',comportamento:a.comportamento||0,disciplina:a.disciplina||0,participacao:a.participacao||0,evolucao:a.evolucao||0,score:a.score||0}))]
+  ];
+  for(const [nome, rows] of tabelas) {
+    if(!rows||!rows.length) continue;
+    try {
+      const r = await fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({action:'syncTable', sheet:nome, rows})});
+      const d = await r.json();
+      if(d.ok) ok++; else fail++;
+    } catch(e) { fail++; }
+    await new Promise(res=>setTimeout(res,300)); // pequena pausa entre chamadas
+  }
+  const now = new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  sheetsConfig.lastSync = now;
+  localStorage.setItem('gsheets', JSON.stringify(sheetsConfig));
+  if(fail===0) {
+    setSyncStatus('ok', 'Sincronizado!', now);
+    toast('✅ Todos os dados sincronizados!','ok');
+    addNotif('☁️ Sincronização completa','Dados salvos no Google Sheets','ok');
+  } else {
+    setSyncStatus('ok', `${ok} tabelas ok, ${fail} com erro`, now);
+    toast(`⚠️ ${ok} tabelas sincronizadas, ${fail} com erro`,'warn');
+  }
+};
+
+// ── AUTO-CARREGAR E AUTO-PROCESSAR FILA ──
+// Carregar dados pendentes da fila
+try {
+  const pending = JSON.parse(localStorage.getItem('_pendingOps')||'[]');
+  if(pending.length) {
+    _pendingOps = pending;
+    setTimeout(processarFila, 3000);
+  }
+} catch(e) {}
+
+// Recarregar do Sheets ao abrir
+setTimeout(async function(){
+  const loaded = await carregarDoSheets();
+  if(loaded) {
+    renderPage(currentPage);
+    // Processar operações pendentes
+    setTimeout(processarFila, 1000);
+  }
+}, 1000);
+
+// Auto-sincronizar a cada 5 minutos
+setInterval(async function(){
+  await carregarDoSheets();
+  await processarFila();
+}, 5 * 60 * 1000);
+
+
+// ══════════════════════════════════════════════════════════
+//  INDICADOR VISUAL DE SAVE EM TEMPO REAL
+// ══════════════════════════════════════════════════════════
+let _saveCounter = 0;
+
+function mostrarSave(msg, state='saving'){
+  const box = document.getElementById('save-indicator');
+  if(!box) return;
+  const id = 'save-' + (++_saveCounter);
+  const el = document.createElement('div');
+  el.id = id;
+  el.className = 'save-item ' + state;
+  const icon = state==='saving'?'⏳':state==='saved'?'✅':'❌';
+  el.innerHTML = `<div class="save-dot ${state}"></div>${icon} ${msg}`;
+  box.appendChild(el);
+  setTimeout(()=>el.classList.add('show'), 10);
+  if(state!=='saving'){
+    setTimeout(()=>{el.classList.remove('show');setTimeout(()=>el.remove(),300);}, 3000);
+  }
+  return id;
+}
+
+function atualizarSave(id, msg, state){
+  const el = document.getElementById(id);
+  if(!el) return;
+  const icon = state==='saved'?'✅':'❌';
+  el.className = 'save-item show ' + state;
+  el.innerHTML = `<div class="save-dot ${state}"></div>${icon} ${msg}`;
+  setTimeout(()=>{el.classList.remove('show');setTimeout(()=>el.remove(),300);}, 2500);
+}
+
+// Override salvarNoSheets com indicador visual
+const _origSalvarNoSheets = salvarNoSheets || saveRowToSheets;
+saveRowToSheets = async function(sheetName, row){
+  const labels = {
+    presencas: '📋 Presença',
+    graduacoes: '🎖️ Graduação',
+    notas: '📝 Nota',
+    ocorrencias: '⚠️ Ocorrência',
+    alunos_updates: '👤 Dados aluno',
+    agenda: '📅 Agenda',
+    patrocinadores: '🤝 Patrocinador',
+    historico: '💰 Histórico',
+    voluntarios: '🙋 Voluntário',
+    wppLog: '💬 WhatsApp',
+  };
+  const label = labels[sheetName] || sheetName;
+  const saveId = mostrarSave(label + ' — salvando...', 'saving');
+  const url = sheetsConfig.url || SHEETS_URL;
+  if(!url){
+    atualizarSave(saveId, label + ' — sem conexão', 'error');
+    return;
+  }
+  try{
+    const r = await fetch(url, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({action:'saveRow', sheet:sheetName, row})
+    });
+    const d = await r.json();
+    if(d.ok){
+      atualizarSave(saveId, label + ' — salvo ✔', 'saved');
+    } else {
+      atualizarSave(saveId, label + ' — erro: '+d.error, 'error');
+      // Add to retry queue
+      _pendingOps.push({sheetName, row, tentativas:1});
+      localStorage.setItem('_pendingOps', JSON.stringify(_pendingOps.slice(0,200)));
+    }
+  } catch(e){
+    atualizarSave(saveId, label + ' — offline (retry)', 'error');
+    _pendingOps.push({sheetName, row, tentativas:1});
+    localStorage.setItem('_pendingOps', JSON.stringify(_pendingOps.slice(0,200)));
+  }
+};
+
+// Mostrar status de carregamento ao abrir
+const _origCarregarDoSheets = carregarDoSheets;
+carregarDoSheets = async function(){
+  const saveId = mostrarSave('☁️ Carregando dados...', 'saving');
+  const ok = await _origCarregarDoSheets();
+  if(ok){
+    atualizarSave(saveId, '☁️ Dados atualizados ✔', 'saved');
+  } else {
+    atualizarSave(saveId, '☁️ Usando dados locais', 'error');
+  }
+  return ok;
+};
+
+// Mostrar status ao sincronizar tudo
+const _origSyncAll = syncAllToSheets;
+syncAllToSheets = async function(){
+  const saveId = mostrarSave('☁️ Sincronizando tudo...', 'saving');
+  await _origSyncAll();
+  atualizarSave(saveId, '☁️ Sincronização completa ✔', 'saved');
+};
+
+
+// ══════════════════════════════════════════════════════════
+//  SISTEMA DE SELOS
+// ══════════════════════════════════════════════════════════
+const SELOS_CONFIG = [
+  {key:'seloAzul',   emoji:'🔵', cor:'#3b82f6', classe:'azul',     label:'Presença',      desc:'Frequência e comprometimento',    meta:30},
+  {key:'seloVermelho',emoji:'🔴',cor:'#ef4444', classe:'vermelho',  label:'Comportamento', desc:'Conduta dentro e fora do tatame', meta:30},
+  {key:'seloVerde',  emoji:'🟢', cor:'#22c55e', classe:'verde',     label:'Cooperação',    desc:'Ajuda e apoio aos colegas',       meta:30},
+  {key:'seloAmarelo',emoji:'🟡', cor:'#eab308', classe:'amarelo',   label:'Pontualidade',  desc:'Chega no horário',                meta:30},
+];
+
+function getSelosAluno(a){
+  return {
+    seloAzul:    parseInt(a.seloAzul)||0,
+    seloVermelho:parseInt(a.seloVermelho)||0,
+    seloVerde:   parseInt(a.seloVerde)||0,
+    seloAmarelo: parseInt(a.seloAmarelo)||0,
+  };
+}
+
+function selosHTML(a, small=false){
+  const s = getSelosAluno(a);
+  const size = small ? 22 : 28;
+  return SELOS_CONFIG.map(c=>{
+    const num = s[c.key]||0;
+    const pct = Math.min(num/c.meta*100,100);
+    const atingiu = num>=c.meta;
+    return`<div class="selo-container" title="${c.label}: ${num}/${c.meta}${atingiu?' ✅ META ATINGIDA!':''}">
+      <div class="selo selo-${c.classe}" style="width:${size}px;height:${size}px;font-size:${small?11:13}px" onclick="abrirSelos('${a.id}')">${num}</div>
+      ${atingiu?`<div style="position:absolute;top:-4px;right:-4px;font-size:10px">⭐</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+function abrirSelos(id){
+  const a = db.alunos.find(x=>x.id===id);
+  if(!a) return;
+  const s = getSelosAluno(a);
+  document.getElementById('selos-modal-foto').innerHTML = fotoHTML(a, 44);
+  document.getElementById('selos-modal-nome').textContent = a.nome;
+  document.getElementById('selos-modal-info').textContent = a.id + ' · ' + (a.turma||autoTurma(a.nasc)||'') + ' · ' + a.faixa;
+  document.getElementById('selos-modal-foto').dataset.alunoId = id;
+
+  document.getElementById('selos-modal-grid').innerHTML = SELOS_CONFIG.map(c=>{
+    const num = s[c.key]||0;
+    const pct = Math.min(num/c.meta*100,100);
+    const atingiu = num>=c.meta;
+    return`<div class="modal-selo-card ${c.classe}" onclick="adicionarSelo('${id}','${c.key}','${c.label}')">
+      <div class="selo-big">${c.emoji}</div>
+      <div class="selo-card-num" style="color:${c.cor}">${num}</div>
+      <div class="selo-card-label" style="color:${c.cor};font-weight:700">${c.label}</div>
+      <div class="selo-card-desc">${c.desc}</div>
+      <div style="margin-top:8px">
+        <div style="background:rgba(255,255,255,.1);border-radius:3px;height:5px;width:100%">
+          <div style="height:100%;border-radius:3px;background:${c.cor};width:${pct}%;transition:width .3s"></div>
+        </div>
+        <div style="font-size:10px;color:var(--muted);margin-top:3px">${num}/${c.meta} ${atingiu?'✅ META!':''}</div>
+      </div>
+      <div style="margin-top:8px;display:flex;gap:4px;justify-content:center">
+        <button class="btn btn-sm" style="background:rgba(255,255,255,.08);color:var(--white);padding:4px 10px" onclick="event.stopPropagation();adicionarSelo('${id}','${c.key}','${c.label}')">+1</button>
+        <button class="btn btn-sm" style="background:rgba(255,255,255,.05);color:var(--muted);padding:4px 8px" onclick="event.stopPropagation();removerSelo('${id}','${c.key}')">-1</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('m-selos').classList.add('open');
+}
+
+function adicionarSelo(id, seloKey, seloLabel){
+  const a = db.alunos.find(x=>x.id===id);
+  if(!a) return;
+  if(!a[seloKey]) a[seloKey] = 0;
+  a[seloKey]++;
+  const num = a[seloKey];
+  const cfg = SELOS_CONFIG.find(c=>c.key===seloKey);
+  saveDB();
+  // Salvar no Sheets
+  saveRowToSheets('alunos_updates',{id:a.id,faixa:a.faixa,status:a.status,turma:a.turma||'',comportamento:a.comportamento||0,disciplina:a.disciplina||0,participacao:a.participacao||0,evolucao:a.evolucao||0,score:a.score||0,seloAzul:a.seloAzul||0,seloVermelho:a.seloVermelho||0,seloVerde:a.seloVerde||0,seloAmarelo:a.seloAmarelo||0});
+  toast(`${cfg.emoji} +1 ${seloLabel} para ${a.nome.split(' ')[0]}! (${num}/${cfg.meta})`,'ok');
+  // Verificar meta
+  if(num===cfg.meta){
+    addNotif(`🏆 Meta atingida!`,`${a.nome} atingiu ${cfg.meta} selos de ${cfg.label}!`,'ok');
+    toast(`🏆 PARABÉNS! ${a.nome.split(' ')[0]} atingiu a meta de ${cfg.meta} selos de ${cfg.label}!`,'ok');
+  }
+  // Atualizar modal
+  abrirSelos(id);
+  renderAlunos();
+}
+
+function removerSelo(id, seloKey){
+  const a = db.alunos.find(x=>x.id===id);
+  if(!a||!a[seloKey]||a[seloKey]<=0) return;
+  a[seloKey]--;
+  saveDB();
+  abrirSelos(id);
+  renderAlunos();
+}
+
+function resetarSelos(){
+  const id = document.getElementById('selos-modal-foto').dataset.alunoId;
+  const a = db.alunos.find(x=>x.id===id);
+  if(!a) return;
+  if(!confirm('Zerar todos os selos de '+a.nome+'?')) return;
+  SELOS_CONFIG.forEach(c=>{ a[c.key]=0; });
+  saveDB();
+  abrirSelos(id);
+  renderAlunos();
+  toast('Selos zerados','warn');
+}
+
+// Verificar metas de selos ao iniciar
+function verificarMetasSelos(){
+  db.alunos.filter(a=>a.status==='Ativo').forEach(a=>{
+    SELOS_CONFIG.forEach(c=>{
+      if((a[c.key]||0)>=c.meta){
+        // Já atingiu - notificar se não notificou ainda
+        const notifKey = 'notif_selo_'+a.id+'_'+c.key;
+        if(!localStorage.getItem(notifKey)){
+          addNotif(`🏆 ${a.nome.split(' ')[0]} — ${c.label}`,`Meta de ${c.meta} selos atingida!`,'ok');
+          localStorage.setItem(notifKey,'1');
+        }
+      }
+    });
+  });
+}
+
+// ══════════════════════════════════════════════════════════
+//  PATCH alunos_updates para incluir selos
+// ══════════════════════════════════════════════════════════
+// Update alunos_updates sheet config to include selos
+const _origSalvarEdicaoAluno = salvarEdicaoAluno;
+salvarEdicaoAluno = function(){
+  _origSalvarEdicaoAluno();
+  // Sync selos too
+  const id = document.getElementById('ed-id').value;
+  const a = db.alunos.find(x=>x.id===id);
+  if(a) saveRowToSheets('alunos_updates',{id:a.id,faixa:a.faixa,status:a.status,turma:a.turma||'',comportamento:a.comportamento||0,disciplina:a.disciplina||0,participacao:a.participacao||0,evolucao:a.evolucao||0,score:a.score||0,seloAzul:a.seloAzul||0,seloVermelho:a.seloVermelho||0,seloVerde:a.seloVerde||0,seloAmarelo:a.seloAmarelo||0});
+};
+
+setTimeout(verificarMetasSelos, 2000);
+
+
+// ══════════════════════════════════════════════════════════
+//  SISTEMA DE GRAUS
+// ══════════════════════════════════════════════════════════
+// Até 14 anos: 10 aulas = 1 grau, 4 graus = troca faixa
+// 15+ anos:    30 aulas = 1 grau, 4 graus = troca faixa
+
+function aulasPorGrau(a){
+  const idade = parseInt(calcIdade(a.nasc))||0;
+  return idade>=15 ? 30 : 10;
+}
+
+function calcGraus(a){
+  const apg = aulasPorGrau(a);
+  const grauAtual = Math.floor(a.presentes / apg); // graus acumulados totais
+  const grauNaFaixa = grauAtual % 4; // 0,1,2,3 dentro da faixa atual
+  const aulasNoGrauAtual = a.presentes % apg; // aulas no grau atual
+  const pctGrau = Math.round(aulasNoGrauAtual / apg * 100);
+  const prontoNovoGrau = aulasNoGrauAtual === 0 && a.presentes > 0; // acabou de completar
+  const prontoTrocarFaixa = grauNaFaixa === 0 && a.presentes > 0 && a.presentes % (apg*4) === 0;
+  return {apg, grauAtual, grauNaFaixa, aulasNoGrauAtual, pctGrau, prontoNovoGrau, prontoTrocarFaixa};
+}
+
+function grauHTML(a){
+  const {apg, grauNaFaixa, aulasNoGrauAtual, pctGrau, prontoTrocarFaixa} = calcGraus(a);
+  const dots = Array.from({length:4},(_,i)=>`<div style="width:10px;height:10px;border-radius:50%;background:${i<grauNaFaixa?beltColor(a.faixa):'rgba(255,255,255,.15)'};border:1px solid rgba(255,255,255,.2)"></div>`).join('');
+  return`<div style="display:flex;flex-direction:column;gap:3px">
+    <div style="display:flex;gap:3px;align-items:center">${dots}<span style="font-size:10px;color:var(--muted);margin-left:3px">${grauNaFaixa}/4</span>${prontoTrocarFaixa?'<span style="font-size:10px;color:var(--gold)">🎖️</span>':''}</div>
+    <div style="background:rgba(255,255,255,.08);border-radius:3px;height:3px;width:60px"><div style="height:100%;border-radius:3px;background:${beltColor(a.faixa)};width:${pctGrau}%"></div></div>
+    <div style="font-size:9px;color:var(--muted)">${aulasNoGrauAtual}/${apg} aulas</div>
+  </div>`;
+}
+
+// Verificar alertas de graus ao iniciar e após cada presença
+function verificarGraus(){
+  db.alunos.filter(a=>a.status==='Ativo'&&a.presentes>0).forEach(a=>{
+    const {apg, grauNaFaixa, prontoTrocarFaixa, grauAtual} = calcGraus(a);
+    const idade = parseInt(calcIdade(a.nasc))||0;
+    // Alerta: ganhou novo grau
+    const novoGrauKey = 'grau_'+a.id+'_'+grauAtual;
+    if(a.presentes>0 && a.presentes%apg===0 && !localStorage.getItem(novoGrauKey)){
+      localStorage.setItem(novoGrauKey,'1');
+      addNotif(`⭐ Novo grau!`,`${a.nome.split(' ')[0]} ganhou o ${grauNaFaixa}º grau da faixa ${a.faixa}!`,'ok');
+      toast(`⭐ ${a.nome.split(' ')[0]} ganhou novo grau! (${grauNaFaixa}/4 da faixa ${a.faixa})`,'ok');
+    }
+    // Alerta: pronto para trocar faixa (4 graus completos)
+    if(prontoTrocarFaixa){
+      const trocarKey = 'trocar_'+a.id+'_'+a.presentes;
+      if(!localStorage.getItem(trocarKey)){
+        localStorage.setItem(trocarKey,'1');
+        addNotif(`🎖️ Pronto para trocar faixa!`,`${a.nome.split(' ')[0]} completou 4 graus da faixa ${a.faixa}!`,'ok');
+      }
+    }
+  });
+}
+
+// Mostrar graus na ficha do aluno — injetar após beltChip
+// Patch verFicha para incluir graus
+const _origVerFichaGrau = verFicha;
+verFicha = function(id){
+  _origVerFichaGrau(id);
+  // Inject graus after faixa info
+  const a = db.alunos.find(x=>x.id===id);
+  if(!a) return;
+  const {apg, grauNaFaixa, aulasNoGrauAtual, pctGrau, prontoTrocarFaixa} = calcGraus(a);
+  const idade = parseInt(calcIdade(a.nasc))||0;
+  // Find ficha content and inject grau info
+  const fichaEl = document.getElementById('ficha-content');
+  if(!fichaEl) return;
+  const grauSection = `
+    <div style="background:rgba(79,127,250,.06);border:1px solid rgba(79,127,250,.15);border-radius:10px;padding:14px;margin-bottom:14px">
+      <div style="font-size:10px;color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">⭐ Sistema de Graus</div>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px">
+        <div style="background:var(--navy);border-radius:8px;padding:10px;text-align:center">
+          <div style="font-size:10px;color:var(--muted);margin-bottom:6px">Graus na faixa atual</div>
+          <div style="display:flex;justify-content:center;gap:5px;margin-bottom:6px">
+            ${Array.from({length:4},(_,i)=>`<div style="width:14px;height:14px;border-radius:50%;background:${i<grauNaFaixa?beltColor(a.faixa):'rgba(255,255,255,.1)'};border:1px solid rgba(255,255,255,.2)"></div>`).join('')}
+          </div>
+          <div style="font-size:18px;font-weight:800;color:var(--accent)">${grauNaFaixa}/4</div>
+          ${prontoTrocarFaixa?`<div style="font-size:11px;color:var(--gold);margin-top:4px">🎖️ Pronto para trocar faixa!</div>`:''}
+        </div>
+        <div style="background:var(--navy);border-radius:8px;padding:10px;text-align:center">
+          <div style="font-size:10px;color:var(--muted);margin-bottom:6px">Próximo grau</div>
+          <div style="background:rgba(255,255,255,.08);border-radius:4px;height:8px;margin:6px 0">
+            <div style="height:100%;border-radius:4px;background:var(--accent);width:${pctGrau}%"></div>
+          </div>
+          <div style="font-size:14px;font-weight:800">${aulasNoGrauAtual}/${apg}</div>
+          <div style="font-size:10px;color:var(--muted)">${apg-aulasNoGrauAtual} aulas para o próximo grau</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:3px">${idade}a → ${apg} aulas/grau</div>
+        </div>
+      </div>
+    </div>`;
+  // Insert before selos section
+  const selosIdx = fichaEl.innerHTML.indexOf('🏅 Selos de Mérito');
+  if(selosIdx > 0){
+    fichaEl.innerHTML = fichaEl.innerHTML.slice(0,selosIdx-100) + grauSection + fichaEl.innerHTML.slice(selosIdx-100);
+  }
+};
+
+// Run grau check after presencas
+const _origMarcarPGrau = marcarP;
+marcarP = function(id, val){
+  _origMarcarPGrau(id, val);
+  if(val==='Sim') setTimeout(()=>verificarGraus(), 500);
+};
+
+// Run on init
+setTimeout(verificarGraus, 2500);
 
 </script>
 </body>
