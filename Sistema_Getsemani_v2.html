@@ -2776,8 +2776,8 @@ function atualizarSave(id, msg, state){
   setTimeout(()=>{el.classList.remove('show');setTimeout(()=>el.remove(),300);}, 2500);
 }
 
-// Override salvarNoSheets com indicador visual
-const _origSalvarNoSheets = salvarNoSheets || saveRowToSheets;
+// Override saveRowToSheets com indicador visual
+const _origSalvarNoSheets = saveRowToSheets || saveRowToSheets;
 saveRowToSheets = async function(sheetName, row){
   const labels = {
     presencas: '📋 Presença',
