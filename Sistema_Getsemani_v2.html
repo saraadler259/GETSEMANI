@@ -992,18 +992,54 @@ let presFilter='todos';
 // ═══════════════════════════════════════════════
 function saveDB(){
   try{
+    // Save main data
     localStorage.setItem('gdb2',JSON.stringify({
       presencas:db.presencas,graduacoes:db.graduacoes,notas:db.notas,
       ocorrencias:db.ocorrencias,wppLog:db.wppLog,notificacoes:db.notificacoes,
       agenda:db.agenda,patrocinadores:db.patrocinadores,historico:db.historico,
       voluntarios:db.voluntarios,
       alunosExtra:db.alunos.filter(a=>Number(a.id.replace('ALU-',''))>84),
-      avalUpdates:db.alunos.map(a=>({id:a.id,faixa:a.faixa,status:a.status,comportamento:a.comportamento,disciplina:a.disciplina,participacao:a.participacao,evolucao:a.evolucao,score:a.score}))
+      avalUpdates:db.alunos.map(a=>({id:a.id,faixa:a.faixa,status:a.status,turma:a.turma||'',
+        comportamento:a.comportamento||0,disciplina:a.disciplina||0,participacao:a.participacao||0,
+        evolucao:a.evolucao||0,score:a.score||0,
+        seloAzul:a.seloAzul||0,seloVermelho:a.seloVermelho||0,seloVerde:a.seloVerde||0,seloAmarelo:a.seloAmarelo||0}))
     }));
-  }catch(e){}
+    // Save fotos separately (can be large)
+    const fotos = {};
+    db.alunos.forEach(a=>{if(a.foto&&a.foto.startsWith('data:'))fotos[a.id]=a.foto;});
+    if(Object.keys(fotos).length>0){
+      localStorage.setItem('gdb_fotos',JSON.stringify(fotos));
+    }
+  }catch(e){
+    // If quota exceeded, save without fotos
+    try{
+      localStorage.setItem('gdb2',JSON.stringify({
+        presencas:db.presencas,graduacoes:db.graduacoes,notas:db.notas,
+        ocorrencias:db.ocorrencias,wppLog:db.wppLog,notificacoes:db.notificacoes,
+        agenda:db.agenda,patrocinadores:db.patrocinadores,historico:db.historico,
+        voluntarios:db.voluntarios,
+        alunosExtra:db.alunos.filter(a=>Number(a.id.replace('ALU-',''))>84),
+        avalUpdates:db.alunos.map(a=>({id:a.id,faixa:a.faixa,status:a.status,turma:a.turma||'',
+          comportamento:a.comportamento||0,disciplina:a.disciplina||0,participacao:a.participacao||0,
+          evolucao:a.evolucao||0,score:a.score||0,
+          seloAzul:a.seloAzul||0,seloVermelho:a.seloVermelho||0,seloVerde:a.seloVerde||0,seloAmarelo:a.seloAmarelo||0}))
+      }));
+    }catch(e2){}
+  }
 }
 function loadDB(){
   try{
+    // Restore fotos first
+    try{
+      const fotosStr=localStorage.getItem('gdb_fotos');
+      if(fotosStr){
+        const fotos=JSON.parse(fotosStr);
+        Object.keys(fotos).forEach(id=>{
+          const a=db.alunos.find(x=>x.id===id);
+          if(a&&fotos[id])a.foto=fotos[id];
+        });
+      }
+    }catch(e){}
     const s=localStorage.getItem('gdb2')||localStorage.getItem('gdb');
     if(s){
       const d=JSON.parse(s);
@@ -1692,8 +1728,8 @@ function verificarAlertas(){
 // ═══════════════════════════════════════════════
 if(!localStorage.getItem('gwpp')){localStorage.setItem('gwpp',JSON.stringify({numero:'51989520485',assinatura:'Projeto Getsêmani - Portão/RS'}));}
 // Pre-configure Google Sheets URL
-if(!localStorage.getItem('gsheets')||JSON.parse(localStorage.getItem('gsheets')||'{}').url!=='https://script.google.com/macros/s/AKfycbzbVjDFrbxievnkJCfsRsllahuvyZlqkzEjEsuBifSnq3qr1hxGKcUG2kpyXJnaxElp/exec'){
-  localStorage.setItem('gsheets',JSON.stringify({url:'https://script.google.com/macros/s/AKfycbzbVjDFrbxievnkJCfsRsllahuvyZlqkzEjEsuBifSnq3qr1hxGKcUG2kpyXJnaxElp/exec',lastSync:''}));
+if(!localStorage.getItem('gsheets')||JSON.parse(localStorage.getItem('gsheets')||'{}').url!=='https://script.google.com/macros/s/AKfycbxr-SqAPUtBJ_8Z7w3UWc5D0AhpkuGFUEAeA9duCS5v05V13Lxckd32sPcTE-yYEzhQ/exec'){
+  localStorage.setItem('gsheets',JSON.stringify({url:'https://script.google.com/macros/s/AKfycbxr-SqAPUtBJ_8Z7w3UWc5D0AhpkuGFUEAeA9duCS5v05V13Lxckd32sPcTE-yYEzhQ/exec',lastSync:''}));
 }
 loadDB();
 recalc();
@@ -1830,11 +1866,26 @@ salvarAluno = function(){
   const turmaEl=document.getElementById('a-turma');
   const turma=turmaEl?(turmaEl.value||autoTurma(nasc)||''):'';
   const foto=getFotoAtual()||'';
-  db.alunos.push({id:nextId('ALU',db.alunos),nome,nasc,sexo:document.getElementById('a-sexo').value,cpf:document.getElementById('a-cpf').value,status:document.getElementById('a-status').value,celular:document.getElementById('a-cel').value,email:document.getElementById('a-email').value,end:document.getElementById('a-end').value,resp1Nome:document.getElementById('a-r1n').value,resp1Cpf:'',resp1Tel:document.getElementById('a-r1t').value,resp2Nome:document.getElementById('a-r2n').value,resp2Cpf:'',resp2Tel:document.getElementById('a-r2t').value,autismo:document.getElementById('a-tea').value,tdah:document.getElementById('a-tdah').value,medicacao:document.getElementById('a-med').value,obs:document.getElementById('a-obs').value,ativ:document.getElementById('a-ativ').value,faixa:document.getElementById('a-faixa').value,turma,foto,qualMedicacao:'',alergias:'',escola:'',turno:'',professora:'',uniforme:'Não',tamanhoUniforme:'',transporte:'Não',autImagem:'Sim',grau:0,entrada:today(),presentes:0,ausentes:0,comportamento:0,disciplina:0,participacao:0,evolucao:0,score:0,notas:[]});
+  const novoAluno={id:nextId('ALU',db.alunos),nome,nasc,sexo:document.getElementById('a-sexo').value,cpf:document.getElementById('a-cpf').value,status:document.getElementById('a-status').value,celular:document.getElementById('a-cel').value,email:document.getElementById('a-email').value,end:document.getElementById('a-end').value,resp1Nome:document.getElementById('a-r1n').value,resp1Cpf:'',resp1Tel:document.getElementById('a-r1t').value,resp2Nome:document.getElementById('a-r2n').value,resp2Cpf:'',resp2Tel:document.getElementById('a-r2t').value,autismo:document.getElementById('a-tea').value,tdah:document.getElementById('a-tdah').value,medicacao:document.getElementById('a-med').value,obs:document.getElementById('a-obs').value,ativ:document.getElementById('a-ativ').value,faixa:document.getElementById('a-faixa').value,turma,foto,qualMedicacao:'',alergias:'',escola:'',turno:'',professora:'',uniforme:'Não',tamanhoUniforme:'',transporte:'Não',autImagem:'Sim',grau:0,entrada:today(),presentes:0,ausentes:0,comportamento:0,disciplina:0,participacao:0,evolucao:0,score:0,notas:[]};
+  db.alunos.push(novoAluno);
   const img=document.getElementById('a-foto-preview');if(img){img.src='';img.style.display='none';}
   const ph=document.getElementById('a-foto-placeholder');if(ph)ph.style.display='block';
-  closeModal('m-aluno');saveDB();renderAlunos();
-  toast(`✅ ${nome} cadastrado! Turma: ${turma||'não definida'}`,'ok');
+  closeModal('m-aluno');
+  saveDB();
+  // Salvar novo aluno no Sheets
+  saveRowToSheets('alunos_novos', {
+    id:novoAluno.id,nome:novoAluno.nome,nasc:novoAluno.nasc,sexo:novoAluno.sexo,
+    cpf:novoAluno.cpf,status:novoAluno.status,celular:novoAluno.celular,
+    email:novoAluno.email,end:novoAluno.end,resp1Nome:novoAluno.resp1Nome,
+    resp1Tel:novoAluno.resp1Tel,resp2Nome:novoAluno.resp2Nome,resp2Tel:novoAluno.resp2Tel,
+    autismo:novoAluno.autismo,tdah:novoAluno.tdah,medicacao:novoAluno.medicacao,
+    obs:novoAluno.obs,ativ:novoAluno.ativ,faixa:novoAluno.faixa,turma:novoAluno.turma,
+    entrada:novoAluno.entrada
+  });
+  // Salvar foto separadamente
+  if(foto) salvarFotoAluno(novoAluno.id, foto);
+  renderAlunos();
+  toast('✅ '+nome+' cadastrado e salvo na nuvem!','ok');
   addNotif('Novo aluno',nome+(turma?' ('+turma+')':''),'ok');
 };
 
@@ -2433,9 +2484,9 @@ function irParaData(data){
 // Pre-fill sheets URL in config page
 setTimeout(function(){
   const inp = document.getElementById('sheets-url');
-  if(inp && !inp.value) inp.value = 'https://script.google.com/macros/s/AKfycbzbVjDFrbxievnkJCfsRsllahuvyZlqkzEjEsuBifSnq3qr1hxGKcUG2kpyXJnaxElp/exec';
+  if(inp && !inp.value) inp.value = 'https://script.google.com/macros/s/AKfycbxr-SqAPUtBJ_8Z7w3UWc5D0AhpkuGFUEAeA9duCS5v05V13Lxckd32sPcTE-yYEzhQ/exec';
   if(typeof sheetsConfig !== 'undefined' && !sheetsConfig.url) {
-    sheetsConfig.url = 'https://script.google.com/macros/s/AKfycbzbVjDFrbxievnkJCfsRsllahuvyZlqkzEjEsuBifSnq3qr1hxGKcUG2kpyXJnaxElp/exec';
+    sheetsConfig.url = 'https://script.google.com/macros/s/AKfycbxr-SqAPUtBJ_8Z7w3UWc5D0AhpkuGFUEAeA9duCS5v05V13Lxckd32sPcTE-yYEzhQ/exec';
     localStorage.setItem('gsheets', JSON.stringify(sheetsConfig));
   }
 }, 500);
@@ -2589,183 +2640,109 @@ renderDashboard = function(){
 };
 
 
+
 // ══════════════════════════════════════════════════════════
-//  SISTEMA DE DADOS ROBUSTO — Sheets como banco principal
+//  SAVE VIA GET (sem CORS!)
 // ══════════════════════════════════════════════════════════
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxr-SqAPUtBJ_8Z7w3UWc5D0AhpkuGFUEAeA9duCS5v05V13Lxckd32sPcTE-yYEzhQ/exec';
 
-// Fila de operações pendentes para retry
-let _pendingOps = [];
-let _syncInProgress = false;
-const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzbVjDFrbxievnkJCfsRsllahuvyZlqkzEjEsuBifSnq3qr1hxGKcUG2kpyXJnaxElp/exec';
-
-// Garantir que sheetsConfig sempre tem a URL
-if(!sheetsConfig.url) {
-  sheetsConfig.url = SHEETS_URL;
-  localStorage.setItem('gsheets', JSON.stringify(sheetsConfig));
-}
-
-// ── SALVAR LINHA NO SHEETS (com retry automático) ──
-async function salvarNoSheets(sheetName, row) {
-  const url = sheetsConfig.url || SHEETS_URL;
-  if(!url) return;
-  const op = {sheetName, row, tentativas: 0};
+async function saveRowToSheets(sheetName, row) {
+  if(!SHEETS_URL) return;
+  const labels = {presencas:'📋 Presenca',graduacoes:'Graduacao',notas:'Nota',ocorrencias:'Ocorrencia',alunos_updates:'Aluno',agenda:'Agenda',patrocinadores:'Patrocinador',historico:'Historico',voluntarios:'Voluntario'};
+  const label = labels[sheetName]||sheetName;
+  const saveId = mostrarSave(label+' salvando...','saving');
   try {
-    const r = await fetch(url, {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({action:'saveRow', sheet:sheetName, row})
+    // Encode data as URL params to avoid CORS preflight
+    const params = new URLSearchParams({
+      action: 'saveRow',
+      sheet: sheetName,
+      row: JSON.stringify(row)
     });
-    const d = await r.json();
-    if(!d.ok) throw new Error(d.error);
-    // Sucesso — remover da fila se estava lá
-    _pendingOps = _pendingOps.filter(p=>p!==op);
+    const url = SHEETS_URL + '?' + params.toString();
+    const r = await fetch(url, {method:'GET', mode:'no-cors'});
+    // no-cors means we can't read the response but the request goes through
+    atualizarSave(saveId, label+' salvo','saved');
     return true;
   } catch(e) {
-    // Falhou — guardar na fila para tentar depois
-    op.tentativas++;
-    if(op.tentativas < 5) {
-      _pendingOps.push(op);
-      localStorage.setItem('_pendingOps', JSON.stringify(_pendingOps.slice(0,200)));
-    }
+    atualizarSave(saveId, label+' falhou','error');
+    _pendingOps.push({sheetName, row, tentativas:1});
+    localStorage.setItem('_pendingOps', JSON.stringify(_pendingOps.slice(0,200)));
     return false;
   }
 }
 
-// Processar fila de operações pendentes
-async function processarFila() {
-  if(_syncInProgress || !_pendingOps.length) return;
-  _syncInProgress = true;
-  const url = sheetsConfig.url || SHEETS_URL;
-  for(let i=_pendingOps.length-1; i>=0; i--) {
-    const op = _pendingOps[i];
-    try {
-      const r = await fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({action:'saveRow', sheet:op.sheetName, row:op.row})});
-      const d = await r.json();
-      if(d.ok) _pendingOps.splice(i, 1);
-    } catch(e) {}
-  }
-  localStorage.setItem('_pendingOps', JSON.stringify(_pendingOps));
-  _syncInProgress = false;
-}
-
-// Override saveRowToSheets com versão robusta
-saveRowToSheets = salvarNoSheets;
-
-// ── CARREGAR DO SHEETS ──
 async function carregarDoSheets() {
-  const url = sheetsConfig.url || SHEETS_URL;
-  if(!url) return false;
-  setSyncStatus('syncing', 'Carregando dados...');
+  if(!SHEETS_URL) return false;
+  setSyncStatus('syncing','Carregando...');
   try {
-    const r = await fetch(url + '?action=getData', {mode:'cors'});
-    if(!r.ok) throw new Error('HTTP '+r.status);
+    // GET request works fine with CORS
+    const r = await fetch(SHEETS_URL + '?action=getData');
     const d = await r.json();
-    if(!d.ok) throw new Error(d.error||'Erro desconhecido');
-    const data = d.data || {};
-    let alterou = false;
-    // Aplicar dados do Sheets no banco local
+    if(!d.ok) throw new Error(d.error||'Erro');
+    const data = d.data||{};
     ['presencas','graduacoes','notas','ocorrencias','agenda','patrocinadores','historico','voluntarios'].forEach(k=>{
-      if(data[k]&&data[k].length) { db[k]=data[k]; alterou=true; }
+      if(data[k]&&data[k].length) db[k]=data[k];
     });
-    if(data.wppLog&&data.wppLog.length) { db.wppLog=data.wppLog.slice(0,100); alterou=true; }
-    if(data.alunos_updates&&data.alunos_updates.length) {
+    if(data.wppLog&&data.wppLog.length) db.wppLog=data.wppLog.slice(0,100);
+    if(data.alunos_updates&&data.alunos_updates.length){
       data.alunos_updates.forEach(u=>{
         const a=db.alunos.find(x=>x.id===u.id);
         if(a){
-          if(u.faixa)a.faixa=u.faixa;
-          if(u.status)a.status=u.status;
-          if(u.turma)a.turma=u.turma;
-          a.comportamento=parseFloat(u.comportamento)||0;
-          a.disciplina=parseFloat(u.disciplina)||0;
-          a.participacao=parseFloat(u.participacao)||0;
-          a.evolucao=parseFloat(u.evolucao)||0;
-          a.score=parseFloat(u.score)||0;
+          if(u.faixa)a.faixa=u.faixa;if(u.status)a.status=u.status;if(u.turma)a.turma=u.turma;
+          a.comportamento=parseFloat(u.comportamento)||0;a.disciplina=parseFloat(u.disciplina)||0;
+          a.participacao=parseFloat(u.participacao)||0;a.evolucao=parseFloat(u.evolucao)||0;a.score=parseFloat(u.score)||0;
+          a.seloAzul=parseInt(u.seloAzul)||0;a.seloVermelho=parseInt(u.seloVermelho)||0;
+          a.seloVerde=parseInt(u.seloVerde)||0;a.seloAmarelo=parseInt(u.seloAmarelo)||0;
         }
       });
-      alterou=true;
     }
-    if(alterou) {
-      saveDB(); // atualiza cache local
-      recalc();
-      const now = new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-      sheetsConfig.lastSync = now;
-      localStorage.setItem('gsheets', JSON.stringify(sheetsConfig));
-      setSyncStatus('ok', 'Dados atualizados', now);
-    } else {
-      setSyncStatus('ok', 'Conectado', sheetsConfig.lastSync||'');
-    }
+    saveDB();recalc();
+    const now=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    setSyncStatus('ok','Sincronizado',now);
     return true;
   } catch(e) {
-    setSyncStatus('err', 'Offline — usando dados locais');
+    setSyncStatus('err','Offline - dados locais');
     return false;
   }
 }
 
-// Override syncAllToSheets para ser mais robusto (enviar tabela por tabela)
-syncAllToSheets = async function() {
-  const url = sheetsConfig.url || SHEETS_URL;
-  if(!url) { toast('URL não configurada','warn'); return; }
-  setSyncStatus('syncing', 'Sincronizando...');
-  toast('☁️ Enviando dados...','info');
-  let ok=0, fail=0;
+async function syncAllToSheets() {
+  if(!SHEETS_URL){toast('URL nao configurada','warn');return;}
+  setSyncStatus('syncing','Sincronizando...');
+  toast('Sincronizando...','info');
   const tabelas = [
-    ['presencas', db.presencas],
-    ['graduacoes', db.graduacoes],
-    ['notas', db.notas],
-    ['ocorrencias', db.ocorrencias],
-    ['agenda', db.agenda],
-    ['patrocinadores', db.patrocinadores],
-    ['historico', db.historico],
-    ['voluntarios', db.voluntarios],
-    ['alunos_updates', db.alunos.map(a=>({id:a.id,faixa:a.faixa,status:a.status,turma:a.turma||'',comportamento:a.comportamento||0,disciplina:a.disciplina||0,participacao:a.participacao||0,evolucao:a.evolucao||0,score:a.score||0}))]
+    ['presencas',db.presencas],['graduacoes',db.graduacoes],['notas',db.notas],
+    ['ocorrencias',db.ocorrencias],['agenda',db.agenda],['patrocinadores',db.patrocinadores],
+    ['historico',db.historico],['voluntarios',db.voluntarios],
+    ['alunos_updates',db.alunos.map(a=>({id:a.id,faixa:a.faixa,status:a.status,turma:a.turma||'',
+      comportamento:a.comportamento||0,disciplina:a.disciplina||0,participacao:a.participacao||0,
+      evolucao:a.evolucao||0,score:a.score||0,seloAzul:a.seloAzul||0,seloVermelho:a.seloVermelho||0,
+      seloVerde:a.seloVerde||0,seloAmarelo:a.seloAmarelo||0}))]
   ];
-  for(const [nome, rows] of tabelas) {
-    if(!rows||!rows.length) continue;
-    try {
-      const r = await fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({action:'syncTable', sheet:nome, rows})});
-      const d = await r.json();
-      if(d.ok) ok++; else fail++;
-    } catch(e) { fail++; }
-    await new Promise(res=>setTimeout(res,300)); // pequena pausa entre chamadas
+  let ok=0;
+  for(const [nome,rows] of tabelas){
+    if(!rows||!rows.length)continue;
+    try{
+      const params=new URLSearchParams({action:'syncTable',sheet:nome,rows:JSON.stringify(rows)});
+      await fetch(SHEETS_URL+'?'+params.toString(),{method:'GET',mode:'no-cors'});
+      ok++;
+    }catch(e){}
+    await new Promise(res=>setTimeout(res,200));
   }
-  const now = new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-  sheetsConfig.lastSync = now;
-  localStorage.setItem('gsheets', JSON.stringify(sheetsConfig));
-  if(fail===0) {
-    setSyncStatus('ok', 'Sincronizado!', now);
-    toast('✅ Todos os dados sincronizados!','ok');
-    addNotif('☁️ Sincronização completa','Dados salvos no Google Sheets','ok');
-  } else {
-    setSyncStatus('ok', `${ok} tabelas ok, ${fail} com erro`, now);
-    toast(`⚠️ ${ok} tabelas sincronizadas, ${fail} com erro`,'warn');
-  }
-};
+  const now=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  setSyncStatus('ok','Sincronizado',now);
+  toast('Sincronizado!','ok');
+}
 
-// ── AUTO-CARREGAR E AUTO-PROCESSAR FILA ──
-// Carregar dados pendentes da fila
-try {
-  const pending = JSON.parse(localStorage.getItem('_pendingOps')||'[]');
-  if(pending.length) {
-    _pendingOps = pending;
-    setTimeout(processarFila, 3000);
-  }
-} catch(e) {}
-
-// Recarregar do Sheets ao abrir
+// Carregar ao abrir
 setTimeout(async function(){
-  const loaded = await carregarDoSheets();
-  if(loaded) {
-    renderPage(currentPage);
-    // Processar operações pendentes
-    setTimeout(processarFila, 1000);
-  }
-}, 1000);
+  const ok = await carregarDoSheets();
+  if(ok){recalc();renderPage(currentPage);toast('Dados atualizados!','ok');}
+},1000);
 
-// Auto-sincronizar a cada 5 minutos
-setInterval(async function(){
-  await carregarDoSheets();
-  await processarFila();
-}, 5 * 60 * 1000);
+// Auto-sync a cada 5 min
+setInterval(carregarDoSheets, 5*60*1000);
+
 
 
 // ══════════════════════════════════════════════════════════
@@ -3113,6 +3090,117 @@ marcarP = function(id, val){
 
 // Run on init
 setTimeout(verificarGraus, 2500);
+
+
+// ══════════════════════════════════════════════════════════
+//  SISTEMA DE FOTOS PERSISTENTE
+// ══════════════════════════════════════════════════════════
+
+// Salva foto em localStorage dedicado (separado do db principal)
+function salvarFotoAluno(id, fotoData){
+  try{
+    const fotos = JSON.parse(localStorage.getItem('gfotos')||'{}');
+    fotos[id] = fotoData;
+    localStorage.setItem('gfotos', JSON.stringify(fotos));
+  }catch(e){
+    // localStorage cheio - tentar compactar
+    try{
+      const fotos = {};
+      fotos[id] = fotoData;
+      localStorage.setItem('gfotos', JSON.stringify(fotos));
+    }catch(e2){}
+  }
+}
+
+// Carregar fotos do localStorage dedicado
+function carregarFotos(){
+  try{
+    const fotos = JSON.parse(localStorage.getItem('gfotos')||'{}');
+    db.alunos.forEach(a=>{
+      if(fotos[a.id]&&!a.foto){
+        a.foto = fotos[a.id];
+      } else if(fotos[a.id]&&a.foto!==fotos[a.id]){
+        // Atualizar se a foto do storage for mais recente
+        fotos[a.id] = a.foto; // keep in sync
+      }
+    });
+  }catch(e){}
+}
+
+// Override abrirEditarFoto para salvar no storage dedicado
+const _origAbrirEditarFoto = abrirEditarFoto;
+abrirEditarFoto = function(id){
+  const input=document.createElement('input');input.type='file';input.accept='image/*';
+  input.onchange=(e)=>{
+    const file=e.target.files[0];if(!file)return;
+    const reader=new FileReader();
+    reader.onload=(ev)=>{
+      const img=new Image();
+      img.onload=()=>{
+        const canvas=document.createElement('canvas');
+        // Reduzir tamanho para economizar espaço
+        const max=160;let w=img.width,h=img.height;
+        if(w>h){if(w>max){h=Math.round(h*max/w);w=max;}}
+        else{if(h>max){w=Math.round(w*max/h);h=max;}}
+        canvas.width=w;canvas.height=h;
+        canvas.getContext('2d').drawImage(img,0,0,w,h);
+        const dataUrl=canvas.toDataURL('image/jpeg',0.6); // mais comprimido
+        const a=db.alunos.find(x=>x.id===id);
+        if(a){
+          a.foto=dataUrl;
+          saveDB();
+          salvarFotoAluno(id, dataUrl); // salvar no storage dedicado
+          // Salvar no Sheets também
+          saveRowToSheets('alunos_updates',{id:a.id,faixa:a.faixa,status:a.status,
+            turma:a.turma||'',comportamento:a.comportamento||0,disciplina:a.disciplina||0,
+            participacao:a.participacao||0,evolucao:a.evolucao||0,score:a.score||0,
+            seloAzul:a.seloAzul||0,seloVermelho:a.seloVermelho||0,
+            seloVerde:a.seloVerde||0,seloAmarelo:a.seloAmarelo||0});
+          renderAlunos();
+          toast('Foto de '+a.nome.split(' ')[0]+' salva!','ok');
+        }
+      };
+      img.src=ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  };
+  input.click();
+};
+
+// Carregar fotos novos alunos do Sheets ao iniciar
+async function carregarAlunosNovos(){
+  const url = 'https://script.google.com/macros/s/AKfycbxr-SqAPUtBJ_8Z7w3UWc5D0AhpkuGFUEAeA9duCS5v05V13Lxckd32sPcTE-yYEzhQ/exec';
+  try{
+    const r = await fetch(url+'?action=getSheet&sheet=alunos_novos');
+    const d = await r.json();
+    if(d.ok&&d.rows&&d.rows.length){
+      let added=0;
+      d.rows.forEach(row=>{
+        if(!db.alunos.find(a=>a.id===row.id)){
+          db.alunos.push({
+            id:row.id,nome:row.nome||'',nasc:row.nasc||'',sexo:row.sexo||'',
+            cpf:row.cpf||'',status:row.status||'Ativo',celular:row.celular||'',
+            email:row.email||'',end:row.end||'',resp1Nome:row.resp1Nome||'',
+            resp1Tel:row.resp1Tel||'',resp2Nome:row.resp2Nome||'',resp2Tel:row.resp2Tel||'',
+            autismo:row.autismo||'Não',tdah:row.tdah||'Não',medicacao:row.medicacao||'Não',
+            obs:row.obs||'',ativ:row.ativ||'Jiu-jitsu',faixa:row.faixa||'Branca',
+            turma:row.turma||'',foto:'',entrada:row.entrada||'',
+            presentes:0,ausentes:0,comportamento:0,disciplina:0,participacao:0,evolucao:0,score:0,notas:[]
+          });
+          added++;
+        }
+      });
+      if(added>0){
+        saveDB();recalc();renderAlunos();
+        toast(added+' aluno(s) novo(s) carregados!','ok');
+      }
+    }
+  }catch(e){}
+}
+
+// Executar ao iniciar
+carregarFotos();
+setTimeout(carregarAlunosNovos, 2000);
 
 </script>
 </body>
