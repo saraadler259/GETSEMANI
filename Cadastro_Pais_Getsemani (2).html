@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projeto Getsêmani - Cadastro de Aluno</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--blue:#1B3FA0;--accent:#4F7FFA;--green:#10B981;--red:#EF4444;--dark:#0A1628;--muted:#6B7280;--border:#E5E7EB}
+body{font-family:'Sora',sans-serif;background:linear-gradient(135deg,#0A1628 0%,#1B3FA0 60%,#0A1628 100%);min-height:100vh;padding:20px}
+.container{max-width:700px;margin:0 auto}
+.header{text-align:center;padding:32px 20px 20px;color:#fff}
+.logo{font-size:52px;margin-bottom:8px}
+.header h1{font-size:26px;font-weight:800;margin-bottom:4px}
+.header p{font-size:13px;opacity:.7}
+.progress-bar{background:rgba(255,255,255,.15);border-radius:20px;height:7px;margin:0 20px 20px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--green));border-radius:20px;transition:width .5s}
+.steps{display:flex;justify-content:space-around;margin:0 10px 24px;color:rgba(255,255,255,.6);font-size:11px;font-weight:600}
+.step{display:flex;flex-direction:column;align-items:center;gap:4px}
+.step-dot{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;transition:all .3s}
+.step.active .step-dot{background:var(--accent);color:#fff;box-shadow:0 0 0 4px rgba(79,127,250,.3)}
+.step.done .step-dot{background:var(--green);color:#fff}
+.card{background:#fff;border-radius:20px;padding:28px 24px;margin-bottom:16px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.card-title{font-size:16px;font-weight:800;color:var(--dark);margin-bottom:4px}
+.card-sub{font-size:12px;color:var(--muted);margin-bottom:18px}
+.divider{height:1px;background:var(--border);margin:20px 0}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fg{display:flex;flex-direction:column;gap:5px}
+.fg.span2{grid-column:1/-1}
+.lbl{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+input,select,textarea{border:2px solid var(--border);border-radius:10px;padding:11px 14px;font-family:'Sora',sans-serif;font-size:13px;color:var(--dark);outline:none;transition:border-color .2s;width:100%}
+input:focus,select:focus,textarea:focus{border-color:var(--accent)}
+input.error,select.error{border-color:var(--red)!important}
+textarea{resize:vertical;min-height:72px}
+.req{color:var(--red);font-weight:800}
+.err{color:var(--red);font-size:11px;font-weight:600;margin-top:3px;display:none}
+.foto-area{border:3px dashed var(--border);border-radius:16px;padding:24px;text-align:center;cursor:pointer;transition:all .2s;background:#F8FAFF}
+.foto-area:hover{border-color:var(--accent);background:#EFF6FF}
+#foto-preview{width:130px;height:130px;border-radius:50%;object-fit:cover;border:4px solid var(--accent);display:none;margin:0 auto 12px}
+.check-group{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.check-item{display:flex;align-items:center;gap:6px;background:#F8FAFF;border:2px solid var(--border);border-radius:8px;padding:9px 14px;cursor:pointer;font-size:12px;font-weight:600;color:var(--dark);transition:all .2s}
+.check-item:hover,.check-item.checked{border-color:var(--accent);background:#EFF6FF;color:var(--blue)}
+.check-item input{width:16px;height:16px;accent-color:var(--accent);cursor:pointer}
+.termo-box{background:#F8FAFF;border:2px solid var(--border);border-radius:12px;padding:20px;font-size:12px;line-height:1.9;color:#374151;max-height:380px;overflow-y:auto;margin-bottom:16px}
+.termo-box h4{font-size:13px;font-weight:800;color:var(--dark);margin-bottom:14px;text-align:center;line-height:1.5}
+.cl{margin-bottom:14px}
+.cl strong{color:var(--dark);display:block;margin-bottom:3px;font-size:12px}
+.termo-check{display:flex;align-items:flex-start;gap:10px;background:#EFF6FF;border:2px solid var(--accent);border-radius:10px;padding:14px;cursor:pointer;margin-bottom:14px}
+.termo-check input{width:20px;height:20px;margin-top:2px;accent-color:var(--accent);cursor:pointer;flex-shrink:0}
+.sig-wrap{border:2px dashed var(--border);border-radius:12px;overflow:hidden;background:#F9FAFB;position:relative}
+#sig-canvas{width:100%;height:180px;cursor:crosshair;display:block;touch-action:none}
+.sig-actions{display:flex;gap:8px;padding:10px 12px;border-top:1px solid var(--border)}
+.sig-hint{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:var(--muted);font-size:12px;font-weight:600;pointer-events:none;text-align:center}
+.btn{border:none;border-radius:12px;padding:14px 28px;font-family:'Sora',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;width:100%}
+.btn-primary{background:linear-gradient(135deg,var(--blue),var(--accent));color:#fff;box-shadow:0 4px 16px rgba(79,127,250,.4)}
+.btn-primary:hover{transform:translateY(-2px)}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.btn-ghost{background:#F3F4F6;color:var(--dark)}
+.btn-red{background:#FEF2F2;color:var(--red);border:1px solid #FCA5A5;padding:8px 16px;font-size:12px;border-radius:8px}
+.btn-row{display:flex;gap:10px;margin-top:20px}
+.success-card,.loading{text-align:center;padding:40px 20px}
+.success-icon{font-size:64px;margin-bottom:16px}
+.spinner{width:44px;height:44px;border:4px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 16px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.info-box{background:#EFF6FF;border-left:4px solid var(--accent);border-radius:8px;padding:12px 14px;font-size:12px;color:#1D4ED8;line-height:1.7;margin-bottom:16px}
+.hidden{display:none!important}
+@media(max-width:520px){.form-grid{grid-template-columns:1fr}.fg.span2{grid-column:1}body{padding:12px}.card{padding:20px 16px}}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="logo">
+  <svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+    <!-- Tree trunk -->
+    <rect x="36" y="52" width="8" height="20" rx="3" fill="#8B5E3C"/>
+    <!-- Hearts in tree shape -->
+    <text x="40" y="20" text-anchor="middle" font-size="11">❤️</text>
+    <text x="28" y="28" text-anchor="middle" font-size="10">💚</text>
+    <text x="52" y="28" text-anchor="middle" font-size="10">💙</text>
+    <text x="20" y="38" text-anchor="middle" font-size="9">🧡</text>
+    <text x="40" y="36" text-anchor="middle" font-size="11">💛</text>
+    <text x="60" y="38" text-anchor="middle" font-size="9">💜</text>
+    <text x="30" y="48" text-anchor="middle" font-size="10">❤️</text>
+    <text x="50" y="48" text-anchor="middle" font-size="10">💚</text>
+    <!-- Hands below -->
+    <text x="40" y="60" text-anchor="middle" font-size="14">🤲</text>
+  </svg>
+</div>
+    <h1>Projeto Getsêmani</h1>
+    <p>Cadastro de Aluno · Portão/RS</p>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progress" style="width:25%"></div></div>
+  <div class="steps">
+    <div class="step active" id="s1"><div class="step-dot">1</div><span>Aluno</span></div>
+    <div class="step" id="s2"><div class="step-dot">2</div><span>Saude</span></div>
+    <div class="step" id="s3"><div class="step-dot">3</div><span>Foto</span></div>
+    <div class="step" id="s4"><div class="step-dot">4</div><span>Termo</span></div>
+  </div>
+
+  <!-- ETAPA 1 -->
+  <div id="step1">
+    <div class="card">
+      <div class="card-title">Dados do Aluno</div>
+      <div class="card-sub">Todos os campos marcados com * sao obrigatorios</div>
+      <div class="form-grid">
+        <div class="fg span2"><label class="lbl">Nome Completo *</label><input id="nome" type="text" placeholder="Nome completo do aluno"><span class="err" id="err-nome">Campo obrigatorio</span></div>
+        <div class="fg"><label class="lbl">Data de Nascimento *</label><input id="nasc" type="date"><span class="err" id="err-nasc">Campo obrigatorio</span></div>
+        <div class="fg"><label class="lbl">Sexo *</label><select id="sexo"><option value="">Selecione</option><option>Masculino</option><option>Feminino</option></select><span class="err" id="err-sexo">Campo obrigatorio</span></div>
+        <div class="fg span2"><label class="lbl">Endereco Completo *</label><input id="end" type="text" placeholder="Rua, numero, bairro, cidade, CEP"><span class="err" id="err-end">Campo obrigatorio</span></div>
+        <div class="fg"><label class="lbl">Escola *</label><input id="escola" type="text" placeholder="Nome da escola"><span class="err" id="err-escola">Campo obrigatorio</span></div>
+        <div class="fg"><label class="lbl">Turno *</label><select id="turno"><option value="">Selecione</option><option>Manha</option><option>Tarde</option><option>Integral</option><option>Noite</option></select><span class="err" id="err-turno">Campo obrigatorio</span></div>
+        <div class="fg"><label class="lbl">Serie / Ano Escolar *</label><input id="serie" type="text" placeholder="Ex: 5 ano, 1 ano EM"><span class="err" id="err-serie">Campo obrigatorio</span></div>
+        <div class="fg"><label class="lbl">Naturalidade *</label><input id="naturalidade" type="text" placeholder="Cidade onde nasceu"><span class="err" id="err-naturalidade">Campo obrigatorio</span></div>
+      </div>
+      <div class="divider"></div>
+      <div class="card-title">Responsavel Principal *</div>
+      <div class="card-sub" style="margin-bottom:14px">Responsavel legal pelo aluno</div>
+      <div class="form-grid">
+        <div class="fg span2"><label class="lbl">Nome Completo *</label><input id="r1n" type="text" placeholder="Nome completo"><span class="err" id="err-r1n">Campo obrigatorio</span></div>
+        <div class="fg"><label class="lbl">CPF *</label><input id="r1cpf" type="text" placeholder="000.000.000-00" oninput="maskCPF(this)"><span class="err" id="err-r1cpf">Campo obrigatorio</span></div>
+        <div class="fg"><label class="lbl">RG *</label><input id="r1rg" type="text" placeholder="0000000"><span class="err" id="err-r1rg">Campo obrigatorio</span></div>
+        <div class="fg"><label class="lbl">Celular / WhatsApp *</label><input id="r1t" type="tel" placeholder="(51) 99999-9999" oninput="maskTel(this)"><span class="err" id="err-r1t">Campo obrigatorio</span></div>
+        <div class="fg"><label class="lbl">E-mail *</label><input id="email" type="email" placeholder="email@exemplo.com"><span class="err" id="err-email">Campo obrigatorio</span></div>
+        <div class="fg"><label class="lbl">Grau de Parentesco *</label><select id="r1par"><option value="">Selecione</option><option>Pai</option><option>Mae</option><option>Avo/Avo</option><option>Tia/Tio</option><option>Responsavel Legal</option></select><span class="err" id="err-r1par">Campo obrigatorio</span></div>
+        <div class="fg"><label class="lbl">Profissao *</label><input id="r1prof" type="text" placeholder="Profissao"><span class="err" id="err-r1prof">Campo obrigatorio</span></div>
+        <div class="fg"><label class="lbl">Telefone de Emergencia *</label><input id="r1emerg" type="tel" placeholder="(51) 99999-9999" oninput="maskTel(this)"><span class="err" id="err-r1emerg">Campo obrigatorio</span></div>
+      </div>
+      <div class="divider"></div>
+      <div class="card-title">Responsavel 2 <span style="font-size:12px;font-weight:400;color:var(--muted)">(opcional)</span></div>
+      <div class="form-grid">
+        <div class="fg span2"><label class="lbl">Nome Completo</label><input id="r2n" type="text" placeholder="Nome completo"></div>
+        <div class="fg"><label class="lbl">Celular</label><input id="r2t" type="tel" placeholder="(51) 99999-9999" oninput="maskTel(this)"></div>
+        <div class="fg"><label class="lbl">Parentesco</label><select id="r2par"><option value="">Selecione</option><option>Pai</option><option>Mae</option><option>Avo/Avo</option><option>Tia/Tio</option><option>Responsavel Legal</option></select></div>
+      </div>
+      <div class="btn-row"><button class="btn btn-primary" onclick="irStep2()">Proximo &rarr;</button></div>
+    </div>
+  </div>
+
+  <!-- ETAPA 2 -->
+  <div id="step2" class="hidden">
+    <div class="card">
+      <div class="card-title">Informacoes de Saude</div>
+      <div class="card-sub">Todas as informacoes sao confidenciais e obrigatorias</div>
+      <div class="info-box">Estas informacoes sao sigilosas e usadas exclusivamente para garantir a seguranca do aluno nas atividades.</div>
+      <div class="form-grid">
+        <div class="fg"><label class="lbl">Tipo Sanguineo *</label><select id="tipo-sang"><option value="">Selecione</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option><option>Nao sei</option></select><span class="err" id="err-tipo-sang">Campo obrigatorio</span></div>
+        <div class="fg"><label class="lbl">Plano de Saude *</label><input id="plano" type="text" placeholder="Nome do plano ou 'Nao possui'"><span class="err" id="err-plano">Campo obrigatorio</span></div>
+        <div class="fg span2">
+          <label class="lbl">O aluno possui alguma das condicoes abaixo? * (selecione todas que se aplicam)</label>
+          <div class="check-group">
+            <label class="check-item" id="chk-tea"><input type="checkbox" id="tea" onchange="toggleChk(this,'chk-tea');atualizarCampos()"> TEA/Autismo</label>
+            <label class="check-item" id="chk-tdah"><input type="checkbox" id="tdah" onchange="toggleChk(this,'chk-tdah');atualizarCampos()"> TDAH</label>
+            <label class="check-item" id="chk-med"><input type="checkbox" id="usa-med" onchange="toggleChk(this,'chk-med');atualizarCampos()"> Usa Medicacao</label>
+            <label class="check-item" id="chk-asma"><input type="checkbox" id="asma" onchange="toggleChk(this,'chk-asma')"> Asma</label>
+            <label class="check-item" id="chk-alergia"><input type="checkbox" id="alergia" onchange="toggleChk(this,'chk-alergia');atualizarCampos()"> Alergias</label>
+            <label class="check-item" id="chk-defic"><input type="checkbox" id="defic" onchange="toggleChk(this,'chk-defic');atualizarCampos()"> Deficiencia Fisica</label>
+            <label class="check-item" id="chk-card"><input type="checkbox" id="card" onchange="toggleChk(this,'chk-card')"> Problema Cardiaco</label>
+            <label class="check-item" id="chk-nenhum"><input type="checkbox" id="nenhum" onchange="marcarNenhum()"> Nenhuma das acima</label>
+          </div>
+          <span class="err" id="err-condicoes">Selecione pelo menos uma opcao</span>
+        </div>
+        <div class="fg span2" id="row-medicacao" style="display:none"><label class="lbl">Qual medicacao? Dose e horario? *</label><input id="medicacao" type="text" placeholder="Ex: Ritalina 10mg as 7h e 12h"><span class="err" id="err-medicacao">Descreva a medicacao</span></div>
+        <div class="fg span2" id="row-alergias" style="display:none"><label class="lbl">Quais alergias? *</label><input id="alergias-desc" type="text" placeholder="Ex: Amendoim, latex, penicilina..."><span class="err" id="err-alergias">Descreva as alergias</span></div>
+        <div class="fg span2" id="row-defic" style="display:none"><label class="lbl">Qual deficiencia fisica? *</label><input id="defic-desc" type="text" placeholder="Descreva a deficiencia"><span class="err" id="err-defic">Descreva a deficiencia</span></div>
+        <div class="fg span2"><label class="lbl">O aluno esta apto fisicamente para atividades esportivas do projeto? *</label><select id="apto" onchange="toggleRestricao()"><option value="">Selecione</option><option value="Sim">Sim, esta apto</option><option value="Nao">Nao, possui restricao medica</option><option value="Parcial">Parcialmente - com restricoes</option></select><span class="err" id="err-apto">Campo obrigatorio</span></div>
+        <div class="fg span2" id="row-restricao" style="display:none"><label class="lbl">Quais restricoes medicas?</label><textarea id="restricao" placeholder="Descreva as restricoes medicas"></textarea></div>
+        <div class="fg span2"><label class="lbl">O aluno ja praticou atividade esportiva? *</label><select id="praticou" onchange="toggleArte()"><option value="">Selecione</option><option value="Nao">Nao, e iniciante</option><option value="Sim">Sim, ja praticou</option></select><span class="err" id="err-praticou">Campo obrigatorio</span></div>
+        <div class="fg span2" id="row-arte" style="display:none"><label class="lbl">Qual atividade esportiva e por quanto tempo?</label><input id="qual-arte" type="text" placeholder="Ex: Ex: futebol, natacao, atividades esportivas..."></div>
+        <div class="fg span2"><label class="lbl">Observacoes de Saude Adicionais *</label><textarea id="obs-saude" placeholder="Outras informacoes de saude, limitacoes ou escreva 'Nenhuma'"></textarea><span class="err" id="err-obs-saude">Campo obrigatorio</span></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="irStep1()">&#8592; Voltar</button>
+        <button class="btn btn-primary" onclick="irStep3()">Proximo &rarr;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ETAPA 3 -->
+  <div id="step3" class="hidden">
+    <div class="card">
+      <div class="card-title">Foto do Aluno *</div>
+      <div class="card-sub">Adicione uma foto recente e nitida do rosto do aluno</div>
+      <div class="info-box">A foto sera usada na carteirinha de identificacao e no sistema de presenca do projeto.</div>
+      <div class="foto-area" id="foto-area" onclick="document.getElementById('foto-input').click()">
+        <img id="foto-preview" src="" alt="Foto">
+        <div id="foto-placeholder">
+          <div style="font-size:48px;margin-bottom:8px">&#128247;</div>
+          <div style="font-size:13px;font-weight:600;color:var(--muted)">Toque para adicionar a foto</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px">Selfie ou foto do rosto - JPG ou PNG</div>
+        </div>
+        <div id="foto-ok" class="hidden" style="margin-top:8px"><span style="color:var(--green);font-size:13px;font-weight:700">&#10003; Foto adicionada! Toque para trocar</span></div>
+      </div>
+      <input type="file" id="foto-input" accept="image/*" capture="user" style="display:none" onchange="processarFoto(event)">
+      <span class="err" id="err-foto" style="margin-top:8px">Foto obrigatoria</span>
+      <div class="btn-row" style="margin-top:20px">
+        <button class="btn btn-ghost" onclick="irStep2()">&#8592; Voltar</button>
+        <button class="btn btn-primary" onclick="irStep4()">Proximo &rarr;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ETAPA 4 -->
+  <div id="step4" class="hidden">
+    <div class="card">
+      <div class="card-title">Termo de Autorizacao e Responsabilidade</div>
+      <div class="card-sub">Leia todo o termo com atencao antes de assinar</div>
+      <div class="termo-box">
+        <h4>TERMO DE AUTORIZACAO, RESPONSABILIDADE E COMPROMISSO<br>PROJETO SOCIAL GETSÊMANI - PROJETO SOCIAL<br>Portão, Rio Grande do Sul</h4>
+        <div class="cl"><strong>PREAMBULO</strong>Eu, responsavel legal pelo(a) aluno(a) identificado(a) neste cadastro, declaro estar plenamente ciente e de acordo com todas as condicoes estabelecidas neste Termo para a participacao no Projeto Social Getsêmani, projeto de cunho social e esportivo voltado ao ensino gratuito do Projeto Social para criancas, adolescentes e adultos do municipio de Portão/RS.</div>
+        <div class="cl"><strong>CLAUSULA 1 - AUTORIZACAO DE PARTICIPACAO</strong>Autorizo expressamente a participacao do(a) meu(minha) filho(a)/tutelado(a) em todas as atividades promovidas pelo Projeto Social Getsêmani, incluindo treinos, competicoes, eventos, excursoes, campanhas sociais e quaisquer outras atividades relacionadas ao projeto. Reconheco que as atividades sao supervisionadas por professores qualificados e que o Projeto Social e uma atividade esportiva que envolve contato fisico controlado.</div>
+        <div class="cl"><strong>CLAUSULA 2 - AUTORIZACAO DE USO DE IMAGEM E VOZ</strong>Autorizo, em carater gratuito e por prazo indeterminado, o uso da imagem, voz, nome e demais dados do(a) aluno(a) em fotografias, videos, gravacoes, entrevistas, transmissoes ao vivo e quaisquer outros materiais produzidos pelo Projeto Getsêmani. Esta autorizacao abrange a divulgacao em: redes sociais (Instagram, Facebook, TikTok, YouTube, WhatsApp), sites, blogs, materiais impressos, relatorios institucionais e apresentacoes para orgaos publicos, patrocinadores e parceiros, sem qualquer onus ao projeto ou ao responsavel.</div>
+        <div class="cl"><strong>CLAUSULA 3 - RESPONSABILIDADE CIVIL E RISCOS</strong>Declaro estar ciente de que o Projeto Getsêmani adota todas as medidas de seguranca cabiveis para protecao dos alunos. Reconheco que a pratica de atividades esportivas envolve riscos inerentes a atividade e que acidentes podem ocorrer mesmo com todas as precaucoes adotadas. Isento o Projeto Social Getsêmani, seus coordenadores, professores e voluntarios de responsabilidade civil por lesoes leves decorrentes da pratica normal da atividade esportiva, reservando ao projeto o direito de acionar os servicos de emergencia em caso de necessidade.</div>
+        <div class="cl"><strong>CLAUSULA 4 - AUTORIZACAO DE ATENDIMENTO MEDICO DE EMERGENCIA</strong>Autorizo a equipe do Projeto Getsêmani a providenciar atendimento medico e/ou odontologico de emergencia ao(a) aluno(a), caso nao seja possivel contatar os responsaveis em tempo habil. Declaro estar ciente de que os custos do atendimento medico de emergencia sao de minha responsabilidade.</div>
+        <div class="cl"><strong>CLAUSULA 5 - COMPROMISSO COM A FREQUENCIA</strong>Comprometo-me a incentivar a frequencia regular do(a) aluno(a) nas atividades do projeto (minimo 70% de presenca) e a comunicar previamente as ausencias quando possivel. Estou ciente de que a frequencia impacta diretamente no desenvolvimento e na progressao do(a) aluno(a) no projeto, incluindo a conquista de graus e a troca de faixa.</div>
+        <div class="cl"><strong>CLAUSULA 6 - COMPROMISSO COM A CONDUTA</strong>Comprometo-me a orientar o(a) aluno(a) sobre a importancia do respeito, disciplina e boas condutas dentro e fora do espaco de atividades e do projeto. Estou ciente de que comportamentos inadequados, agressividade fora do contexto esportivo, bullying, desrespeito aos professores, colegas ou patrimonio do projeto poderao resultar em advertencia, suspensao temporaria ou exclusao definitiva, conforme avaliacao da coordenacao.</div>
+        <div class="cl"><strong>CLAUSULA 7 - INFORMACOES DE SAUDE E VERACIDADE DOS DADOS</strong>Declaro que todas as informacoes de saude fornecidas neste cadastro sao verdadeiras e completas. Comprometo-me a comunicar imediatamente a coordenacao qualquer alteracao no estado de saude do(a) aluno(a), especialmente inicio ou mudanca de medicacao, novos diagnosticos ou restricoes medicas que possam impactar a pratica esportiva. Declaro ainda que os dados pessoais fornecidos (nome, CPF, RG, endereco, contatos) sao verdadeiros e atualizados.</div>
+        <div class="cl"><strong>CLAUSULA 8 - PROTECAO DE DADOS (LGPD)</strong>Concordo com a coleta, armazenamento e tratamento dos dados pessoais do(a) aluno(a) e meus proprios para fins exclusivos de gestao, controle de presenca, emissao de relatorios e comunicacao do Projeto Social Getsêmani, em conformidade com a Lei Geral de Protecao de Dados (Lei no 13.709/2018). Os dados nao serao compartilhados com terceiros sem meu consentimento expresso, exceto quando exigido por lei ou por orgaos publicos financiadores do projeto.</div>
+        <div class="cl"><strong>CLAUSULA 9 - UNIFORMES E EQUIPAMENTOS</strong>Estou ciente de que o projeto fornece os equipamentos necessarios para a pratica e comprometo-me a zelar pela conservacao dos materiais emprestados ou fornecidos. Em caso de dano por uso inadequado ou mau uso intencional, comprometerei a restituicao dos itens danificados.</div>
+        <div class="cl"><strong>CLAUSULA 10 - FOTOS E DOCUMENTOS</strong>Autorizo o armazenamento digital da foto do(a) aluno(a) fornecida neste cadastro para fins de identificacao, emissao de carteirinha e controle de presenca. Estou ciente de que a foto sera armazenada em servicos seguros do Google.</div>
+        <div class="cl"><strong>CLAUSULA 11 - DECLARACAO FINAL</strong>Declaro que li integralmente este Termo, que compreendi todos os seus termos e condicoes, e que assino de livre e espontanea vontade, sem qualquer tipo de coacao. Declaro ainda que tenho plena capacidade civil para assumir as obrigacoes aqui descritas e que sou o(a) legitimo(a) responsavel legal pelo(a) aluno(a) cadastrado(a). Estou ciente de que esta assinatura digital tem validade juridica equivalente a uma assinatura fisica, nos termos da legislacao brasileira vigente.</div>
+        <p style="font-weight:700;text-align:center;margin-top:16px">Portão/RS, <span id="data-termo"></span></p>
+      </div>
+
+      <label class="termo-check">
+        <input type="checkbox" id="aceite-termo" onchange="verificarAceite()">
+        <span>Li integralmente e concordo com todos os termos e clausulas acima. Declaro que as informacoes sao verdadeiras e que sou o(a) responsavel legal pelo(a) aluno(a), estando autorizado(a) a assinar este termo.</span>
+      </label>
+      <span class="err" id="err-aceite">Voce precisa aceitar os termos para continuar</span>
+
+      <div class="card-title" style="margin:18px 0 6px">Assinatura Digital *</div>
+      <div class="card-sub" style="margin-bottom:12px">Assine com o dedo (celular) ou mouse (computador)</div>
+      <div class="sig-wrap">
+        <canvas id="sig-canvas" width="900" height="220"></canvas>
+        <div class="sig-hint" id="sig-hint">Assine aqui com o dedo ou mouse</div>
+      </div>
+      <div class="sig-actions">
+        <button class="btn-red" onclick="limparAssinatura()">Limpar</button>
+        <span style="flex:1;text-align:center;font-size:11px;color:var(--muted);align-self:center">A assinatura confirma sua identidade</span>
+      </div>
+      <span class="err" id="err-sig" style="margin-top:8px">Assinatura obrigatoria</span>
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="irStep3()">&#8592; Voltar</button>
+        <button class="btn btn-primary" id="btn-enviar" onclick="enviarCadastro()" disabled>Enviar Cadastro</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOADING -->
+  <div id="step-loading" class="hidden">
+    <div class="card"><div class="loading">
+      <div class="spinner"></div>
+      <div style="font-size:16px;font-weight:700;color:var(--dark);margin-bottom:8px">Enviando cadastro...</div>
+      <div style="font-size:12px;color:var(--muted)">Salvando dados, foto e assinatura. Aguarde.</div>
+    </div></div>
+  </div>
+
+  <!-- SUCESSO -->
+  <div id="step-success" class="hidden">
+    <div class="card"><div class="success-card">
+      <div class="success-icon">&#127881;</div>
+      <div style="font-size:22px;font-weight:800;color:var(--dark);margin-bottom:8px">Cadastro enviado!</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.8;max-width:400px;margin:0 auto">
+        Obrigado! O cadastro e o termo assinado foram recebidos com sucesso.<br><br>
+        A equipe do Projeto Getsêmani entrara em contato pelo WhatsApp para confirmar a matricula.<br><br>
+        <strong>Seja bem-vindo(a) ao projeto!</strong>
+      </div>
+      <div style="margin-top:24px;background:#F0FDF4;border-radius:14px;padding:16px;border:1px solid #BBF7D0">
+        <div style="font-size:12px;color:#166534;font-weight:700;margin-bottom:4px">Duvidas? Fale conosco:</div>
+        <a href="https://wa.me/51989520485" style="color:#166534;font-size:16px;font-weight:800;text-decoration:none">&#128242; (51) 98952-0485</a>
+      </div>
+    </div></div>
+  </div>
+</div>
+
+<script>
+const SHEETS_URL='https://script.google.com/macros/s/AKfycbxr-SqAPUtBJ_8Z7w3UWc5D0AhpkuGFUEAeA9duCS5v05V13Lxckd32sPcTE-yYEzhQ/exec';
+let fotoBase64='',sigVazia=true;
+document.getElementById('data-termo').textContent=new Date().toLocaleDateString('pt-BR',{day:'numeric',month:'long',year:'numeric'});
+
+function maskCPF(el){let v=el.value.replace(/\D/g,'').substring(0,11);v=v.replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d{1,2})$/,'$1-$2');el.value=v;}
+function maskTel(el){let v=el.value.replace(/\D/g,'').substring(0,11);if(v.length>10)v=v.replace(/(\d{2})(\d{5})(\d{4})/,'($1) $2-$3');else v=v.replace(/(\d{2})(\d{4})(\d{0,4})/,'($1) $2-$3');el.value=v.replace(/-$/,'');}
+
+function showStep(n){['step1','step2','step3','step4','step-loading','step-success'].forEach(s=>document.getElementById(s).classList.add('hidden'));document.getElementById(n).classList.remove('hidden');window.scrollTo({top:0,behavior:'smooth'});}
+function setProg(pct,active){document.getElementById('progress').style.width=pct+'%';[1,2,3,4].forEach(i=>{const el=document.getElementById('s'+i);el.classList.remove('active','done');if(i<active)el.classList.add('done');else if(i===active)el.classList.add('active');});}
+function irStep1(){showStep('step1');setProg(25,1);}
+function irStep2(){if(!val1())return;showStep('step2');setProg(50,2);}
+function irStep3(){if(!val2())return;showStep('step3');setProg(75,3);}
+function irStep4(){if(!valFoto())return;showStep('step4');setProg(100,4);}
+
+function req(id){const el=document.getElementById(id);if(!el)return true;const ok=el.value.trim()!=='';el.classList.toggle('error',!ok);const err=document.getElementById('err-'+id);if(err)err.style.display=ok?'none':'block';return ok;}
+function val1(){return['nome','nasc','sexo','end','escola','turno','serie','naturalidade','r1n','r1cpf','r1rg','r1t','email','r1par','r1prof','r1emerg'].map(req).every(Boolean);}
+function val2(){
+  let ok=true;
+  if(!req('tipo-sang'))ok=false;
+  if(!req('plano'))ok=false;
+  const conds=['tea','tdah','usa-med','asma','alergia','defic','card','nenhum'];
+  const algum=conds.some(id=>document.getElementById(id).checked);
+  document.getElementById('err-condicoes').style.display=algum?'none':'block';
+  if(!algum)ok=false;
+  if(document.getElementById('usa-med').checked&&!req('medicacao'))ok=false;
+  if(document.getElementById('alergia').checked&&!req('alergias-desc'))ok=false;
+  if(document.getElementById('defic').checked&&!req('defic-desc'))ok=false;
+  if(!req('apto'))ok=false;
+  if(!req('praticou'))ok=false;
+  if(!req('obs-saude'))ok=false;
+  return ok;
+}
+function valFoto(){const ok=fotoBase64!=='';document.getElementById('err-foto').style.display=ok?'none':'block';return ok;}
+
+function toggleChk(cb,id){document.getElementById(id).classList.toggle('checked',cb.checked);}
+function marcarNenhum(){
+  const n=document.getElementById('nenhum').checked;
+  ['tea','tdah','usa-med','asma','alergia','defic','card'].forEach(id=>{document.getElementById(id).checked=false;document.getElementById('chk-'+id).classList.remove('checked');});
+  document.getElementById('chk-nenhum').classList.toggle('checked',n);
+  atualizarCampos();
+}
+function atualizarCampos(){
+  document.getElementById('row-medicacao').style.display=document.getElementById('usa-med').checked?'flex':'none';
+  document.getElementById('row-alergias').style.display=document.getElementById('alergia').checked?'flex':'none';
+  document.getElementById('row-defic').style.display=document.getElementById('defic').checked?'flex':'none';
+}
+function toggleRestricao(){document.getElementById('row-restricao').style.display=document.getElementById('apto').value!=='Sim'?'flex':'none';}
+function toggleArte(){document.getElementById('row-arte').style.display=document.getElementById('praticou').value==='Sim'?'flex':'none';}
+
+function processarFoto(e){
+  const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    const img=new Image();
+    img.onload=()=>{
+      const canvas=document.createElement('canvas');const max=300;let w=img.width,h=img.height;
+      if(w>h){if(w>max){h=Math.round(h*max/w);w=max;}}else{if(h>max){w=Math.round(w*max/h);h=max;}}
+      canvas.width=w;canvas.height=h;canvas.getContext('2d').drawImage(img,0,0,w,h);
+      fotoBase64=canvas.toDataURL('image/jpeg',0.8);
+      document.getElementById('foto-preview').src=fotoBase64;
+      document.getElementById('foto-preview').style.display='block';
+      document.getElementById('foto-placeholder').style.display='none';
+      document.getElementById('foto-ok').classList.remove('hidden');
+      document.getElementById('err-foto').style.display='none';
+    };
+    img.src=ev.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+const canvas=document.getElementById('sig-canvas');
+const ctx=canvas.getContext('2d');
+let drawing=false;
+ctx.strokeStyle='#0A1628';ctx.lineWidth=2.5;ctx.lineCap='round';ctx.lineJoin='round';
+function getPos(e){const r=canvas.getBoundingClientRect();const sx=canvas.width/r.width,sy=canvas.height/r.height;const src=e.touches?e.touches[0]:e;return{x:(src.clientX-r.left)*sx,y:(src.clientY-r.top)*sy};}
+canvas.addEventListener('mousedown',e=>{drawing=true;const p=getPos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);});
+canvas.addEventListener('mousemove',e=>{if(!drawing)return;const p=getPos(e);ctx.lineTo(p.x,p.y);ctx.stroke();sigVazia=false;document.getElementById('sig-hint').style.display='none';verificarAceite();});
+canvas.addEventListener('mouseup',()=>{drawing=false;});
+canvas.addEventListener('touchstart',e=>{e.preventDefault();drawing=true;const p=getPos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);});
+canvas.addEventListener('touchmove',e=>{e.preventDefault();if(!drawing)return;const p=getPos(e);ctx.lineTo(p.x,p.y);ctx.stroke();sigVazia=false;document.getElementById('sig-hint').style.display='none';verificarAceite();});
+canvas.addEventListener('touchend',()=>{drawing=false;});
+function limparAssinatura(){ctx.clearRect(0,0,canvas.width,canvas.height);sigVazia=true;document.getElementById('sig-hint').style.display='block';verificarAceite();}
+function verificarAceite(){const aceite=document.getElementById('aceite-termo').checked;document.getElementById('btn-enviar').disabled=!(aceite&&!sigVazia);}
+
+function v(id){const el=document.getElementById(id);return el?el.value.trim():'';}
+
+async function enviarCadastro(){
+  if(!document.getElementById('aceite-termo').checked){document.getElementById('err-aceite').style.display='block';return;}
+  if(sigVazia){document.getElementById('err-sig').style.display='block';return;}
+  showStep('step-loading');
+  const id='CAD-'+Date.now();
+  const row={id,nome:v('nome'),nasc:v('nasc'),sexo:v('sexo'),end:v('end'),escola:v('escola'),turno:v('turno'),serie:v('serie'),naturalidade:v('naturalidade'),r1n:v('r1n'),r1cpf:v('r1cpf'),r1rg:v('r1rg'),r1t:v('r1t'),email:v('email'),r1par:v('r1par'),r1prof:v('r1prof'),r1emerg:v('r1emerg'),r2n:v('r2n'),r2t:v('r2t'),r2par:v('r2par'),tipoSang:v('tipo-sang'),plano:v('plano'),tea:document.getElementById('tea').checked?'Sim':'Nao',tdah:document.getElementById('tdah').checked?'Sim':'Nao',medicacao:document.getElementById('usa-med').checked?'Sim':'Nao',qualMedicacao:v('medicacao'),asma:document.getElementById('asma').checked?'Sim':'Nao',alergia:document.getElementById('alergia').checked?'Sim':'Nao',qualAlergia:v('alergias-desc'),deficiencia:document.getElementById('defic').checked?'Sim':'Nao',qualDefic:v('defic-desc'),cardiaco:document.getElementById('card').checked?'Sim':'Nao',apto:v('apto'),restricao:v('restricao'),praticou:v('praticou'),qualArte:v('qual-arte'),obsSaude:v('obs-saude'),dataEnvio:new Date().toLocaleDateString('pt-BR')+' '+new Date().toLocaleTimeString('pt-BR'),status:'Pendente',termoAceito:'Sim'};
+  try{
+    await fetch(SHEETS_URL+'?'+new URLSearchParams({action:'saveRow',sheet:'cadastros_novos',row:JSON.stringify(row)}).toString());
+    if(fotoBase64)await fetch(SHEETS_URL+'?'+new URLSearchParams({action:'savePhoto',alunoId:'FOTO-'+id,foto:fotoBase64}).toString());
+    const sigData=canvas.toDataURL('image/png',0.7);
+    await fetch(SHEETS_URL+'?'+new URLSearchParams({action:'savePhoto',alunoId:'SIG-'+id,foto:sigData}).toString());
+  }catch(err){}
+  showStep('step-success');
+}
+</script>
+</body>
+</html>
