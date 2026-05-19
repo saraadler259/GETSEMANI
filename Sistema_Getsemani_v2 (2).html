@@ -316,7 +316,8 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 <!-- ══ ALUNOS ══ -->
 <div id="page-alunos" class="page">
   <div class="topbar"><div><div class="page-title">👥 Alunos</div><div class="page-sub" id="alunos-count-lbl"></div></div>
-  <div class="topbar-right"><div class="search-wrap"><input type="text" id="srch-alunos" placeholder="Buscar…" oninput="renderAlunos()"></div><label class="btn btn-ghost" style="cursor:pointer">📥 CSV<input type="file" accept=".csv" style="display:none" onchange="importCSV(event)"></label><button class="btn btn-primary" onclick="openModal('m-aluno')">+ Novo Aluno</button></div></div>
+  <div class="topbar-right"><div class="search-wrap"><input type="text" id="srch-alunos" placeholder="Buscar…" oninput="renderAlunos()"></div><label class="btn btn-ghost" style="cursor:pointer">📥 CSV<input type="file" accept=".csv" style="display:none" onchange="importCSV(event)"></label><button class="btn btn-primary" onclick="openModal('m-aluno')">+ Novo Aluno</button>
+        <button class="btn btn-outline btn-sm" onclick="verificarCadastrosNovos()" title="Buscar cadastros enviados pelos pais">🔄 Cadastros pais</button></div></div>
   <div class="filters" id="alunos-filters">
     <span style="font-size:11px;color:var(--muted);font-weight:600">Filtrar:</span>
     <button class="fchip active" onclick="setFilter('status','todos',this)">Todos</button>
@@ -1147,7 +1148,6 @@ async function syncAllToSheets(){
     }else{setSyncStatus('err','Erro na sincronização');toast('Erro: '+d.error,'err');}
   }catch(e){setSyncStatus('err','Falha na conexão');toast('Falha ao sincronizar. Verifique a conexão.','err');}
 }
-async 
 const APPS_SCRIPT_CODE=`// SISTEMA GETSÊMANI — Google Apps Script
 // Cole em: Extensões > Apps Script > Implantar > Web App (Qualquer pessoa)
 const SHEETS=['presencas','graduacoes','ocorrencias','agenda','wppLog','patrocinadores','historico','voluntarios','alunos_updates','notas'];
@@ -2790,7 +2790,7 @@ function atualizarSave(id, msg, state){
 
 // Override saveRowToSheets com indicador visual
 const _origSalvarNoSheets = saveRowToSheets || saveRowToSheets;
-saveRowToSheets = function(sheetName, row){
+saveRowToSheets = async function(sheetName, row){
   // Metodo definitivo: usa imagem para bypass total de CORS
   const url = 'https://script.google.com/macros/s/AKfycbxr-SqAPUtBJ_8Z7w3UWc5D0AhpkuGFUEAeA9duCS5v05V13Lxckd32sPcTE-yYEzhQ/exec';
   const label = ({presencas:'Presenca',graduacoes:'Graduacao',notas:'Nota',
@@ -3314,94 +3314,64 @@ setTimeout(carregarFotoUrls, 2500);
 // ══════════════════════════════════════════════════════════
 async function verificarCadastrosNovos() {
   const url = 'https://script.google.com/macros/s/AKfycbxr-SqAPUtBJ_8Z7w3UWc5D0AhpkuGFUEAeA9duCS5v05V13Lxckd32sPcTE-yYEzhQ/exec';
+  const saveId = mostrarSave('Buscando cadastros...','saving');
   try {
-    const r = await fetch(url + '?action=getSheet&sheet=cadastros_novos');
-    const d = await r.json();
-    if(!d.ok || !d.rows || !d.rows.length) return;
-
+    const resp = await Promise.race([
+      fetch(url + '?action=getData'),
+      new Promise((_,reject) => setTimeout(()=>reject(new Error('timeout')), 8000))
+    ]);
+    const d = await resp.json();
+    if(!d.ok || !d.data) { atualizarSave(saveId,'Erro ao buscar dados','error'); return; }
+    const rows = d.data.cadastros_novos || [];
+    if(!rows.length){ atualizarSave(saveId,'Nenhum cadastro novo','saved'); toast('Nenhum cadastro novo encontrado','info'); return; }
     let adicionados = 0;
-    d.rows.forEach(row => {
+    rows.forEach(row => {
       if(!row.nome || row.status === 'Aprovado') return;
-      // Verificar se aluno já existe pelo nome
-      const jaExiste = db.alunos.find(a =>
-        a.nome.toLowerCase().trim() === row.nome.toLowerCase().trim()
-      );
+      const jaExiste = db.alunos.find(a => a.nome.toLowerCase().trim() === row.nome.toLowerCase().trim());
       if(jaExiste) return;
-
-      // Calcular turma pela data de nascimento
       let turma = '';
       if(row.nasc) {
         try {
           const parts = row.nasc.split('-');
           const birth = new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2]));
-          const age = Math.floor((new Date() - birth) / (365.25 * 24 * 60 * 60 * 1000));
-          if(age >= 3 && age <= 10) turma = 'Kids';
-          else if(age >= 11 && age <= 18) turma = 'Teens';
-          else if(age >= 19) turma = 'Adultos';
+          const age = Math.floor((new Date() - birth) / (365.25*24*60*60*1000));
+          if(age>=3&&age<=10) turma='Kids';
+          else if(age>=11&&age<=18) turma='Teens';
+          else if(age>=19) turma='Adultos';
         } catch(e) {}
       }
-
-      // Gerar novo ID
       const novoId = nextId('ALU', db.alunos);
-
-      // Adicionar aluno ao sistema
       db.alunos.push({
-        id: novoId,
-        nome: row.nome,
-        nasc: row.nasc || '',
-        sexo: row.sexo || '',
-        cpf: row.r1cpf || '',
-        status: 'Ativo',
-        turma: turma,
-        escola: row.escola || '',
-        turno: row.turno || '',
-        professora: '',
-        end: row.end || '',
-        celular: row.r1t || '',
-        email: row.email || '',
-        resp1Nome: row.r1n || '',
-        resp1Cpf: row.r1cpf || '',
-        resp1Tel: row.r1t || '',
-        resp2Nome: row.r2n || '',
-        resp2Cpf: '',
-        resp2Tel: row.r2t || '',
-        autismo: row.tea || 'Não',
-        tdah: row.tdah || 'Não',
-        medicacao: row.medicacao || 'Não',
-        qualMedicacao: row.qualMedicacao || '',
-        obs: row.obsSaude || '',
-        ativ: 'Projeto Social',
-        faixa: 'Branca',
-        alergias: row.qualAlergia || '',
-        uniforme: 'Não',
-        tamanhoUniforme: '',
-        transporte: 'Não',
-        autImagem: 'Sim',
-        grau: 0,
-        entrada: row.dataEnvio || today(),
-        foto: '',
-        presentes: 0,
-        ausentes: 0,
-        comportamento: 0,
-        disciplina: 0,
-        participacao: 0,
-        evolucao: 0,
-        score: 0,
-        notas: []
+        id:novoId, nome:row.nome, nasc:row.nasc||'', sexo:row.sexo||'',
+        cpf:row.r1cpf||'', status:'Ativo', turma:turma,
+        escola:row.escola||'', turno:row.turno||'', professora:'',
+        end:row.end||'', celular:row.r1t||'', email:row.email||'',
+        resp1Nome:row.r1n||'', resp1Cpf:row.r1cpf||'', resp1Tel:row.r1t||'',
+        resp2Nome:row.r2n||'', resp2Cpf:'', resp2Tel:row.r2t||'',
+        autismo:row.tea||'Não', tdah:row.tdah||'Não', medicacao:row.medicacao||'Não',
+        qualMedicacao:row.qualMedicacao||'', obs:row.obsSaude||row.obs||'',
+        ativ:'Projeto Social', faixa:'Branca', alergias:'', uniforme:'Não',
+        tamanhoUniforme:'', transporte:'Não', autImagem:'Sim', grau:0,
+        entrada:row.dataEnvio||today(), foto:'', presentes:0, ausentes:0,
+        comportamento:0, disciplina:0, participacao:0, evolucao:0, score:0, notas:[]
       });
+      // Marcar como aprovado
+      saveRowToSheets('cadastros_novos', {...row, status:'Aprovado', idSistema:novoId});
       adicionados++;
-
-      // Marcar como aprovado no Sheets
-      saveRowToSheets('cadastros_novos', {...row, status: 'Aprovado', idSistema: novoId});
     });
-
     if(adicionados > 0) {
-      saveDB(); recalc();
-      renderPage(currentPage);
-      toast('🎉 ' + adicionados + ' novo(s) aluno(s) aprovado(s) automaticamente!', 'ok');
-      addNotif('Cadastros aprovados', adicionados + ' novo(s) aluno(s) adicionado(s)', 'ok');
+      saveDB(); recalc(); renderAlunos();
+      atualizarSave(saveId, adicionados+' aluno(s) adicionado(s)!','saved');
+      toast('🎉 '+adicionados+' novo(s) aluno(s) cadastrado(s)!','ok');
+      addNotif('Cadastros aprovados', adicionados+' novo(s) aluno(s)','ok');
+    } else {
+      atualizarSave(saveId,'Todos ja cadastrados','saved');
+      toast('Todos os cadastros ja estao no sistema','info');
     }
-  } catch(e) {}
+  } catch(e) {
+    atualizarSave(saveId,'Falha: '+e.message,'error');
+    toast('Erro ao buscar cadastros: '+e.message,'err');
+  }
 }
 
 // Verificar cadastros novos ao abrir e a cada 10 minutos
