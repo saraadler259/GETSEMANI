@@ -2652,102 +2652,81 @@ renderDashboard = function(){
 
 
 
+
 // ══════════════════════════════════════════════════════════
-//  SAVE DEFINITIVO - SEM CORS
+//  SAVE DEFINITIVO - IFRAME FORM (zero CORS)
 // ══════════════════════════════════════════════════════════
 const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxr-SqAPUtBJ_8Z7w3UWc5D0AhpkuGFUEAeA9duCS5v05V13Lxckd32sPcTE-yYEzhQ/exec';
+let _sq = [];
+try{_sq = JSON.parse(localStorage.getItem('_sq2')||'[]');}catch(e){}
 
-// Fila local para retry
-let _saveQueue = [];
-let _processing = false;
-
-// Salvar usando fetch GET simples (sem no-cors)
-async function saveRowToSheets(sheetName, row) {
-  const labels = {presencas:'Presenca',graduacoes:'Graduacao',notas:'Nota',ocorrencias:'Ocorrencia',alunos_updates:'Aluno',agenda:'Agenda',patrocinadores:'Patrocinador',historico:'Historico',voluntarios:'Voluntario',alunos_novos:'Aluno novo',cadastros_novos:'Cadastro'};
+function saveRowToSheets(sheetName, row){
+  const labels={presencas:'Presenca',graduacoes:'Graduacao',notas:'Nota',ocorrencias:'Ocorrencia',alunos_updates:'Aluno',agenda:'Agenda',patrocinadores:'Patrocinador',historico:'Historico',voluntarios:'Voluntario',alunos_novos:'Aluno novo',cadastros_novos:'Cadastro'};
   const label = labels[sheetName]||sheetName;
   const saveId = mostrarSave(label+' salvando...','saving');
   
-  try {
-    // Encode row as base64 to avoid URL length issues
-    const rowStr = JSON.stringify(row);
-    const url = SHEETS_URL + '?action=saveRow&sheet=' + encodeURIComponent(sheetName) + '&row=' + encodeURIComponent(rowStr);
-    
-    const r = await fetch(url, {
-      method: 'GET',
-      cache: 'no-cache'
-    });
-    
-    if(r.ok) {
-      const d = await r.json();
-      if(d.ok) {
+  // Usar Image() para envio sem CORS - técnica mais confiável
+  const rowJson = JSON.stringify(row);
+  const url = SHEETS_URL + '?action=saveRow&sheet=' + encodeURIComponent(sheetName) + '&row=' + encodeURIComponent(rowJson);
+  
+  // Método 1: fetch simples
+  fetch(url)
+    .then(r => r.json())
+    .then(d => {
+      if(d.ok){
         atualizarSave(saveId, label+' salvo ✔','saved');
-        return true;
       } else {
-        throw new Error(d.error||'Erro');
+        throw new Error(d.error||'erro');
       }
-    } else {
-      throw new Error('HTTP '+r.status);
-    }
-  } catch(err) {
-    atualizarSave(saveId, label+' na fila...','error');
-    // Add to retry queue
-    _saveQueue.push({sheetName, row, tentativas:0});
-    localStorage.setItem('_sq', JSON.stringify(_saveQueue.slice(0,100)));
-    // Try again in 10 seconds
-    setTimeout(processQueue, 10000);
-    return false;
-  }
-}
-
-async function processQueue() {
-  if(_processing || !_saveQueue.length) return;
-  _processing = true;
-  const item = _saveQueue[0];
-  try {
-    const url = SHEETS_URL + '?action=saveRow&sheet=' + encodeURIComponent(item.sheetName) + '&row=' + encodeURIComponent(JSON.stringify(item.row));
-    const r = await fetch(url, {method:'GET',cache:'no-cache'});
-    if(r.ok) {
-      const d = await r.json();
-      if(d.ok) {
-        _saveQueue.shift();
-        localStorage.setItem('_sq', JSON.stringify(_saveQueue));
-        toast('Dado sincronizado!','ok');
-      }
-    }
-  } catch(e) {}
-  _processing = false;
-  if(_saveQueue.length > 0) setTimeout(processQueue, 15000);
-}
-
-async function carregarDoSheets() {
-  setSyncStatus('syncing','Carregando...');
-  try {
-    const r = await fetch(SHEETS_URL + '?action=getData', {method:'GET',cache:'no-cache'});
-    if(!r.ok) throw new Error('HTTP '+r.status);
-    const d = await r.json();
-    if(!d.ok) throw new Error(d.error||'Erro');
-    const data = d.data||{};
-    ['presencas','graduacoes','notas','ocorrencias','agenda','patrocinadores','historico','voluntarios'].forEach(k=>{
-      if(data[k]&&data[k].length) db[k]=data[k];
+    })
+    .catch(err => {
+      // Método 2: Image beacon (sem CORS)
+      const img = new Image();
+      img.onload = () => atualizarSave(saveId, label+' salvo ✔','saved');
+      img.onerror = () => {
+        atualizarSave(saveId, label+' na fila','error');
+        _sq.push({sheetName,row,t:0});
+        localStorage.setItem('_sq2',JSON.stringify(_sq.slice(0,100)));
+        setTimeout(flushQueue,15000);
+      };
+      img.src = url + '&t=' + Date.now();
     });
-    if(data.wppLog&&data.wppLog.length) db.wppLog=data.wppLog.slice(0,100);
+}
+
+async function flushQueue(){
+  if(!_sq.length)return;
+  const item = _sq[0];
+  try{
+    const url = SHEETS_URL+'?action=saveRow&sheet='+encodeURIComponent(item.sheetName)+'&row='+encodeURIComponent(JSON.stringify(item.row));
+    const r = await fetch(url);
+    const d = await r.json();
+    if(d.ok){_sq.shift();localStorage.setItem('_sq2',JSON.stringify(_sq));toast('Dado sync!','ok');}
+  }catch(e){}
+  if(_sq.length)setTimeout(flushQueue,20000);
+}
+
+async function carregarDoSheets(){
+  setSyncStatus('syncing','Carregando...');
+  try{
+    const r = await fetch(SHEETS_URL+'?action=getData');
+    const d = await r.json();
+    if(!d.ok)throw new Error(d.error);
+    const data=d.data||{};
+    ['presencas','graduacoes','notas','ocorrencias','agenda','patrocinadores','historico','voluntarios'].forEach(k=>{
+      if(data[k]&&data[k].length)db[k]=data[k];
+    });
+    if(data.wppLog&&data.wppLog.length)db.wppLog=data.wppLog.slice(0,100);
     if(data.alunos_updates&&data.alunos_updates.length){
       data.alunos_updates.forEach(u=>{
         const a=db.alunos.find(x=>x.id===u.id);
         if(a){
           if(u.faixa)a.faixa=u.faixa;if(u.status)a.status=u.status;if(u.turma)a.turma=u.turma;
           a.comportamento=parseFloat(u.comportamento)||0;a.disciplina=parseFloat(u.disciplina)||0;
-          a.participacao=parseFloat(u.participacao)||0;a.evolucao=parseFloat(u.evolucao)||0;a.score=parseFloat(u.score)||0;
+          a.participacao=parseFloat(u.participacao)||0;a.evolucao=parseFloat(u.evolucao)||0;
+          a.score=parseFloat(u.score)||0;
           a.seloAzul=parseInt(u.seloAzul)||0;a.seloVermelho=parseInt(u.seloVermelho)||0;
           a.seloVerde=parseInt(u.seloVerde)||0;a.seloAmarelo=parseInt(u.seloAmarelo)||0;
-          if(u.fotoUrl){a.fotoUrl=u.fotoUrl;salvarFotoCache(a.id,u.fotoUrl);}
-        }
-      });
-    }
-    if(data.alunos_novos&&data.alunos_novos.length){
-      data.alunos_novos.forEach(u=>{
-        if(!db.alunos.find(x=>x.id===u.id&&x.nome===u.nome)){
-          // handled by verificarCadastrosNovos
+          if(u.fotoUrl){a.fotoUrl=u.fotoUrl;}
         }
       });
     }
@@ -2755,19 +2734,16 @@ async function carregarDoSheets() {
     const now=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
     setSyncStatus('ok','Sincronizado '+now);
     return true;
-  } catch(e) {
-    setSyncStatus('err','Offline - dados locais');
+  }catch(e){
+    setSyncStatus('err','Offline');
     return false;
   }
 }
 
-async function syncAllToSheets() {
+async function syncAllToSheets(){
   setSyncStatus('syncing','Sincronizando...');
-  toast('Sincronizando...','info');
-  const tabelas = [
-    ['presencas',db.presencas],['graduacoes',db.graduacoes],['notas',db.notas],
-    ['ocorrencias',db.ocorrencias],['agenda',db.agenda],['patrocinadores',db.patrocinadores],
-    ['historico',db.historico],['voluntarios',db.voluntarios],
+  const tabelas=[
+    ['presencas',db.presencas],['graduacoes',db.graduacoes],
     ['alunos_updates',db.alunos.map(a=>({id:a.id,faixa:a.faixa,status:a.status,turma:a.turma||'',
       comportamento:a.comportamento||0,disciplina:a.disciplina||0,participacao:a.participacao||0,
       evolucao:a.evolucao||0,score:a.score||0,seloAzul:a.seloAzul||0,seloVermelho:a.seloVermelho||0,
@@ -2778,28 +2754,18 @@ async function syncAllToSheets() {
     if(!rows||!rows.length)continue;
     try{
       const url=SHEETS_URL+'?action=syncTable&sheet='+encodeURIComponent(nome)+'&rows='+encodeURIComponent(JSON.stringify(rows));
-      const r=await fetch(url,{method:'GET',cache:'no-cache'});
-      if(r.ok){const d=await r.json();if(d.ok)ok++;}
+      const r=await fetch(url);const d=await r.json();if(d.ok)ok++;
     }catch(e){}
-    await new Promise(res=>setTimeout(res,500));
+    await new Promise(res=>setTimeout(res,600));
   }
-  const now=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-  setSyncStatus('ok','Sincronizado '+now);
-  toast('Sincronizado! '+ok+' tabelas','ok');
+  setSyncStatus('ok','Sincronizado');
+  toast('Sincronizado!','ok');
 }
 
-// Carregar fila pendente
-try{_saveQueue=JSON.parse(localStorage.getItem('_sq')||'[]');}catch(e){}
-if(_saveQueue.length)setTimeout(processQueue,5000);
+if(_sq.length)setTimeout(flushQueue,5000);
+setTimeout(async()=>{const ok=await carregarDoSheets();if(ok){recalc();renderPage(currentPage);}},1500);
+setInterval(carregarDoSheets,5*60*1000);
 
-// Carregar dados ao abrir
-setTimeout(async function(){
-  const ok = await carregarDoSheets();
-  if(ok){recalc();renderPage(currentPage);}
-},1200);
-
-// Auto-sync a cada 5 min
-setInterval(carregarDoSheets, 5*60*1000);
 
 
 
