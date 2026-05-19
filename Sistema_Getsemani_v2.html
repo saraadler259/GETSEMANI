@@ -2651,42 +2651,79 @@ renderDashboard = function(){
 
 
 
+
 // ══════════════════════════════════════════════════════════
-//  SAVE VIA GET (sem CORS!)
+//  SAVE DEFINITIVO - SEM CORS
 // ══════════════════════════════════════════════════════════
 const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxr-SqAPUtBJ_8Z7w3UWc5D0AhpkuGFUEAeA9duCS5v05V13Lxckd32sPcTE-yYEzhQ/exec';
 
+// Fila local para retry
+let _saveQueue = [];
+let _processing = false;
+
+// Salvar usando fetch GET simples (sem no-cors)
 async function saveRowToSheets(sheetName, row) {
-  if(!SHEETS_URL) return;
-  const labels = {presencas:'📋 Presenca',graduacoes:'Graduacao',notas:'Nota',ocorrencias:'Ocorrencia',alunos_updates:'Aluno',agenda:'Agenda',patrocinadores:'Patrocinador',historico:'Historico',voluntarios:'Voluntario'};
+  const labels = {presencas:'Presenca',graduacoes:'Graduacao',notas:'Nota',ocorrencias:'Ocorrencia',alunos_updates:'Aluno',agenda:'Agenda',patrocinadores:'Patrocinador',historico:'Historico',voluntarios:'Voluntario',alunos_novos:'Aluno novo',cadastros_novos:'Cadastro'};
   const label = labels[sheetName]||sheetName;
   const saveId = mostrarSave(label+' salvando...','saving');
+  
   try {
-    // Encode data as URL params to avoid CORS preflight
-    const params = new URLSearchParams({
-      action: 'saveRow',
-      sheet: sheetName,
-      row: JSON.stringify(row)
+    // Encode row as base64 to avoid URL length issues
+    const rowStr = JSON.stringify(row);
+    const url = SHEETS_URL + '?action=saveRow&sheet=' + encodeURIComponent(sheetName) + '&row=' + encodeURIComponent(rowStr);
+    
+    const r = await fetch(url, {
+      method: 'GET',
+      cache: 'no-cache'
     });
-    const url = SHEETS_URL + '?' + params.toString();
-    const r = await fetch(url, {method:'GET', mode:'no-cors'});
-    // no-cors means we can't read the response but the request goes through
-    atualizarSave(saveId, label+' salvo','saved');
-    return true;
-  } catch(e) {
-    atualizarSave(saveId, label+' falhou','error');
-    _pendingOps.push({sheetName, row, tentativas:1});
-    localStorage.setItem('_pendingOps', JSON.stringify(_pendingOps.slice(0,200)));
+    
+    if(r.ok) {
+      const d = await r.json();
+      if(d.ok) {
+        atualizarSave(saveId, label+' salvo ✔','saved');
+        return true;
+      } else {
+        throw new Error(d.error||'Erro');
+      }
+    } else {
+      throw new Error('HTTP '+r.status);
+    }
+  } catch(err) {
+    atualizarSave(saveId, label+' na fila...','error');
+    // Add to retry queue
+    _saveQueue.push({sheetName, row, tentativas:0});
+    localStorage.setItem('_sq', JSON.stringify(_saveQueue.slice(0,100)));
+    // Try again in 10 seconds
+    setTimeout(processQueue, 10000);
     return false;
   }
 }
 
+async function processQueue() {
+  if(_processing || !_saveQueue.length) return;
+  _processing = true;
+  const item = _saveQueue[0];
+  try {
+    const url = SHEETS_URL + '?action=saveRow&sheet=' + encodeURIComponent(item.sheetName) + '&row=' + encodeURIComponent(JSON.stringify(item.row));
+    const r = await fetch(url, {method:'GET',cache:'no-cache'});
+    if(r.ok) {
+      const d = await r.json();
+      if(d.ok) {
+        _saveQueue.shift();
+        localStorage.setItem('_sq', JSON.stringify(_saveQueue));
+        toast('Dado sincronizado!','ok');
+      }
+    }
+  } catch(e) {}
+  _processing = false;
+  if(_saveQueue.length > 0) setTimeout(processQueue, 15000);
+}
+
 async function carregarDoSheets() {
-  if(!SHEETS_URL) return false;
   setSyncStatus('syncing','Carregando...');
   try {
-    // GET request works fine with CORS
-    const r = await fetch(SHEETS_URL + '?action=getData');
+    const r = await fetch(SHEETS_URL + '?action=getData', {method:'GET',cache:'no-cache'});
+    if(!r.ok) throw new Error('HTTP '+r.status);
     const d = await r.json();
     if(!d.ok) throw new Error(d.error||'Erro');
     const data = d.data||{};
@@ -2703,12 +2740,20 @@ async function carregarDoSheets() {
           a.participacao=parseFloat(u.participacao)||0;a.evolucao=parseFloat(u.evolucao)||0;a.score=parseFloat(u.score)||0;
           a.seloAzul=parseInt(u.seloAzul)||0;a.seloVermelho=parseInt(u.seloVermelho)||0;
           a.seloVerde=parseInt(u.seloVerde)||0;a.seloAmarelo=parseInt(u.seloAmarelo)||0;
+          if(u.fotoUrl){a.fotoUrl=u.fotoUrl;salvarFotoCache(a.id,u.fotoUrl);}
+        }
+      });
+    }
+    if(data.alunos_novos&&data.alunos_novos.length){
+      data.alunos_novos.forEach(u=>{
+        if(!db.alunos.find(x=>x.id===u.id&&x.nome===u.nome)){
+          // handled by verificarCadastrosNovos
         }
       });
     }
     saveDB();recalc();
     const now=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-    setSyncStatus('ok','Sincronizado',now);
+    setSyncStatus('ok','Sincronizado '+now);
     return true;
   } catch(e) {
     setSyncStatus('err','Offline - dados locais');
@@ -2717,7 +2762,6 @@ async function carregarDoSheets() {
 }
 
 async function syncAllToSheets() {
-  if(!SHEETS_URL){toast('URL nao configurada','warn');return;}
   setSyncStatus('syncing','Sincronizando...');
   toast('Sincronizando...','info');
   const tabelas = [
@@ -2733,25 +2777,30 @@ async function syncAllToSheets() {
   for(const [nome,rows] of tabelas){
     if(!rows||!rows.length)continue;
     try{
-      const params=new URLSearchParams({action:'syncTable',sheet:nome,rows:JSON.stringify(rows)});
-      await fetch(SHEETS_URL+'?'+params.toString(),{method:'GET',mode:'no-cors'});
-      ok++;
+      const url=SHEETS_URL+'?action=syncTable&sheet='+encodeURIComponent(nome)+'&rows='+encodeURIComponent(JSON.stringify(rows));
+      const r=await fetch(url,{method:'GET',cache:'no-cache'});
+      if(r.ok){const d=await r.json();if(d.ok)ok++;}
     }catch(e){}
-    await new Promise(res=>setTimeout(res,200));
+    await new Promise(res=>setTimeout(res,500));
   }
   const now=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-  setSyncStatus('ok','Sincronizado',now);
-  toast('Sincronizado!','ok');
+  setSyncStatus('ok','Sincronizado '+now);
+  toast('Sincronizado! '+ok+' tabelas','ok');
 }
 
-// Carregar ao abrir
+// Carregar fila pendente
+try{_saveQueue=JSON.parse(localStorage.getItem('_sq')||'[]');}catch(e){}
+if(_saveQueue.length)setTimeout(processQueue,5000);
+
+// Carregar dados ao abrir
 setTimeout(async function(){
   const ok = await carregarDoSheets();
-  if(ok){recalc();renderPage(currentPage);toast('Dados atualizados!','ok');}
-},1000);
+  if(ok){recalc();renderPage(currentPage);}
+},1200);
 
 // Auto-sync a cada 5 min
 setInterval(carregarDoSheets, 5*60*1000);
+
 
 
 
