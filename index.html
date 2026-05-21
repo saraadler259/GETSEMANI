@@ -3673,6 +3673,109 @@ setTimeout(verificarCadastrosPendentes, 5000);
 // E a cada 15 minutos
 setInterval(verificarCadastrosPendentes, 15*60*1000);
 
+
+// ══════════════════════════════════════════════════════════
+//  CARREGAR DADOS DO SHEETS VIA JSONP (SEM CORS)
+// ══════════════════════════════════════════════════════════
+function carregarDadosJSONP() {
+  const cbName = 'dadosCb_' + Date.now();
+  const script = document.createElement('script');
+  const saveId = mostrarSave('Carregando dados...', 'saving');
+  
+  const timer = setTimeout(() => {
+    delete window[cbName];
+    try { document.head.removeChild(script); } catch(e) {}
+    atualizarSave(saveId, 'Usando dados locais', 'error');
+  }, 10000);
+  
+  window[cbName] = function(result) {
+    clearTimeout(timer);
+    delete window[cbName];
+    try { document.head.removeChild(script); } catch(e) {}
+    
+    if(!result || !result.ok || !result.data) {
+      atualizarSave(saveId, 'Usando dados locais', 'error');
+      return;
+    }
+    
+    const data = result.data;
+    let updated = false;
+    
+    // Carregar presencas
+    if(data.presencas && data.presencas.length > 0) {
+      db.presencas = data.presencas;
+      updated = true;
+    }
+    // Carregar graduacoes
+    if(data.graduacoes && data.graduacoes.length > 0) {
+      db.graduacoes = data.graduacoes;
+      updated = true;
+    }
+    // Carregar notas
+    if(data.notas && data.notas.length > 0) {
+      db.notas = data.notas;
+      updated = true;
+    }
+    // Carregar ocorrencias
+    if(data.ocorrencias && data.ocorrencias.length > 0) {
+      db.ocorrencias = data.ocorrencias;
+      updated = true;
+    }
+    // Carregar agenda
+    if(data.agenda && data.agenda.length > 0) {
+      db.agenda = data.agenda;
+      updated = true;
+    }
+    // Atualizar avaliacoes e selos dos alunos
+    if(data.alunos_updates && data.alunos_updates.length > 0) {
+      data.alunos_updates.forEach(u => {
+        const a = db.alunos.find(x => x.id === u.id);
+        if(a) {
+          if(u.faixa) a.faixa = u.faixa;
+          if(u.status) a.status = u.status;
+          if(u.turma) a.turma = u.turma;
+          a.comportamento = parseFloat(u.comportamento)||0;
+          a.disciplina = parseFloat(u.disciplina)||0;
+          a.participacao = parseFloat(u.participacao)||0;
+          a.evolucao = parseFloat(u.evolucao)||0;
+          a.score = parseFloat(u.score)||0;
+          a.seloAzul = parseInt(u.seloAzul)||0;
+          a.seloVermelho = parseInt(u.seloVermelho)||0;
+          a.seloVerde = parseInt(u.seloVerde)||0;
+          a.seloAmarelo = parseInt(u.seloAmarelo)||0;
+          if(u.fotoBase64 && u.fotoBase64.length > 100) {
+            a.foto = u.fotoBase64;
+            saveFotoCache(a.id, u.fotoBase64);
+          }
+        }
+      });
+      updated = true;
+    }
+    
+    if(updated) {
+      saveDB();
+      recalc();
+      renderPage(currentPage);
+      const now = new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+      setSyncStatus('ok', 'Sincronizado', now);
+      atualizarSave(saveId, 'Dados atualizados ✔', 'saved');
+    } else {
+      atualizarSave(saveId, 'Dados em dia', 'saved');
+    }
+  };
+  
+  script.src = 'https://script.google.com/macros/s/AKfycbxr-SqAPUtBJ_8Z7w3UWc5D0AhpkuGFUEAeA9duCS5v05V13Lxckd32sPcTE-yYEzhQ/exec?action=getData&callback=' + cbName + '&t=' + Date.now();
+  script.onerror = () => {
+    clearTimeout(timer);
+    atualizarSave(saveId, 'Sem conexao', 'error');
+  };
+  document.head.appendChild(script);
+}
+
+// Carregar ao iniciar e a cada 3 minutos
+setTimeout(carregarDadosJSONP, 2000);
+setInterval(carregarDadosJSONP, 3*60*1000);
+
 </script>
 </body>
 </html>
