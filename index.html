@@ -3701,9 +3701,16 @@ function carregarDadosJSONP() {
     const data = result.data;
     let updated = false;
     
+    // Normalizar formato de data (Sheets retorna "Mon May 18 2026...", sistema usa "2026-05-18")
+    function normDate(d){
+      if(!d||d===''||d==='undefined')return'';
+      if(/^\d{4}-\d{2}-\d{2}$/.test(d))return d;
+      try{const dt=new Date(d);if(!isNaN(dt.getTime()))return dt.toISOString().split('T')[0];}catch(e){}
+      return d;
+    }
     // Carregar presencas
     if(data.presencas && data.presencas.length > 0) {
-      db.presencas = data.presencas;
+      db.presencas = data.presencas.map(p=>({...p,data:normDate(p.data)}));
       updated = true;
     }
     // Carregar graduacoes
