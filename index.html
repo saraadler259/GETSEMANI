@@ -8,6 +8,14 @@
 <!-- VERSION 2.5 -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sistema Getsêmani</title>
+<meta name="application-name" content="Getsêmani">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Getsêmani">
+<meta name="theme-color" content="#0A1628">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%230A1628'/%3E%3Ccircle cx='256' cy='256' r='180' fill='none' stroke='%234F7FFA' stroke-width='18'/%3E%3Ctext x='256' y='330' font-size='220' text-anchor='middle' fill='white'%3E🥋%3C/text%3E%3C/svg%3E">
+<link rel="manifest" href="data:application/json,%7B%22name%22%3A%22Sistema%20Gets%C3%AAm%C3%A2ni%22%2C%22short_name%22%3A%22Gets%C3%AAm%C3%A2ni%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230A1628%22%2C%22theme_color%22%3A%22%230A1628%22%2C%22orientation%22%3A%22portrait%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%2520xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%2520viewBox%3D'0%25200%2520512%2520512'%253E%253Crect%2520width%3D'512'%2520height%3D'512'%2520rx%3D'100'%2520fill%3D'%25230A1628'%2F%253E%253Ctext%2520x%3D'256'%2520y%3D'330'%2520font-size%3D'320'%2520text-anchor%3D'middle'%253E%25F0%259F%25A5%258B%253C%2Ftext%253E%253C%2Fsvg%253E%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D">
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>
@@ -317,7 +325,8 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 <div id="page-alunos" class="page">
   <div class="topbar"><div><div class="page-title">👥 Alunos</div><div class="page-sub" id="alunos-count-lbl"></div></div>
   <div class="topbar-right"><div class="search-wrap"><input type="text" id="srch-alunos" placeholder="Buscar…" oninput="renderAlunos()"></div><label class="btn btn-ghost" style="cursor:pointer">📥 CSV<input type="file" accept=".csv" style="display:none" onchange="importCSV(event)"></label><button class="btn btn-primary" onclick="openModal('m-aluno')">+ Novo Aluno</button>
-        <button class="btn btn-outline btn-sm" onclick="verificarCadastrosNovos()" title="Buscar cadastros enviados pelos pais">🔄 Cadastros pais</button></div></div>
+        <button class="btn btn-outline btn-sm" onclick="verificarCadastrosNovos()" title="Buscar cadastros enviados pelos pais">🔄 Cadastros pais</button>
+        <button id="btn-instalar-app" class="btn btn-sm" onclick="instalarApp()" title="Instalar como app no celular" style="display:none;background:linear-gradient(135deg,#4F7FFA,#8B5CF6);color:white;align-items:center;gap:4px">📲 Instalar App</button></div></div>
   <div class="filters" id="alunos-filters">
     <span style="font-size:11px;color:var(--muted);font-weight:600">Filtrar:</span>
     <button class="fchip active" onclick="setFilter('status','todos',this)">Todos</button>
@@ -3680,8 +3689,32 @@ setInterval(verificarCadastrosPendentes, 15*60*1000);
 
 
 // ══════════════════════════════════════════════════════════
-//  CARREGAR DADOS DO SHEETS VIA JSONP (SEM CORS)
+//  PWA — INSTALAR COMO APP
 // ══════════════════════════════════════════════════════════
+let _pwaPrompt = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  _pwaPrompt = e;
+  const btn = document.getElementById('btn-instalar-app');
+  if(btn) btn.style.display = 'flex';
+});
+window.addEventListener('appinstalled', () => {
+  const btn = document.getElementById('btn-instalar-app');
+  if(btn) btn.style.display = 'none';
+  toast('🎉 App instalado com sucesso!', 'ok');
+});
+function instalarApp() {
+  if(_pwaPrompt) {
+    _pwaPrompt.prompt();
+    _pwaPrompt.userChoice.then(r => {
+      if(r.outcome === 'accepted') toast('🎉 Instalando app...', 'ok');
+      _pwaPrompt = null;
+    });
+  } else {
+    // iOS — não suporta beforeinstallprompt, mostrar instrução
+    toast('No iPhone: toque em Compartilhar → "Adicionar à Tela de Início"', 'info', 5000);
+  }
+}
 function carregarDadosJSONP() {
   const cbName = 'dadosCb_' + Date.now();
   const script = document.createElement('script');
