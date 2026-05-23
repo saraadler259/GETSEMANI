@@ -20,6 +20,7 @@
 
 <style>
 :root{--navy:#0A1628;--navy2:#111f3a;--navy3:#172444;--blue:#1B3FA0;--accent:#4F7FFA;--gold:#F5A623;--green:#2ECC8F;--red:#E84D6A;--purple:#8B5CF6;--cyan:#06B6D4;--orange:#F97316;--white:#F0F4FF;--muted:#7A8BB0;--card:#162035;--border:rgba(79,127,250,0.15);--radius:14px;--shadow:0 8px 32px rgba(0,0,0,0.4)}
+html.light{--navy:#f0f4ff;--navy2:#e4eaf8;--navy3:#d8e2f5;--blue:#1B3FA0;--accent:#2563eb;--gold:#d97706;--green:#059669;--red:#dc2626;--purple:#7c3aed;--cyan:#0891b2;--orange:#ea580c;--white:#1e2a45;--muted:#4b5563;--card:#ffffff;--border:rgba(37,99,235,0.15);--shadow:0 4px 20px rgba(0,0,0,0.1)}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--navy);color:var(--white);font-family:'Sora',sans-serif;min-height:100vh;overflow-x:hidden}
 ::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px}
@@ -326,6 +327,7 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
   <div class="topbar"><div><div class="page-title">👥 Alunos</div><div class="page-sub" id="alunos-count-lbl"></div></div>
   <div class="topbar-right"><div class="search-wrap"><input type="text" id="srch-alunos" placeholder="Buscar…" oninput="renderAlunos()"></div><label class="btn btn-ghost" style="cursor:pointer">📥 CSV<input type="file" accept=".csv" style="display:none" onchange="importCSV(event)"></label><button class="btn btn-primary" onclick="openModal('m-aluno')">+ Novo Aluno</button>
         <button class="btn btn-outline btn-sm" onclick="verificarCadastrosNovos()" title="Buscar cadastros enviados pelos pais">🔄 Cadastros pais</button>
+        <button id="btn-tema" onclick="toggleTema()" title="Alternar tema claro/escuro" style="background:none;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:5px 10px;cursor:pointer;font-size:14px" class="btn btn-sm">🌙</button>
         <button id="btn-instalar-app" class="btn btn-sm" onclick="instalarApp()" title="Instalar como app no celular" style="display:none;background:linear-gradient(135deg,#4F7FFA,#8B5CF6);color:white;align-items:center;gap:4px">📲 Instalar App</button></div></div>
   <div class="filters" id="alunos-filters">
     <span style="font-size:11px;color:var(--muted);font-weight:600">Filtrar:</span>
@@ -3703,6 +3705,22 @@ window.addEventListener('appinstalled', () => {
   if(btn) btn.style.display = 'none';
   toast('🎉 App instalado com sucesso!', 'ok');
 });
+function toggleTema(){
+  const light=document.documentElement.classList.toggle("light");
+  document.getElementById("btn-tema").textContent=light?"🌙":"☀️";
+  localStorage.setItem("tema",light?"light":"dark");
+  const mc=document.querySelector("meta[name=theme-color]");
+  if(mc)mc.content=light?"#f0f4ff":"#0A1628";
+}
+// Restaurar tema salvo
+(function(){
+  if(localStorage.getItem("tema")==="light"){
+    document.documentElement.classList.add("light");
+    const btn=document.getElementById("btn-tema");
+    if(btn)btn.textContent="🌙";
+  }
+})();
+
 function instalarApp() {
   if(_pwaPrompt) {
     _pwaPrompt.prompt();
