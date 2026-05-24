@@ -1098,7 +1098,10 @@ function loadDB(){
       if(d.patrocinadores&&d.patrocinadores.length)db.patrocinadores=d.patrocinadores;
       if(d.historico&&d.historico.length)db.historico=d.historico;
       if(d.voluntarios&&d.voluntarios.length)db.voluntarios=d.voluntarios;
+      // Adicionar alunos extras salvos (novos cadastros)
       if(d.alunosExtra)d.alunosExtra.forEach(da=>{if(!db.alunos.find(a=>a.id===da.id))db.alunos.push(da);});
+      // Restaurar status/turma/faixa de TODOS os alunos do avalUpdates
+      // (garante que edições feitas em outro dispositivo apareçam)
       if(d.avalUpdates)d.avalUpdates.forEach(u=>{
         const a=db.alunos.find(x=>x.id===u.id);
         if(a){a.faixa=u.faixa||a.faixa;a.status=u.status||a.status;a.comportamento=u.comportamento||0;a.disciplina=u.disciplina||0;a.participacao=u.participacao||0;a.evolucao=u.evolucao||0;a.score=u.score||0;}
@@ -3891,8 +3894,10 @@ function carregarDadosJSONP() {
       db.agenda = data.agenda;
       updated = true;
     }
-    // Carregar alunos do Sheets (sincronização completa)
+    // Carregar alunos do Sheets (só atualiza campos, nunca remove alunos base)
     if(data.alunos && data.alunos.length > 0) {
+      // Se vier menos alunos que os locais, só atualiza — não substitui
+      const sheetsTemMenos = data.alunos.length < db.alunos.length;
       data.alunos.forEach(u => {
         const a = db.alunos.find(x => x.id === u.id);
         if(a) {
@@ -3912,8 +3917,8 @@ function carregarDadosJSONP() {
           a.evolucao = parseFloat(u.evolucao)||a.evolucao||0;
           a.score = parseFloat(u.score)||a.score||0;
           if(u.foto && u.foto.length > 100) a.foto = u.foto;
-        } else if(u.id && u.nome) {
-          // Novo aluno vindo do Sheets
+        } else if(u.id && u.nome && !sheetsTemMenos) {
+          // Novo aluno vindo do Sheets (só adiciona se Sheets tem lista completa)
           db.alunos.push({
             id:u.id, nome:u.nome||'', nasc:normDate(u.nasc)||'', sexo:u.sexo||'',
             cpf:u.cpf||'', foto:u.foto||'', status:u.status||'Ativo', turma:u.turma||'',
