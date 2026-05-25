@@ -1838,8 +1838,8 @@ function verificarAlertas(){
 // ═══════════════════════════════════════════════
 if(!localStorage.getItem('gwpp')){localStorage.setItem('gwpp',JSON.stringify({numero:'51989520485',assinatura:'Projeto Getsêmani - Portão/RS'}));}
 // Pre-configure Google Sheets URL
-if(!localStorage.getItem('gsheets')||JSON.parse(localStorage.getItem('gsheets')||'{}').url!=='https://script.google.com/macros/s/AKfycbxLPXo9VpV5-CatBTPyWL9WCL6tSDi4zFBwWN_C3P3-IA69RRWnBV53qV23C4o6BxLVIw/exec'){
-  localStorage.setItem('gsheets',JSON.stringify({url:'https://script.google.com/macros/s/AKfycbxLPXo9VpV5-CatBTPyWL9WCL6tSDi4zFBwWN_C3P3-IA69RRWnBV53qV23C4o6BxLVIw/exec',lastSync:''}));
+if(!localStorage.getItem('gsheets')||JSON.parse(localStorage.getItem('gsheets')||'{}').url!=='https://script.google.com/macros/s/AKfycbyZSu3qIkNiOTsfxaxZbLTxxsfz3z7tIUQh8KH1RjDYfQ38g-gbmFLSfHTEaMiwdNq1RQ/exec'){
+  localStorage.setItem('gsheets',JSON.stringify({url:'https://script.google.com/macros/s/AKfycbyZSu3qIkNiOTsfxaxZbLTxxsfz3z7tIUQh8KH1RjDYfQ38g-gbmFLSfHTEaMiwdNq1RQ/exec',lastSync:''}));
 }
 loadDB();
 recalc();
@@ -1911,9 +1911,11 @@ function getFotoAtual(){
   return img&&img.src&&img.src.startsWith('data:')?img.src:'';
 }
 function fotoHTML(a,size=48){
-  const onclick=`onclick="abrirEditarFoto('${a.id}')" title="Clique para ${a.foto?'trocar':'adicionar'} foto" style="cursor:pointer"`;
-  if(a.foto&&a.foto.startsWith('data:'))
-    return`<img src="${a.foto}" ${onclick} style="width:${size}px;height:${size}px;border-radius:50%;object-fit:cover;border:2px solid rgba(79,127,250,.4);flex-shrink:0;cursor:pointer">`;
+  const onclick=`onclick="abrirEditarFoto('${a.id}')" title="Clique para ${a.foto||a.fotoDrive?'trocar':'adicionar'} foto" style="cursor:pointer"`;
+  // Usar foto do Drive se disponível (sincroniza em qualquer dispositivo)
+  const src = a.fotoDrive || (a.foto&&a.foto.startsWith('data:')?a.foto:null);
+  if(src)
+    return`<img src="${src}" ${onclick} style="width:${size}px;height:${size}px;border-radius:50%;object-fit:cover;border:2px solid rgba(79,127,250,.4);flex-shrink:0;cursor:pointer" onerror="this.style.display='none'">`;
   return`<div ${onclick} style="width:${size}px;height:${size}px;border-radius:50%;background:linear-gradient(135deg,#1B3FA0,#4F7FFA);display:flex;align-items:center;justify-content:center;font-size:${Math.round(size*0.38)}px;font-weight:800;color:#fff;flex-shrink:0">${a.nome.charAt(0)}</div>`;
 }
 
@@ -2599,9 +2601,9 @@ function irParaData(data){
 // Pre-fill sheets URL in config page
 setTimeout(function(){
   const inp = document.getElementById('sheets-url');
-  if(inp && !inp.value) inp.value = 'https://script.google.com/macros/s/AKfycbxLPXo9VpV5-CatBTPyWL9WCL6tSDi4zFBwWN_C3P3-IA69RRWnBV53qV23C4o6BxLVIw/exec';
+  if(inp && !inp.value) inp.value = 'https://script.google.com/macros/s/AKfycbyZSu3qIkNiOTsfxaxZbLTxxsfz3z7tIUQh8KH1RjDYfQ38g-gbmFLSfHTEaMiwdNq1RQ/exec';
   if(typeof sheetsConfig !== 'undefined' && !sheetsConfig.url) {
-    sheetsConfig.url = 'https://script.google.com/macros/s/AKfycbxLPXo9VpV5-CatBTPyWL9WCL6tSDi4zFBwWN_C3P3-IA69RRWnBV53qV23C4o6BxLVIw/exec';
+    sheetsConfig.url = 'https://script.google.com/macros/s/AKfycbyZSu3qIkNiOTsfxaxZbLTxxsfz3z7tIUQh8KH1RjDYfQ38g-gbmFLSfHTEaMiwdNq1RQ/exec';
     localStorage.setItem('gsheets', JSON.stringify(sheetsConfig));
   }
 }, 500);
@@ -2760,7 +2762,7 @@ renderDashboard = function(){
 
 
 // SAVE DEFINITIVO v3
-const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxLPXo9VpV5-CatBTPyWL9WCL6tSDi4zFBwWN_C3P3-IA69RRWnBV53qV23C4o6BxLVIw/exec';
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyZSu3qIkNiOTsfxaxZbLTxxsfz3z7tIUQh8KH1RjDYfQ38g-gbmFLSfHTEaMiwdNq1RQ/exec';
 
 function saveRowToSheets(sheetName, row){
   const labels={presencas:'Presenca',graduacoes:'Graduacao',notas:'Nota',ocorrencias:'Ocorrencia',alunos_updates:'Aluno',agenda:'Agenda',patrocinadores:'Patrocinador',historico:'Historico',voluntarios:'Voluntario',alunos_novos:'Aluno',cadastros_novos:'Cadastro'};
@@ -2892,7 +2894,7 @@ function atualizarSave(id, msg, state){
 const _origSalvarNoSheets = saveRowToSheets || saveRowToSheets;
 saveRowToSheets = async function(sheetName, row){
   // Metodo definitivo: usa imagem para bypass total de CORS
-  const url = 'https://script.google.com/macros/s/AKfycbxLPXo9VpV5-CatBTPyWL9WCL6tSDi4zFBwWN_C3P3-IA69RRWnBV53qV23C4o6BxLVIw/exec';
+  const url = 'https://script.google.com/macros/s/AKfycbyZSu3qIkNiOTsfxaxZbLTxxsfz3z7tIUQh8KH1RjDYfQ38g-gbmFLSfHTEaMiwdNq1RQ/exec';
   const label = ({presencas:'Presenca',graduacoes:'Graduacao',notas:'Nota',
     ocorrencias:'Ocorrencia',alunos_updates:'Aluno',agenda:'Agenda',
     patrocinadores:'Patrocinador',historico:'Historico',voluntarios:'Voluntario',
@@ -3208,17 +3210,64 @@ setTimeout(verificarGraus, 2500);
 
 // Salva foto em localStorage dedicado (separado do db principal)
 function salvarFotoAluno(id, fotoData){
+  // 1. Salvar localmente (fallback)
   try{
     const fotos = JSON.parse(localStorage.getItem('gfotos')||'{}');
     fotos[id] = fotoData;
     localStorage.setItem('gfotos', JSON.stringify(fotos));
-  }catch(e){
-    // localStorage cheio - tentar compactar
-    try{
-      const fotos = {};
-      fotos[id] = fotoData;
-      localStorage.setItem('gfotos', JSON.stringify(fotos));
-    }catch(e2){}
+  }catch(e){}
+
+  // 2. Enviar para Google Drive via Apps Script
+  const cbName = 'fotoCb_' + Date.now();
+  const script = document.createElement('script');
+  const timer  = setTimeout(()=>{
+    delete window[cbName];
+    try{document.head.removeChild(script);}catch(e){}
+  }, 15000);
+
+  window[cbName] = function(r) {
+    clearTimeout(timer);
+    delete window[cbName];
+    try{document.head.removeChild(script);}catch(e){}
+    if(r && r.ok && r.url) {
+      // Salvar URL do Drive no aluno
+      const a = db.alunos.find(x => x.id === id);
+      if(a) {
+        a.fotoDrive = r.url;
+        saveDB();
+      }
+      toast('📷 Foto salva na nuvem!','ok');
+    }
+  };
+
+  script.onerror = ()=>{
+    clearTimeout(timer);
+    delete window[cbName];
+    try{document.head.removeChild(script);}catch(e){}
+  };
+
+  // Compactar foto antes de enviar
+  try {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const max = 200;
+      let w = img.width, h = img.height;
+      if(w>h){if(w>max){h=Math.round(h*max/w);w=max;}}
+      else{if(h>max){w=Math.round(w*max/h);h=max;}}
+      canvas.width=w; canvas.height=h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      const compressed = canvas.toDataURL('image/jpeg', 0.7);
+      const aluno = db.alunos.find(x => x.id === id);
+      const nome  = aluno ? encodeURIComponent(aluno.nome) : '';
+      script.src  = 'https://script.google.com/macros/s/AKfycbyZSu3qIkNiOTsfxaxZbLTxxsfz3z7tIUQh8KH1RjDYfQ38g-gbmFLSfHTEaMiwdNq1RQ/exec?action=saveFoto&id='+id+'&nome='+nome+'&foto='+encodeURIComponent(compressed)+'&callback='+cbName;
+      document.head.appendChild(script);
+    };
+    img.onerror = ()=>{ document.head.appendChild(script); };
+    img.src = fotoData;
+  } catch(e) {
+    script.src = 'https://script.google.com/macros/s/AKfycbyZSu3qIkNiOTsfxaxZbLTxxsfz3z7tIUQh8KH1RjDYfQ38g-gbmFLSfHTEaMiwdNq1RQ/exec?action=saveFoto&id='+id+'&foto='+encodeURIComponent(fotoData)+'&callback='+cbName;
+    document.head.appendChild(script);
   }
 }
 
@@ -3279,7 +3328,7 @@ abrirEditarFoto = function(id){
 
 // Carregar fotos novos alunos do Sheets ao iniciar
 async function carregarAlunosNovos(){
-  const url = 'https://script.google.com/macros/s/AKfycbxLPXo9VpV5-CatBTPyWL9WCL6tSDi4zFBwWN_C3P3-IA69RRWnBV53qV23C4o6BxLVIw/exec';
+  const url = 'https://script.google.com/macros/s/AKfycbyZSu3qIkNiOTsfxaxZbLTxxsfz3z7tIUQh8KH1RjDYfQ38g-gbmFLSfHTEaMiwdNq1RQ/exec';
   try{
     const r = await fetch(url+'?action=getSheet&sheet=alunos_novos');
     const d = await r.json();
@@ -3418,7 +3467,7 @@ setTimeout(carregarFotoUrls, 2500);
 // ══════════════════════════════════════════════════════════
 //  FOTOS PERMANENTES — GOOGLE DRIVE
 // ══════════════════════════════════════════════════════════
-const DRIVE_URL = 'https://script.google.com/macros/s/AKfycbxLPXo9VpV5-CatBTPyWL9WCL6tSDi4zFBwWN_C3P3-IA69RRWnBV53qV23C4o6BxLVIw/exec';
+const DRIVE_URL = 'https://script.google.com/macros/s/AKfycbyZSu3qIkNiOTsfxaxZbLTxxsfz3z7tIUQh8KH1RjDYfQ38g-gbmFLSfHTEaMiwdNq1RQ/exec';
 
 async function salvarFotoNoDrive(alunoId, base64) {
   try {
@@ -3586,7 +3635,7 @@ function verificarCadastrosNovos() {
     clearTimeout(timer);
     atualizarSave(saveId, 'Erro de conexão', 'error');
   };
-  script.src = 'https://script.google.com/macros/s/AKfycbxLPXo9VpV5-CatBTPyWL9WCL6tSDi4zFBwWN_C3P3-IA69RRWnBV53qV23C4o6BxLVIw/exec?action=getData&callback=' + cbName + '&t=' + Date.now();
+  script.src = 'https://script.google.com/macros/s/AKfycbyZSu3qIkNiOTsfxaxZbLTxxsfz3z7tIUQh8KH1RjDYfQ38g-gbmFLSfHTEaMiwdNq1RQ/exec?action=getData&callback=' + cbName + '&t=' + Date.now();
   document.head.appendChild(script);
 }
 // Verificar ao abrir e a cada 10 min
@@ -3598,7 +3647,7 @@ setInterval(verificarCadastrosNovos, 10*60*1000);
 //  SISTEMA DE FOTOS — DEFINITIVO
 //  Salva no Sheets via pixel, carrega via JSONP
 // ══════════════════════════════════════════════════════════
-const _SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxLPXo9VpV5-CatBTPyWL9WCL6tSDi4zFBwWN_C3P3-IA69RRWnBV53qV23C4o6BxLVIw/exec';
+const _SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyZSu3qIkNiOTsfxaxZbLTxxsfz3z7tIUQh8KH1RjDYfQ38g-gbmFLSfHTEaMiwdNq1RQ/exec';
 let _fotosCache = {};
 try { _fotosCache = JSON.parse(localStorage.getItem('gFotosCache')||'{}'); } catch(e) {}
 
@@ -3740,7 +3789,7 @@ function verificarCadastrosPendentes() {
       document.getElementById('nb-alunos').style.animation = 'pulse 1s 3';
     }
   };
-  script.src = 'https://script.google.com/macros/s/AKfycbxLPXo9VpV5-CatBTPyWL9WCL6tSDi4zFBwWN_C3P3-IA69RRWnBV53qV23C4o6BxLVIw/exec?action=getCadastrosPendentes&callback=' + cbName + '&t=' + Date.now();
+  script.src = 'https://script.google.com/macros/s/AKfycbyZSu3qIkNiOTsfxaxZbLTxxsfz3z7tIUQh8KH1RjDYfQ38g-gbmFLSfHTEaMiwdNq1RQ/exec?action=getCadastrosPendentes&callback=' + cbName + '&t=' + Date.now();
   script.onerror = () => { clearTimeout(timer); };
   document.head.appendChild(script);
 }
@@ -3830,7 +3879,7 @@ async function syncAlunosSheets() {
   if(window._syncing) return;
   window._syncing = true;
   try {
-  const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxLPXo9VpV5-CatBTPyWL9WCL6tSDi4zFBwWN_C3P3-IA69RRWnBV53qV23C4o6BxLVIw/exec';
+  const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyZSu3qIkNiOTsfxaxZbLTxxsfz3z7tIUQh8KH1RjDYfQ38g-gbmFLSfHTEaMiwdNq1RQ/exec';
   const cbName = 'syncAlunosCb_' + Date.now();
   const script = document.createElement('script');
 
@@ -4004,7 +4053,7 @@ function carregarDadosJSONP() {
     }
   };
   
-  script.src = 'https://script.google.com/macros/s/AKfycbxLPXo9VpV5-CatBTPyWL9WCL6tSDi4zFBwWN_C3P3-IA69RRWnBV53qV23C4o6BxLVIw/exec?action=getData&callback=' + cbName + '&t=' + Date.now();
+  script.src = 'https://script.google.com/macros/s/AKfycbyZSu3qIkNiOTsfxaxZbLTxxsfz3z7tIUQh8KH1RjDYfQ38g-gbmFLSfHTEaMiwdNq1RQ/exec?action=getData&callback=' + cbName + '&t=' + Date.now();
   script.onerror = () => {
     clearTimeout(timer);
     atualizarSave(saveId, 'Sem conexao', 'error');
@@ -4045,7 +4094,7 @@ function fazerBackupDiario() {
     if(r&&r.ok) { localStorage.setItem('gts_backup_dia', hoje); console.log('✅ Backup diário:', hoje); }
   };
   script.onerror = ()=>{ clearTimeout(timer); delete window[cbName]; try{document.head.removeChild(script);}catch(e){} };
-  script.src = 'https://script.google.com/macros/s/AKfycbxLPXo9VpV5-CatBTPyWL9WCL6tSDi4zFBwWN_C3P3-IA69RRWnBV53qV23C4o6BxLVIw/exec?action=backup&dados=' + encodeURIComponent(JSON.stringify(dados)) + '&callback=' + cbName;
+  script.src = 'https://script.google.com/macros/s/AKfycbyZSu3qIkNiOTsfxaxZbLTxxsfz3z7tIUQh8KH1RjDYfQ38g-gbmFLSfHTEaMiwdNq1RQ/exec?action=backup&dados=' + encodeURIComponent(JSON.stringify(dados)) + '&callback=' + cbName;
   document.head.appendChild(script);
 }
 setTimeout(fazerBackupDiario, 30000);
