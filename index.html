@@ -278,6 +278,13 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-10px)}40%{transform:translateX(10px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
 @keyframes loginFadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 .login-box{animation:loginFadeIn .5s ease}
+
+/* CORREÇÃO SCROLL ALUNOS */
+#page-alunos{overflow:visible!important}
+#page-alunos .card{overflow:visible!important;height:auto!important}
+#page-alunos .tbl-wrap{overflow-x:auto!important;overflow-y:visible!important;height:auto!important;max-height:none!important}
+#page-alunos table{height:auto!important}
+#tbody-alunos{display:table-row-group!important;overflow:visible!important;height:auto!important;max-height:none!important}
 </style>
 </head>
 <body>
