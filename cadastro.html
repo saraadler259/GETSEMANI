@@ -7,8 +7,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--blue:#1B3FA0;--accent:#4F7FFA;--green:#10B981;--red:#EF4444;--dark:#0A1628;--muted:#6B7280;--border:#E5E7EB}
-body{font-family:'Sora',sans-serif;background:linear-gradient(135deg,#0A1628 0%,#1B3FA0 60%,#0A1628 100%);min-height:100vh;padding:20px}
+:root{--blue:#1B3FA0;--accent:#4F7FFA;--green:#10B981;--red:#EF4444;--dark:#f0ede6;--muted:#6B7280;--border:#E5E7EB}
+body{background:#f0ede6;font-family:'Sora',sans-serif;background:linear-gradient(135deg,#f0ede6 0%,#1B3FA0 60%,#f0ede6 100%);min-height:100vh;padding:20px}
 .container{max-width:700px;margin:0 auto}
 .header{text-align:center;padding:32px 20px 20px;color:#fff}
 .logo{font-size:52px;margin-bottom:8px}
@@ -361,7 +361,7 @@ function processarFoto(e){
 const canvas=document.getElementById('sig-canvas');
 const ctx=canvas.getContext('2d');
 let drawing=false;
-ctx.strokeStyle='#0A1628';ctx.lineWidth=2.5;ctx.lineCap='round';ctx.lineJoin='round';
+ctx.strokeStyle='#f0ede6';ctx.lineWidth=2.5;ctx.lineCap='round';ctx.lineJoin='round';
 function getPos(e){const r=canvas.getBoundingClientRect();const sx=canvas.width/r.width,sy=canvas.height/r.height;const src=e.touches?e.touches[0]:e;return{x:(src.clientX-r.left)*sx,y:(src.clientY-r.top)*sy};}
 canvas.addEventListener('mousedown',e=>{drawing=true;const p=getPos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);});
 canvas.addEventListener('mousemove',e=>{if(!drawing)return;const p=getPos(e);ctx.lineTo(p.x,p.y);ctx.stroke();sigVazia=false;document.getElementById('sig-hint').style.display='none';verificarAceite();});
