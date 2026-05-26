@@ -350,6 +350,7 @@ table tr{height:auto!important}
     <div class="nav-item" onclick="nav('patrocinadores')"><span class="ni">🤝</span> Patrocinadores</div>
     <div class="nav-item" onclick="nav('historico')"><span class="ni">💰</span> Histórico</div>
     <div class="nav-label">Operacional</div>
+    <div class="nav-item" onclick="nav('oficinas')"><span class="ni">🏫</span> Oficinas</div>
     <div class="nav-item" onclick="nav('voluntarios')"><span class="ni">🙋</span> Voluntários</div>
     <div class="nav-item" onclick="nav('ocorrencias')"><span class="ni">⚠️</span> Ocorrências <span class="nbadge red" id="nb-oco"></span></div>
     <div class="nav-label">Sistema</div>
@@ -523,6 +524,34 @@ table tr{height:auto!important}
 </div>
 
 <!-- ══ CONFIGURAÇÕES ══ -->
+<div id="page-oficinas" class="page">
+  <div class="topbar">
+    <div><div class="page-title">🏫 Oficinas</div><div class="page-sub">Futebol, Informática e outras atividades</div></div>
+    <div class="topbar-right"><button class="btn btn-primary btn-sm" onclick="abrirNovaOficina()">+ Nova Oficina</button></div>
+  </div>
+  <div id="oficinas-lista"></div>
+</div>
+<div class="ov" id="m-oficina"><div class="modal"><div class="mh">
+  <h3 id="oficina-modal-title">➕ Nova Oficina</h3>
+  <button class="mclose" onclick="closeModal('m-oficina')">✕</button>
+</div><div class="mb">
+  <div class="form2">
+    <div class="fg span2"><label>Nome da Oficina *</label><input id="of-nome" placeholder="Ex: Futebol, Informática..."></div>
+    <div class="fg"><label>Responsável</label><input id="of-resp" placeholder="Nome do responsável"></div>
+    <div class="fg"><label>Dias da Semana</label><input id="of-dias" placeholder="Ex: Segunda e Quarta"></div>
+    <div class="fg"><label>Turno</label><select id="of-turno"><option>Manhã</option><option>Tarde</option><option>Noite</option><option>Integral</option></select></div>
+    <div class="fg"><label>Horário</label><input id="of-horario" placeholder="Ex: 14:00 - 16:00"></div>
+    <div class="fg"><label>Local</label><input id="of-local" placeholder="Ex: Quadra, Sala..."></div>
+    <div class="fg"><label>Vagas</label><input id="of-vagas" type="number" placeholder="0" min="0"></div>
+    <div class="fg"><label>Status</label><select id="of-status"><option>Ativa</option><option>Pausada</option><option>Encerrada</option></select></div>
+    <div class="fg span2"><label>Descrição</label><textarea id="of-desc" rows="3" placeholder="Objetivos, materiais necessários..."></textarea></div>
+    <div class="fg span2"><label>Alunos Participantes</label><div id="of-alunos-lista" style="max-height:200px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;padding:8px"></div></div>
+  </div>
+</div><div class="mf">
+  <button class="btn btn-outline" onclick="closeModal('m-oficina')">Cancelar</button>
+  <button class="btn btn-primary" onclick="salvarOficina()">Salvar</button>
+</div></div></div>
+
 <div id="page-configuracoes" class="page">
   <div class="topbar"><div><div class="page-title">⚙️ Configurações</div><div class="page-sub">Google Sheets, backup e sincronização</div></div>
   <div class="topbar-right"><button class="btn btn-green" onclick="syncAllToSheets()">☁️ Sincronizar agora</button></div></div>
@@ -1313,7 +1342,7 @@ function nav(page){
   document.querySelectorAll('.nav-item').forEach(n=>{if(n.getAttribute('onclick')&&n.getAttribute('onclick').includes("'"+page+"'"))n.classList.add('active');});
   closeSidebar();recalc();renderPage(page);
 }
-function renderPage(p){switch(p){case'dashboard':renderDashboard();break;case'alunos':renderAlunos();break;case'presencas':renderPresencas();break;case'avaliacoes':renderAvaliacoes();break;case'graduacoes':renderGraduacoes();break;case'agenda':renderAgenda();break;case'relatorios':renderRelatorios();break;case'exportar':renderExportar();break;case'whatsapp':renderWhatsapp();break;case'patrocinadores':renderPat();break;case'historico':renderHist();break;case'voluntarios':renderVol();break;case'oficinas':renderOficinas();break;case'ocorrencias':renderOco();break;case'configuracoes':renderConfiguracoes();break;}}
+function renderPage(p){switch(p){case'dashboard':renderDashboard();break;case'alunos':renderAlunos();break;case'presencas':renderPresencas();break;case'avaliacoes':renderAvaliacoes();break;case'graduacoes':renderGraduacoes();break;case'agenda':renderAgenda();break;case'relatorios':renderRelatorios();break;case'exportar':renderExportar();break;case'whatsapp':renderWhatsapp();break;case'patrocinadores':renderPat();break;case'historico':renderHist();break;case'voluntarios':renderVol();break;case'oficinas':renderOficinas();break;case'ocorrencias':renderOco();break;case'oficinas':renderOficinas();break;case'configuracoes':renderConfiguracoes();break;}}
 
 // ═══════════════════════════════════════════════
 //  MODAL
