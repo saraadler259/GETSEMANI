@@ -300,11 +300,9 @@ textarea.form-control{resize:vertical;min-height:78px}
     <div class="nav-item" onclick="go('risco')"><span class="ni">🗺️</span>Mapa de Risco<span class="nav-badge">3</span></div>
     <div class="nav-item" onclick="go('presenca')"><span class="ni">📋</span>Presenças</div>
     <div class="nav-item" onclick="go('voluntarios')"><span class="ni">🙌</span>Voluntários</div>
-    <div class="nav-item" onclick="go('colaboradores')"><span class="ni">👔</span>Colaboradores</div>
     <div class="nav-item" onclick="go('destaques')"><span class="ni">⭐</span>Destaques</div>
-    <div class="nav-item" onclick="go('saude')"><span class="ni">🏥</span>Saúde</div>
-    <div class="nav-item" onclick="go('alimentacao')"><span class="ni">🍽️</span>Alimentação</div>
-    <div class="nav-item" onclick="go('transporte')"><span class="ni">🚌</span>Transporte</div>
+    <div class="nav-item" onclick="go('avaliacoes')"><span class="ni">📝</span>Avaliações</div>
+    <div class="nav-item" onclick="go('ocorrencias')"><span class="ni">🚨</span>Ocorrências</div>
   </div>
   <div class="nav-section">
     <div class="nav-label">Programas</div>
@@ -319,9 +317,9 @@ textarea.form-control{resize:vertical;min-height:78px}
     <div class="nav-item" onclick="go('patrimonio')"><span class="ni">🖥️</span>Patrimônio</div>
     <div class="nav-item" onclick="go('parceiros')"><span class="ni">🤝</span>CRM Parceiros</div>
     <div class="nav-item" onclick="go('prestacao')"><span class="ni">📊</span>Prestação de Contas</div>
+    <div class="nav-item" onclick="go('agenda')"><span class="ni">📅</span>Agenda</div>
     <div class="nav-item" onclick="go('financeiro')"><span class="ni">💳</span>Financeiro</div>
     <div class="nav-item" onclick="go('editais')"><span class="ni">📰</span>Editais<span class="nav-badge">2</span></div>
-    <div class="nav-item" onclick="go('lgpd')"><span class="ni">🔒</span>LGPD & Permissões</div>
   </div>
   <div class="nav-section">
     <div class="nav-label">Famílias & Docs</div>
@@ -330,6 +328,7 @@ textarea.form-control{resize:vertical;min-height:78px}
     <div class="nav-item" onclick="go('fotos')"><span class="ni">📸</span>Fotos & Evidências</div>
     <div class="nav-item" onclick="go('assinaturas')"><span class="ni">✍️</span>Assinaturas Digitais</div>
     <div class="nav-item" onclick="go('whatsapp')"><span class="ni">💬</span>WhatsApp & Avisos</div>
+    <div class="nav-item" onclick="go('lgpd')"><span class="ni">🔒</span>LGPD & Permissões</div>
   </div>
 </nav>
 
@@ -338,7 +337,8 @@ textarea.form-control{resize:vertical;min-height:78px}
   <button id="menu-btn" onclick="toggleMenu()">☰</button>
   <div id="page-title">Dashboard</div>
   <div class="topbar-right">
-    <div class="topbar-badge">Projeto Getsêmani — 2026</div>
+    <div class="topbar-badge">🏠 Projeto Getsêmani — 2026</div>
+    <div class="topbar-badge" style="background:#fef9ee;border-color:var(--gold);color:var(--gold)">🎂 João faz aniversário hoje!</div>
     <button class="btn-save" onclick="toast('✅ Salvo!')">💾 Salvar</button>
   </div>
 </div>
@@ -349,11 +349,17 @@ textarea.form-control{resize:vertical;min-height:78px}
 <div id="sec-dashboard" class="section active">
   <div class="sec-header"><div><h2>Dashboard</h2><p>Visão geral — atualizado em tempo real</p></div></div>
   <div class="grid-5" style="margin-bottom:16px">
-    <div class="kpi"><div class="kpi-icon gray">👥</div><div><div class="kpi-val">112</div><div class="kpi-label">Crianças</div><div class="kpi-sub">Meta 150</div></div></div>
-    <div class="kpi"><div class="kpi-icon green">✅</div><div><div class="kpi-val green">87%</div><div class="kpi-label">Frequência</div><div class="kpi-sub">Este mês</div></div></div>
-    <div class="kpi"><div class="kpi-icon gold">🤝</div><div><div class="kpi-val">4</div><div class="kpi-label">Patrocinadores</div><div class="kpi-sub">Meta 10</div></div></div>
-    <div class="kpi"><div class="kpi-icon blue">🖥️</div><div><div class="kpi-val">8</div><div class="kpi-label">Computadores</div><div class="kpi-sub">Meta 20</div></div></div>
+    <div class="kpi"><div class="kpi-icon gray">👥</div><div><div class="kpi-val">112</div><div class="kpi-label">Crianças Ativas</div><div class="kpi-sub">Meta: 150</div></div></div>
+    <div class="kpi"><div class="kpi-icon green">📅</div><div><div class="kpi-val green">87%</div><div class="kpi-label">Freq. Média</div><div class="kpi-sub">Junho 2026</div></div></div>
+    <div class="kpi"><div class="kpi-icon blue">👨‍👩‍👧</div><div><div class="kpi-val">87</div><div class="kpi-label">Famílias</div><div class="kpi-sub">Cadastradas</div></div></div>
+    <div class="kpi"><div class="kpi-icon gold">🤝</div><div><div class="kpi-val">14</div><div class="kpi-label">Voluntários</div><div class="kpi-sub">Ativos</div></div></div>
     <div class="kpi"><div class="kpi-icon red">⚠️</div><div><div class="kpi-val red">3</div><div class="kpi-label">Alto Risco</div><div class="kpi-sub">Ação imediata</div></div></div>
+  </div>
+  <div class="grid-4" style="margin-bottom:16px">
+    <div class="kpi"><div class="kpi-icon green">💰</div><div><div class="kpi-val green">R$8.4k</div><div class="kpi-label">Doações Junho</div><div class="kpi-sub">+ R$52k em 2026</div></div></div>
+    <div class="kpi"><div class="kpi-icon gold">🤝</div><div><div class="kpi-val">4</div><div class="kpi-label">Patrocinadores</div><div class="kpi-sub">Meta: 10</div></div></div>
+    <div class="kpi"><div class="kpi-icon blue">📰</div><div><div class="kpi-val">3</div><div class="kpi-label">Editais abertos</div><div class="kpi-sub">1 fecha em 12 dias</div></div></div>
+    <div class="kpi"><div class="kpi-icon red">⏰</div><div><div class="kpi-val red">3</div><div class="kpi-label">Contas vencendo</div><div class="kpi-sub">Próximos 15 dias</div></div></div>
   </div>
   <div class="grid-3" style="margin-bottom:16px">
     <div class="card">
@@ -381,6 +387,40 @@ textarea.form-control{resize:vertical;min-height:78px}
       </div>
     </div>
   </div>
+  <!-- ANIVERSARIANTES -->
+  <div class="card" style="margin-bottom:16px;border-left:4px solid var(--gold)">
+    <div class="card-header">
+      <div class="card-title">🎂 Aniversariantes — Próximos 7 dias</div>
+      <span class="chip chip-gold">3 esta semana</span>
+    </div>
+    <div style="display:flex;gap:16px;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#fef9ee;border-radius:var(--r-sm);flex:1;min-width:180px">
+        <span style="font-size:28px">🎂</span>
+        <div>
+          <div style="font-weight:700;font-size:13px">João Pereira</div>
+          <div style="font-size:11px;color:var(--gold);font-weight:600">Hoje! · 14 anos</div>
+        </div>
+        <button class="btn-wa btn-sm" style="margin-left:auto;padding:5px 10px;font-size:11px" onclick="openWA('aniversario')">💬 Parabéns</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--surface2);border-radius:var(--r-sm);flex:1;min-width:180px">
+        <span style="font-size:28px">🎈</span>
+        <div>
+          <div style="font-weight:700;font-size:13px">Ana Lima</div>
+          <div style="font-size:11px;color:var(--text4)">Em 3 dias · 14 anos</div>
+        </div>
+        <button class="btn-wa btn-sm" style="margin-left:auto;padding:5px 10px;font-size:11px" onclick="openWA('aniversario')">💬 Agendar</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--surface2);border-radius:var(--r-sm);flex:1;min-width:180px">
+        <span style="font-size:28px">🎈</span>
+        <div>
+          <div style="font-weight:700;font-size:13px">Carlos Santos</div>
+          <div style="font-size:11px;color:var(--text4)">Em 6 dias · 16 anos</div>
+        </div>
+        <button class="btn-wa btn-sm" style="margin-left:auto;padding:5px 10px;font-size:11px" onclick="openWA('aniversario')">💬 Agendar</button>
+      </div>
+    </div>
+  </div>
+
   <div class="grid-2">
     <div class="card">
       <div class="card-header"><div class="card-title">Atividades de Hoje</div></div>
@@ -440,11 +480,11 @@ textarea.form-control{resize:vertical;min-height:78px}
   <div class="card"><div class="tbl-wrap"><table>
     <thead><tr><th>Aluno</th><th>Escola / Série</th><th>Oficinas</th><th>Freq.</th><th>Risco</th><th>Ações</th></tr></thead>
     <tbody>
-      <tr><td><div class="tbl-name">João Pereira</div><div class="tbl-sub">Desde jan/2021</div></td><td><div>E.E. Santos Dumont</div><div class="tbl-sub">8º Ano EF</div></td><td><span class="chip chip-blue">Informática</span> <span class="chip chip-green">Futebol</span></td><td><strong style="color:var(--green)">92%</strong></td><td><span class="chip risco-verde">🟢 Baixo</span></td><td><div style="display:flex;gap:5px"><button class="btn btn-xs btn-outline" onclick="openPron('João Pereira')">Prontuário</button><button class="btn btn-xs btn-ghost" onclick="openWA('resp')">💬</button></div></td></tr>
-      <tr><td><div class="tbl-name">Maria Oliveira</div><div class="tbl-sub">Desde mar/2020</div></td><td><div>E.E. Dom Pedro II</div><div class="tbl-sub">1º Médio</div></td><td><span class="chip chip-gold">Leitura</span></td><td><strong style="color:var(--green)">88%</strong></td><td><span class="chip risco-verde">🟢 Baixo</span></td><td><div style="display:flex;gap:5px"><button class="btn btn-xs btn-outline" onclick="openPron('Maria Oliveira')">Prontuário</button><button class="btn btn-xs btn-ghost" onclick="openWA('resp')">💬</button></div></td></tr>
-      <tr><td><div class="tbl-name">Lucas Silva</div><div class="tbl-sub">Desde ago/2023</div></td><td><div>E.M. José de Alencar</div><div class="tbl-sub">5º Ano EF</div></td><td><span class="chip chip-green">Futebol</span></td><td><strong style="color:var(--red)">48%</strong></td><td><span class="chip risco-vermelho">🔴 Alto</span></td><td><div style="display:flex;gap:5px"><button class="btn btn-xs btn-outline" onclick="openPron('Lucas Silva')">Prontuário</button><button class="btn btn-xs btn-danger btn-xs" onclick="openWA('urgente')">💬⚠️</button></div></td></tr>
-      <tr><td><div class="tbl-name">Ana Lima</div><div class="tbl-sub">Desde fev/2022</div></td><td><div>E.E. Castro Alves</div><div class="tbl-sub">7º Ano EF</div></td><td><span class="chip chip-gray">Acolhimento</span> <span class="chip chip-gold">Leitura</span></td><td><strong style="color:var(--yellow)">67%</strong></td><td><span class="chip risco-amarelo">🟡 Atenção</span></td><td><div style="display:flex;gap:5px"><button class="btn btn-xs btn-outline" onclick="openPron('Ana Lima')">Prontuário</button><button class="btn btn-xs btn-ghost" onclick="openWA('resp')">💬</button></div></td></tr>
-      <tr><td><div class="tbl-name">Carlos Santos</div><div class="tbl-sub">Desde jan/2021</div></td><td><div>E.E. Santos Dumont</div><div class="tbl-sub">9º Ano EF</div></td><td><span class="chip chip-green">Jiu-Jitsu</span> <span class="chip chip-green">Futebol</span></td><td><strong style="color:var(--green)">95%</strong></td><td><span class="chip risco-verde">🟢 Baixo</span></td><td><div style="display:flex;gap:5px"><button class="btn btn-xs btn-outline" onclick="openPron('Carlos Santos')">Prontuário</button><button class="btn btn-xs btn-ghost" onclick="openWA('resp')">💬</button></div></td></tr>
+      <tr><td><div class="tbl-name">João Pereira</div><div class="tbl-sub">Desde jan/2021</div></td><td><div>E.E. Santos Dumont</div><div class="tbl-sub">8º Ano EF</div></td><td><span class="chip chip-blue">Informática</span> <span class="chip chip-green">Futebol</span></td><td><div style="display:flex;align-items:center;gap:6px"><div style="width:36px;height:4px;background:#eee;border-radius:99px;overflow:hidden"><div style="width:92%;height:100%;background:var(--green);border-radius:99px"></div></div><strong style="color:var(--green)">92%</strong></div></td><td><span class="chip risco-verde">🟢 Baixo</span></td><td><div style="display:flex;gap:5px"><button class="btn btn-xs btn-outline" onclick="openPron('João Pereira')">Prontuário</button><button class="btn btn-xs btn-ghost" onclick="openWA('resp')">💬</button></div></td></tr>
+      <tr><td><div class="tbl-name">Maria Oliveira</div><div class="tbl-sub">Desde mar/2020</div></td><td><div>E.E. Dom Pedro II</div><div class="tbl-sub">1º Médio</div></td><td><span class="chip chip-gold">Leitura</span></td><td><div style="display:flex;align-items:center;gap:6px"><div style="width:36px;height:4px;background:#eee;border-radius:99px;overflow:hidden"><div style="width:88%;height:100%;background:var(--green);border-radius:99px"></div></div><strong style="color:var(--green)">88%</strong></div></td><td><span class="chip risco-verde">🟢 Baixo</span></td><td><div style="display:flex;gap:5px"><button class="btn btn-xs btn-outline" onclick="openPron('Maria Oliveira')">Prontuário</button><button class="btn btn-xs btn-ghost" onclick="openWA('resp')">💬</button></div></td></tr>
+      <tr><td><div class="tbl-name">Lucas Silva</div><div class="tbl-sub">Desde ago/2023</div></td><td><div>E.M. José de Alencar</div><div class="tbl-sub">5º Ano EF</div></td><td><span class="chip chip-green">Futebol</span></td><td><div style="display:flex;align-items:center;gap:6px"><div style="width:36px;height:4px;background:#eee;border-radius:99px;overflow:hidden"><div style="width:48%;height:100%;background:var(--red);border-radius:99px"></div></div><strong style="color:var(--red)">48%</strong></div></td><td><span class="chip risco-vermelho">🔴 Alto</span></td><td><div style="display:flex;gap:5px"><button class="btn btn-xs btn-outline" onclick="openPron('Lucas Silva')">Prontuário</button><button class="btn btn-xs btn-danger btn-xs" onclick="openWA('urgente')">💬⚠️</button></div></td></tr>
+      <tr><td><div class="tbl-name">Ana Lima</div><div class="tbl-sub">Desde fev/2022</div></td><td><div>E.E. Castro Alves</div><div class="tbl-sub">7º Ano EF</div></td><td><span class="chip chip-gray">Acolhimento</span> <span class="chip chip-gold">Leitura</span></td><td><div style="display:flex;align-items:center;gap:6px"><div style="width:36px;height:4px;background:#eee;border-radius:99px;overflow:hidden"><div style="width:67%;height:100%;background:var(--yellow);border-radius:99px"></div></div><strong style="color:var(--yellow)">67%</strong></div></td><td><span class="chip risco-amarelo">🟡 Atenção</span></td><td><div style="display:flex;gap:5px"><button class="btn btn-xs btn-outline" onclick="openPron('Ana Lima')">Prontuário</button><button class="btn btn-xs btn-ghost" onclick="openWA('resp')">💬</button></div></td></tr>
+      <tr><td><div class="tbl-name">Carlos Santos</div><div class="tbl-sub">Desde jan/2021</div></td><td><div>E.E. Santos Dumont</div><div class="tbl-sub">9º Ano EF</div></td><td><span class="chip chip-green">Jiu-Jitsu</span> <span class="chip chip-green">Futebol</span></td><td><div style="display:flex;align-items:center;gap:6px"><div style="width:36px;height:4px;background:#eee;border-radius:99px;overflow:hidden"><div style="width:95%;height:100%;background:var(--green);border-radius:99px"></div></div><strong style="color:var(--green)">95%</strong></div></td><td><span class="chip risco-verde">🟢 Baixo</span></td><td><div style="display:flex;gap:5px"><button class="btn btn-xs btn-outline" onclick="openPron('Carlos Santos')">Prontuário</button><button class="btn btn-xs btn-ghost" onclick="openWA('resp')">💬</button></div></td></tr>
     </tbody>
   </table></div><div style="font-size:11.5px;color:var(--text4);text-align:right;padding:9px 0 0">5 de 112 alunos</div></div>
 </div>
@@ -478,7 +518,7 @@ textarea.form-control{resize:vertical;min-height:78px}
 <!-- ════ PRESENÇA ════ -->
 <div id="sec-presenca" class="section">
   <div class="sec-header"><div><h2>Controle de Presenças</h2><p>Registro diário por oficina</p></div><div class="actions"><button class="btn btn-primary" onclick="toast('✅ Presenças salvas!')">💾 Salvar</button></div></div>
-  <div class="card" style="margin-bottom:13px"><div class="form-row"><div class="form-group" style="margin:0"><label>Data</label><input type="date" class="form-control" value="2026-06-12"></div><div class="form-group" style="margin:0"><label>Oficina</label><select class="form-control"><option>Futebol</option><option>Jiu-Jitsu</option><option>Informática</option><option>Leitura</option><option>Acolhimento</option></select></div></div></div>
+  <div class="card" style="margin-bottom:13px"><div class="form-row"><div class="form-group" style="margin:0"><label>Data</label><input type="date" class="form-control" value="2026-06-12"></div><div class="form-group" style="margin:0"><label>Oficina</label><select class="form-control" id="sel-oficina-presenca"><option>Futebol</option><option>Jiu-Jitsu</option><option>Informática</option><option>Leitura</option><option>Acolhimento</option><option>Teatro & Expressão</option><option>Música</option><option>Reforço Escolar</option><option>Outras Oficinas</option></select></div></div></div>
   <div class="card"><div class="card-header"><div class="card-title">Clique para marcar</div></div><div class="pres-grid" id="pres-grid"></div><div style="display:flex;gap:14px;margin-top:12px;font-size:12px;color:var(--text4)"><span style="display:flex;align-items:center;gap:5px"><span style="width:11px;height:11px;background:var(--green2);border-radius:3px;display:inline-block"></span>Presente</span><span style="display:flex;align-items:center;gap:5px"><span style="width:11px;height:11px;background:var(--red2);border-radius:3px;display:inline-block"></span>Ausente</span></div></div>
 </div>
 
@@ -786,156 +826,98 @@ textarea.form-control{resize:vertical;min-height:78px}
 </div>
 
 
-<!-- ════ SAÚDE ════ -->
-<div id="sec-saude" class="section">
+<!-- ════ AVALIAÇÕES ════ -->
+<div id="sec-avaliacoes" class="section">
   <div class="sec-header">
-    <div><h2>Saúde</h2><p>Prontuário de saúde, alergias, medicamentos e emergências</p></div>
-    <div class="actions"><button class="btn btn-primary" onclick="openM('m-saude')">+ Registro de Saúde</button></div>
-  </div>
-  <div class="grid-4" style="margin-bottom:16px">
-    <div class="kpi"><div class="kpi-icon red">⚠️</div><div><div class="kpi-val red">8</div><div class="kpi-label">Com Alergias</div></div></div>
-    <div class="kpi"><div class="kpi-icon gold">💊</div><div><div class="kpi-val" style="color:var(--yellow)">5</div><div class="kpi-label">Usam Medicamentos</div></div></div>
-    <div class="kpi"><div class="kpi-icon blue">🩺</div><div><div class="kpi-val">3</div><div class="kpi-label">Restrições Físicas</div></div></div>
-    <div class="kpi"><div class="kpi-icon green">💉</div><div><div class="kpi-val green">94%</div><div class="kpi-label">Vacinação OK</div></div></div>
-  </div>
-  <div class="card">
-    <div class="card-header"><div class="card-title">Registros de Saúde dos Alunos</div></div>
-    <div class="tbl-wrap"><table>
-      <thead><tr><th>Aluno</th><th>Tipo Sanguíneo</th><th>Alergias</th><th>Medicamentos</th><th>Restrições Físicas</th><th>Contato Emergência</th><th>Ação</th></tr></thead>
-      <tbody>
-        <tr><td><div class="tbl-name">João Pereira</div></td><td>O+</td><td><span class="chip chip-red">Amendoim</span></td><td>Nenhum</td><td>Nenhuma</td><td>(51) 99999-0001</td><td><button class="btn btn-xs btn-outline" onclick="openM('m-ver-saude')">Ver</button></td></tr>
-        <tr><td><div class="tbl-name">Maria Oliveira</div></td><td>A+</td><td>Nenhuma</td><td><span class="chip chip-yellow">Ritalina</span></td><td>Nenhuma</td><td>(51) 99999-0002</td><td><button class="btn btn-xs btn-outline" onclick="openM('m-ver-saude')">Ver</button></td></tr>
-        <tr><td><div class="tbl-name">Lucas Silva</div></td><td>B+</td><td><span class="chip chip-red">Lactose</span></td><td>Nenhum</td><td><span class="chip chip-yellow">Joelho direito</span></td><td>(51) 99999-0003</td><td><button class="btn btn-xs btn-outline" onclick="openM('m-ver-saude')">Ver</button></td></tr>
-        <tr><td><div class="tbl-name">Ana Lima</div></td><td>AB+</td><td>Nenhuma</td><td>Nenhum</td><td>Nenhuma</td><td>(51) 99999-0004</td><td><button class="btn btn-xs btn-outline" onclick="openM('m-ver-saude')">Ver</button></td></tr>
-      </tbody>
-    </table></div>
-  </div>
-  <div class="card"><div class="card-header"><div class="card-title">Ocorrências de Saúde Recentes</div></div>
-    <div style="display:flex;flex-direction:column;gap:0">
-      <div style="display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--border)"><div style="font-size:20px">🤕</div><div style="flex:1"><div style="font-weight:600;font-size:13px">Carlos Santos — Torção no tornozelo</div><div style="font-size:11.5px;color:var(--text4)">Treino de Jiu-Jitsu · 05/06/2026 · Pais comunicados · Afastado 7 dias</div></div><span class="chip chip-green">Resolvida</span></div>
-      <div style="display:flex;align-items:center;gap:12px;padding:11px 0"><div style="font-size:20px">🤒</div><div style="flex:1"><div style="font-weight:600;font-size:13px">Sofia Ramos — Febre durante atividade</div><div style="font-size:11.5px;color:var(--text4)">Acolhimento · 02/06/2026 · Responsável acionado · Saída antecipada</div></div><span class="chip chip-green">Resolvida</span></div>
-    </div>
-  </div>
-</div>
-
-<!-- ════ ALIMENTAÇÃO ════ -->
-<div id="sec-alimentacao" class="section">
-  <div class="sec-header">
-    <div><h2>Alimentação</h2><p>Controle de refeições, lanches, cardápios e restrições</p></div>
-    <div class="actions"><button class="btn btn-primary" onclick="openM('m-cardapio')">+ Novo Cardápio</button></div>
-  </div>
-  <div class="grid-4" style="margin-bottom:16px">
-    <div class="kpi"><div class="kpi-icon green">🍽️</div><div><div class="kpi-val green">112</div><div class="kpi-label">Recebem lanche</div></div></div>
-    <div class="kpi"><div class="kpi-icon red">⚠️</div><div><div class="kpi-val red">6</div><div class="kpi-label">Restrições aliment.</div></div></div>
-    <div class="kpi"><div class="kpi-icon gold">📦</div><div><div class="kpi-val">45kg</div><div class="kpi-label">Estoque merenda</div></div></div>
-    <div class="kpi"><div class="kpi-icon blue">💰</div><div><div class="kpi-val">R$1.2k</div><div class="kpi-label">Gasto/mês aliment.</div></div></div>
-  </div>
-  <div class="grid-2">
-    <div class="card"><div class="card-header"><div class="card-title">Cardápio da Semana</div></div>
-      <div style="font-size:13px">
-        <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border)"><span>Segunda</span><span style="color:var(--text2)">Suco + biscoito integral</span></div>
-        <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border)"><span>Terça</span><span style="color:var(--text2)">Fruta + achocolatado</span></div>
-        <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border)"><span>Quarta</span><span style="color:var(--text2)">Pão + queijo + suco</span></div>
-        <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border)"><span>Quinta</span><span style="color:var(--text2)">Iogurte + granola</span></div>
-        <div style="display:flex;justify-content:space-between;padding:7px 0"><span>Sexta</span><span style="color:var(--text2)">Bolo caseiro + suco</span></div>
-      </div>
-    </div>
-    <div class="card"><div class="card-header"><div class="card-title">Restrições Alimentares</div></div>
-      <div style="font-size:13px">
-        <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border)"><span>João Pereira</span><span class="chip chip-red">Amendoim</span></div>
-        <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border)"><span>Lucas Silva</span><span class="chip chip-red">Lactose</span></div>
-        <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border)"><span>Beatriz Moura</span><span class="chip chip-yellow">Glúten</span></div>
-        <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border)"><span>Rafael Santos</span><span class="chip chip-red">Camarão</span></div>
-        <div style="display:flex;justify-content:space-between;padding:7px 0"><span>Sofia Ramos</span><span class="chip chip-yellow">Corantes</span></div>
-      </div>
-    </div>
-  </div>
-  <div class="card"><div class="card-header"><div class="card-title">Controle de Consumo Mensal</div></div>
-    <div class="prog-row"><div class="prog-meta"><span>Biscoitos / Pães (kg)</span><span>32 / 50</span></div><div class="prog-bar"><div class="prog-fill" style="width:64%"></div></div></div>
-    <div class="prog-row"><div class="prog-meta"><span>Frutas (kg)</span><span>18 / 30</span></div><div class="prog-bar"><div class="prog-fill" style="width:60%"></div></div></div>
-    <div class="prog-row"><div class="prog-meta"><span>Achocolatados / Sucos (L)</span><span>24 / 40</span></div><div class="prog-bar"><div class="prog-fill" style="width:60%"></div></div></div>
-    <div class="prog-row"><div class="prog-meta"><span>Laticínios (kg)</span><span>12 / 20</span></div><div class="prog-bar"><div class="prog-fill" style="width:60%"></div></div></div>
-  </div>
-</div>
-
-<!-- ════ TRANSPORTE ════ -->
-<div id="sec-transporte" class="section">
-  <div class="sec-header">
-    <div><h2>Transporte</h2><p>Como as crianças chegam, quem pode buscar e autorizações de saída</p></div>
-    <div class="actions"><button class="btn btn-primary" onclick="openM('m-transporte')">+ Cadastrar Transporte</button></div>
+    <div><h2>Avaliações</h2><p>Avaliação individual de desenvolvimento — sem ranking competitivo</p></div>
+    <div class="actions"><button class="btn btn-primary" onclick="openM('m-avaliacao')">+ Nova Avaliação</button></div>
   </div>
   <div class="grid-3" style="margin-bottom:16px">
-    <div class="kpi"><div class="kpi-icon blue">🚶</div><div><div class="kpi-val">68</div><div class="kpi-label">A pé / sozinhos</div></div></div>
-    <div class="kpi"><div class="kpi-icon green">👨‍👩‍👧</div><div><div class="kpi-val">31</div><div class="kpi-label">Com responsável</div></div></div>
-    <div class="kpi"><div class="kpi-icon red">⚠️</div><div><div class="kpi-val red">13</div><div class="kpi-label">Risco no trajeto</div></div></div>
+    <div class="kpi"><div class="kpi-icon green">📝</div><div><div class="kpi-val green">78</div><div class="kpi-label">Avaliações feitas</div><div class="kpi-sub">1º Sem 2026</div></div></div>
+    <div class="kpi"><div class="kpi-icon gold">⭐</div><div><div class="kpi-val">8.4</div><div class="kpi-label">Evolução média</div><div class="kpi-sub">Turma toda</div></div></div>
+    <div class="kpi"><div class="kpi-icon red">⚠️</div><div><div class="kpi-val red">6</div><div class="kpi-label">Precisam atenção</div><div class="kpi-sub">Evolução baixa</div></div></div>
   </div>
   <div class="card">
-    <div class="card-header"><div class="card-title">Cadastro de Transporte por Aluno</div></div>
+    <div class="card-header"><div class="card-title">Avaliações Recentes</div></div>
     <div class="tbl-wrap"><table>
-      <thead><tr><th>Aluno</th><th>Como vem</th><th>Quem pode buscar</th><th>Autorização saída</th><th>Risco trajeto</th><th></th></tr></thead>
+      <thead><tr><th>Aluno</th><th>Oficina</th><th>Período</th><th>Comportamento</th><th>Participação</th><th>Evolução</th><th>Nota</th><th>Ações</th></tr></thead>
       <tbody>
-        <tr><td><div class="tbl-name">João Pereira</div></td><td>A pé (sozinho)</td><td>Mãe, Avó</td><td><span class="chip chip-green">✅ Assinada</span></td><td><span class="chip chip-green">Baixo</span></td><td><button class="btn btn-xs btn-ghost" onclick="toast('Editando...')">✏️</button></td></tr>
-        <tr><td><div class="tbl-name">Lucas Silva</div></td><td>Bicicleta</td><td>Apenas mãe</td><td><span class="chip chip-green">✅ Assinada</span></td><td><span class="chip chip-yellow">Médio</span></td><td><button class="btn btn-xs btn-ghost" onclick="toast('Editando...')">✏️</button></td></tr>
-        <tr><td><div class="tbl-name">Sofia Ramos</div></td><td>Responsável traz</td><td>Mãe ou pai</td><td><span class="chip chip-yellow">⚠️ Pendente</span></td><td><span class="chip chip-green">Baixo</span></td><td><button class="btn btn-xs btn-ghost" onclick="toast('Editando...')">✏️</button></td></tr>
-        <tr><td><div class="tbl-name">Pedro Alves</div></td><td>A pé (sozinho)</td><td>Avó</td><td><span class="chip chip-green">✅ Assinada</span></td><td><span class="chip chip-red">Alto</span></td><td><button class="btn btn-xs btn-ghost" onclick="toast('Editando...')">✏️</button></td></tr>
+        <tr><td><div class="tbl-name">João Pereira</div></td><td><span class="chip chip-blue">Informática</span></td><td>1º Sem 2026</td><td><span class="chip chip-green">Ótimo</span></td><td><span class="chip chip-green">Ótimo</span></td><td><span class="chip chip-green">Muito boa</span></td><td><strong style="color:var(--green)">9.2</strong></td><td><button class="btn btn-xs btn-outline" onclick="toast('Abrindo avaliação...')">Ver</button></td></tr>
+        <tr><td><div class="tbl-name">Maria Oliveira</div></td><td><span class="chip chip-gold">Leitura</span></td><td>1º Sem 2026</td><td><span class="chip chip-green">Ótimo</span></td><td><span class="chip chip-green">Ótimo</span></td><td><span class="chip chip-green">Excelente</span></td><td><strong style="color:var(--green)">9.8</strong></td><td><button class="btn btn-xs btn-outline" onclick="toast('Abrindo avaliação...')">Ver</button></td></tr>
+        <tr><td><div class="tbl-name">Lucas Silva</div></td><td><span class="chip chip-green">Futebol</span></td><td>1º Sem 2026</td><td><span class="chip chip-yellow">Regular</span></td><td><span class="chip chip-red">Baixa</span></td><td><span class="chip chip-yellow">Regular</span></td><td><strong style="color:var(--yellow)">5.5</strong></td><td><button class="btn btn-xs btn-outline" onclick="toast('Abrindo avaliação...')">Ver</button></td></tr>
+        <tr><td><div class="tbl-name">Carlos Santos</div></td><td><span class="chip chip-green">Jiu-Jitsu</span></td><td>1º Sem 2026</td><td><span class="chip chip-green">Ótimo</span></td><td><span class="chip chip-green">Ótimo</span></td><td><span class="chip chip-green">Excelente</span></td><td><strong style="color:var(--green)">9.5</strong></td><td><button class="btn btn-xs btn-outline" onclick="toast('Abrindo avaliação...')">Ver</button></td></tr>
       </tbody>
     </table></div>
   </div>
 </div>
 
-<!-- ════ COLABORADORES ════ -->
-<div id="sec-colaboradores" class="section">
+<!-- ════ OCORRÊNCIAS ════ -->
+<div id="sec-ocorrencias" class="section">
   <div class="sec-header">
-    <div><h2>Colaboradores</h2><p>Funcionários, educadores, coordenadores e RH básico</p></div>
-    <div class="actions"><button class="btn btn-primary" onclick="openM('m-colaborador')">+ Novo Colaborador</button></div>
+    <div><h2>Ocorrências</h2><p>Registro de ocorrências disciplinares, familiares e de saúde</p></div>
+    <div class="actions"><button class="btn btn-primary" onclick="openM('m-ocorrencia')">+ Registrar Ocorrência</button></div>
   </div>
-  <div class="grid-4" style="margin-bottom:16px">
-    <div class="kpi"><div class="kpi-icon blue">👔</div><div><div class="kpi-val">6</div><div class="kpi-label">Colaboradores</div></div></div>
-    <div class="kpi"><div class="kpi-icon green">✅</div><div><div class="kpi-val green">5</div><div class="kpi-label">Ativos</div></div></div>
-    <div class="kpi"><div class="kpi-icon gold">📋</div><div><div class="kpi-val">3</div><div class="kpi-label">Contratos vigentes</div></div></div>
-    <div class="kpi"><div class="kpi-icon red">⏰</div><div><div class="kpi-val red">1</div><div class="kpi-label">Doc vencendo</div></div></div>
+  <div class="grid-3" style="margin-bottom:16px">
+    <div class="kpi"><div class="kpi-icon red">🚨</div><div><div class="kpi-val red">3</div><div class="kpi-label">Abertas</div><div class="kpi-sub">Requer atenção</div></div></div>
+    <div class="kpi"><div class="kpi-icon gold">📋</div><div><div class="kpi-val" style="color:var(--yellow)">12</div><div class="kpi-label">Total 2026</div></div></div>
+    <div class="kpi"><div class="kpi-icon green">✅</div><div><div class="kpi-val green">9</div><div class="kpi-label">Resolvidas</div></div></div>
   </div>
   <div class="card">
-    <div class="card-header"><div class="card-title">Equipe</div></div>
-    <div class="tbl-wrap"><table>
-      <thead><tr><th>Nome</th><th>Cargo</th><th>Contrato</th><th>Documentos</th><th>Status</th><th>Ações</th></tr></thead>
-      <tbody>
-        <tr><td><div class="tbl-name">Sara Adler</div></td><td>Coordenadora Geral</td><td>CLT</td><td><span class="chip chip-green">OK</span></td><td><span class="chip chip-green">Ativo</span></td><td><button class="btn btn-xs btn-outline" onclick="toast('Abrindo perfil...')">Ver</button></td></tr>
-        <tr><td><div class="tbl-name">Ana Ferreira</div></td><td>Educadora Informática</td><td>Contrato PJ</td><td><span class="chip chip-green">OK</span></td><td><span class="chip chip-green">Ativo</span></td><td><button class="btn btn-xs btn-outline" onclick="toast('Abrindo perfil...')">Ver</button></td></tr>
-        <tr><td><div class="tbl-name">Roberto Silva</div></td><td>Educador Esportivo</td><td>Contrato PJ</td><td><span class="chip chip-yellow">⚠️ RG vencendo</span></td><td><span class="chip chip-green">Ativo</span></td><td><button class="btn btn-xs btn-outline" onclick="toast('Abrindo perfil...')">Ver</button></td></tr>
-        <tr><td><div class="tbl-name">Carla Dias</div></td><td>Assistente Social</td><td>CLT</td><td><span class="chip chip-green">OK</span></td><td><span class="chip chip-green">Ativo</span></td><td><button class="btn btn-xs btn-outline" onclick="toast('Abrindo perfil...')">Ver</button></td></tr>
-        <tr><td><div class="tbl-name">José Costa</div></td><td>Aux. Administrativo</td><td>CLT</td><td><span class="chip chip-green">OK</span></td><td><span class="chip chip-green">Ativo</span></td><td><button class="btn btn-xs btn-outline" onclick="toast('Abrindo perfil...')">Ver</button></td></tr>
-      </tbody>
-    </table></div>
-  </div>
-  <div class="card"><div class="card-header"><div class="card-title">Escalas da Semana</div></div>
-    <div style="font-size:13px">
-      <div style="display:grid;grid-template-columns:120px 1fr 1fr 1fr 1fr 1fr;gap:1px;background:var(--border);border-radius:var(--r-sm);overflow:hidden">
-        <div style="background:var(--surface2);padding:9px;font-weight:700;font-size:11px;color:var(--text3)">Colaborador</div>
-        <div style="background:var(--surface2);padding:9px;font-weight:700;font-size:11px;color:var(--text3);text-align:center">Seg</div>
-        <div style="background:var(--surface2);padding:9px;font-weight:700;font-size:11px;color:var(--text3);text-align:center">Ter</div>
-        <div style="background:var(--surface2);padding:9px;font-weight:700;font-size:11px;color:var(--text3);text-align:center">Qua</div>
-        <div style="background:var(--surface2);padding:9px;font-weight:700;font-size:11px;color:var(--text3);text-align:center">Qui</div>
-        <div style="background:var(--surface2);padding:9px;font-weight:700;font-size:11px;color:var(--text3);text-align:center">Sex</div>
-        <div style="background:var(--surface);padding:9px;font-size:12px">Ana F.</div>
-        <div style="background:var(--green-bg);padding:9px;text-align:center;font-size:11px;color:var(--green)">14–17h</div>
-        <div style="background:var(--surface);padding:9px"></div>
-        <div style="background:var(--green-bg);padding:9px;text-align:center;font-size:11px;color:var(--green)">14–17h</div>
-        <div style="background:var(--surface);padding:9px"></div>
-        <div style="background:var(--green-bg);padding:9px;text-align:center;font-size:11px;color:var(--green)">14–17h</div>
-        <div style="background:var(--surface);padding:9px;font-size:12px">Roberto S.</div>
-        <div style="background:var(--surface);padding:9px"></div>
-        <div style="background:var(--blue-bg);padding:9px;text-align:center;font-size:11px;color:var(--accent)">14–18h</div>
-        <div style="background:var(--blue-bg);padding:9px;text-align:center;font-size:11px;color:var(--accent)">14–18h</div>
-        <div style="background:var(--blue-bg);padding:9px;text-align:center;font-size:11px;color:var(--accent)">14–18h</div>
-        <div style="background:var(--surface);padding:9px"></div>
-        <div style="background:var(--surface);padding:9px;font-size:12px">Carla D.</div>
-        <div style="background:var(--surface);padding:9px"></div>
-        <div style="background:var(--surface);padding:9px"></div>
-        <div style="background:var(--surface);padding:9px"></div>
-        <div style="background:var(--yellow-bg);padding:9px;text-align:center;font-size:11px;color:var(--yellow)">14–18h</div>
-        <div style="background:var(--yellow-bg);padding:9px;text-align:center;font-size:11px;color:var(--yellow)">14–18h</div>
+    <div class="card-header"><div class="card-title">Ocorrências Recentes</div></div>
+    <div style="display:flex;flex-direction:column">
+      <div style="display:flex;align-items:flex-start;gap:13px;padding:13px 0;border-bottom:1px solid var(--border)">
+        <div style="width:36px;height:36px;border-radius:50%;background:var(--red-bg);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">🚨</div>
+        <div style="flex:1"><div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap"><strong>Lucas Silva</strong><span class="chip chip-red">Evasão</span><span class="chip risco-vermelho">🔴 Aberta</span></div><div style="font-size:13px;color:var(--text2);margin-top:3px">Não comparece há 3 semanas. Contato com família sem retorno.</div><div style="font-size:11px;color:var(--text4);margin-top:3px">Ana Ferreira · 05/06/2026</div></div>
+        <div style="display:flex;gap:5px;flex-shrink:0"><button class="btn btn-xs btn-outline" onclick="toast('Abrindo ocorrência...')">Ver</button><button class="btn btn-xs btn-ghost" onclick="openWA('urgente')">💬</button></div>
       </div>
+      <div style="display:flex;align-items:flex-start;gap:13px;padding:13px 0;border-bottom:1px solid var(--border)">
+        <div style="width:36px;height:36px;border-radius:50%;background:var(--yellow-bg);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">👨‍👩‍👧</div>
+        <div style="flex:1"><div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap"><strong>Ana Lima</strong><span class="chip chip-yellow">Familiar</span><span class="chip risco-amarelo">🟡 Em andamento</span></div><div style="font-size:13px;color:var(--text2);margin-top:3px">Conflito familiar relatado. Encaminhado para CRAS.</div><div style="font-size:11px;color:var(--text4);margin-top:3px">Carla Dias · 02/06/2026</div></div>
+        <div style="display:flex;gap:5px;flex-shrink:0"><button class="btn btn-xs btn-outline" onclick="toast('Abrindo ocorrência...')">Ver</button><button class="btn btn-xs btn-ghost" onclick="openWA('resp')">💬</button></div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:13px;padding:13px 0">
+        <div style="width:36px;height:36px;border-radius:50%;background:var(--green-bg);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">🏥</div>
+        <div style="flex:1"><div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap"><strong>Carlos Santos</strong><span class="chip chip-blue">Saúde</span><span class="chip risco-verde">🟢 Resolvida</span></div><div style="font-size:13px;color:var(--text2);margin-top:3px">Torção no tornozelo durante treino. Pais comunicados. Retornou com atestado.</div><div style="font-size:11px;color:var(--text4);margin-top:3px">Roberto Silva · 28/05/2026</div></div>
+        <div style="display:flex;gap:5px;flex-shrink:0"><button class="btn btn-xs btn-outline" onclick="toast('Abrindo ocorrência...')">Ver</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ AGENDA ════ -->
+<div id="sec-agenda" class="section">
+  <div class="sec-header">
+    <div><h2>Agenda</h2><p>Calendário de atividades, eventos e prazos do projeto</p></div>
+    <div class="actions"><button class="btn btn-primary" onclick="openM('m-evento')">+ Novo Evento</button></div>
+  </div>
+  <div class="grid-4" style="margin-bottom:16px">
+    <div class="kpi"><div class="kpi-icon blue">📅</div><div><div class="kpi-val">8</div><div class="kpi-label">Eventos em Junho</div></div></div>
+    <div class="kpi"><div class="kpi-icon green">✅</div><div><div class="kpi-val green">3</div><div class="kpi-label">Esta semana</div></div></div>
+    <div class="kpi"><div class="kpi-icon red">🔔</div><div><div class="kpi-val red">1</div><div class="kpi-label">Hoje</div></div></div>
+    <div class="kpi"><div class="kpi-icon gold">🎉</div><div><div class="kpi-val">2</div><div class="kpi-label">Eventos especiais</div></div></div>
+  </div>
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-header">
+      <div style="display:flex;align-items:center;gap:10px">
+        <button class="btn btn-ghost btn-sm" onclick="mesAnterior()">◀</button>
+        <div class="card-title" id="cal-titulo">Junho 2026</div>
+        <button class="btn btn-ghost btn-sm" onclick="mesSeguinte()">▶</button>
+      </div>
+      <div style="display:flex;gap:10px">
+        <span style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text4)"><span style="width:10px;height:10px;background:var(--accent);border-radius:2px;display:inline-block"></span>Atividade</span>
+        <span style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text4)"><span style="width:10px;height:10px;background:var(--gold);border-radius:2px;display:inline-block"></span>Evento</span>
+        <span style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text4)"><span style="width:10px;height:10px;background:var(--red);border-radius:2px;display:inline-block"></span>Prazo</span>
+      </div>
+    </div>
+    <div id="calendario" style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px"></div>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="card-title">Próximos Eventos</div></div>
+    <div style="display:flex;flex-direction:column">
+      <div style="display:flex;align-items:center;gap:13px;padding:11px 0;border-bottom:1px solid var(--border)"><div style="width:42px;text-align:center;flex-shrink:0"><div style="font-size:17px;font-weight:700;color:var(--accent);line-height:1">12</div><div style="font-size:10px;color:var(--text4);text-transform:uppercase">Jun</div></div><div style="width:4px;height:40px;background:var(--accent);border-radius:2px;flex-shrink:0"></div><div style="flex:1"><div style="font-weight:600;font-size:13px">Informática — Módulo Excel</div><div style="font-size:12px;color:var(--text4);margin-top:2px">14h–17h · Sala Informática · 28 alunos</div></div><span class="chip chip-blue">Atividade</span></div>
+      <div style="display:flex;align-items:center;gap:13px;padding:11px 0;border-bottom:1px solid var(--border)"><div style="width:42px;text-align:center;flex-shrink:0"><div style="font-size:17px;font-weight:700;color:var(--gold);line-height:1">20</div><div style="font-size:10px;color:var(--text4);text-transform:uppercase">Jun</div></div><div style="width:4px;height:40px;background:var(--gold);border-radius:2px;flex-shrink:0"></div><div style="flex:1"><div style="font-weight:600;font-size:13px">Reunião com Patrocinador — Empresa ABC</div><div style="font-size:12px;color:var(--text4);margin-top:2px">10h · Sede do projeto</div></div><span class="chip chip-gold">Reunião</span></div>
+      <div style="display:flex;align-items:center;gap:13px;padding:11px 0;border-bottom:1px solid var(--border)"><div style="width:42px;text-align:center;flex-shrink:0"><div style="font-size:17px;font-weight:700;color:var(--red);line-height:1">24</div><div style="font-size:10px;color:var(--text4);text-transform:uppercase">Jun</div></div><div style="width:4px;height:40px;background:var(--red);border-radius:2px;flex-shrink:0"></div><div style="flex:1"><div style="font-weight:600;font-size:13px">⚠️ Prazo BNDES Educação Social</div><div style="font-size:12px;color:var(--text4);margin-top:2px">Inscrição encerra — preparar documentação</div></div><span class="chip chip-red">Prazo</span></div>
+      <div style="display:flex;align-items:center;gap:13px;padding:11px 0"><div style="width:42px;text-align:center;flex-shrink:0"><div style="font-size:17px;font-weight:700;color:var(--green);line-height:1">28</div><div style="font-size:10px;color:var(--text4);text-transform:uppercase">Jun</div></div><div style="width:4px;height:40px;background:var(--green);border-radius:2px;flex-shrink:0"></div><div style="flex:1"><div style="font-weight:600;font-size:13px">🎉 Formatura Turma Informática</div><div style="font-size:12px;color:var(--text4);margin-top:2px">18h · Sede do projeto · Famílias convidadas</div></div><span class="chip chip-green">Evento especial</span></div>
     </div>
   </div>
 </div>
@@ -953,59 +935,51 @@ textarea.form-control{resize:vertical;min-height:78px}
     <div class="kpi"><div class="kpi-icon green">📈</div><div><div class="kpi-val green">R$52.2k</div><div class="kpi-label">Receitas 2026</div></div></div>
     <div class="kpi"><div class="kpi-icon red">📉</div><div><div class="kpi-val red">R$31.4k</div><div class="kpi-label">Despesas 2026</div></div></div>
     <div class="kpi"><div class="kpi-icon blue">💰</div><div><div class="kpi-val">R$20.8k</div><div class="kpi-label">Saldo atual</div></div></div>
-    <div class="kpi"><div class="kpi-icon gold">⏰</div><div><div class="kpi-val" style="color:var(--yellow)">3</div><div class="kpi-label">Contas vencendo</div></div></div>
+    <div class="kpi"><div class="kpi-icon gold">⏰</div><div><div class="kpi-val" style="color:var(--yellow)">3</div><div class="kpi-label">Contas vencendo</div><div class="kpi-sub">Próximos 15 dias</div></div></div>
   </div>
   <div class="grid-2" style="margin-bottom:16px">
     <div class="card"><div class="card-header"><div class="card-title">Contas a Receber</div></div>
-      <div class="tbl-wrap"><table>
-        <thead><tr><th>Descrição</th><th>Valor</th><th>Vencimento</th><th>Status</th></tr></thead>
-        <tbody>
-          <tr><td>Empresa ABC — Patrocínio Jul</td><td style="color:var(--green);font-weight:700">R$ 2.000</td><td>01/07/2026</td><td><span class="chip chip-yellow">Aguardando</span></td></tr>
-          <tr><td>BNDES — 1ª Parcela</td><td style="color:var(--green);font-weight:700">R$ 8.000</td><td>15/07/2026</td><td><span class="chip chip-blue">Em análise</span></td></tr>
-          <tr><td>Prefeitura — Convênio Q3</td><td style="color:var(--green);font-weight:700">R$ 5.500</td><td>30/06/2026</td><td><span class="chip chip-yellow">Aguardando</span></td></tr>
-        </tbody>
-      </table></div>
+      <table><thead><tr><th>Descrição</th><th>Valor</th><th>Vencimento</th><th>Status</th></tr></thead><tbody>
+        <tr><td>Empresa ABC — Patrocínio Jul</td><td style="color:var(--green);font-weight:700">R$2.000</td><td>01/07</td><td><span class="chip chip-yellow">Aguardando</span></td></tr>
+        <tr><td>BNDES — 1ª Parcela</td><td style="color:var(--green);font-weight:700">R$8.000</td><td>15/07</td><td><span class="chip chip-blue">Em análise</span></td></tr>
+        <tr><td>Prefeitura — Convênio Q3</td><td style="color:var(--green);font-weight:700">R$5.500</td><td>30/06</td><td><span class="chip chip-yellow">Aguardando</span></td></tr>
+      </tbody></table>
     </div>
     <div class="card"><div class="card-header"><div class="card-title">Contas a Pagar</div></div>
-      <div class="tbl-wrap"><table>
-        <thead><tr><th>Descrição</th><th>Valor</th><th>Vencimento</th><th>Status</th></tr></thead>
-        <tbody>
-          <tr><td>Aluguel sede</td><td style="color:var(--red);font-weight:700">R$ 1.200</td><td style="color:var(--red)">12/06/2026</td><td><span class="chip chip-red">Vence hoje!</span></td></tr>
-          <tr><td>Conta de luz e água</td><td style="color:var(--red);font-weight:700">R$ 280</td><td style="color:var(--yellow)">20/06/2026</td><td><span class="chip chip-yellow">Próxima</span></td></tr>
-          <tr><td>Materiais pedagógicos</td><td style="color:var(--red);font-weight:700">R$ 450</td><td>30/06/2026</td><td><span class="chip chip-green">Planejada</span></td></tr>
-          <tr><td>Merenda — fornecedor</td><td style="color:var(--red);font-weight:700">R$ 680</td><td>25/06/2026</td><td><span class="chip chip-green">Planejada</span></td></tr>
-        </tbody>
-      </table></div>
+      <table><thead><tr><th>Descrição</th><th>Valor</th><th>Vencimento</th><th>Status</th></tr></thead><tbody>
+        <tr><td>Aluguel sede</td><td style="color:var(--red);font-weight:700">R$1.200</td><td style="color:var(--red)">12/06 ⚠️</td><td><span class="chip chip-red">Vence hoje!</span></td></tr>
+        <tr><td>Conta de luz/água</td><td style="color:var(--red);font-weight:700">R$280</td><td style="color:var(--yellow)">20/06</td><td><span class="chip chip-yellow">Próxima</span></td></tr>
+        <tr><td>Materiais pedagógicos</td><td style="color:var(--red);font-weight:700">R$450</td><td>30/06</td><td><span class="chip chip-green">Planejada</span></td></tr>
+        <tr><td>Merenda — fornecedor</td><td style="color:var(--red);font-weight:700">R$680</td><td>25/06</td><td><span class="chip chip-green">Planejada</span></td></tr>
+      </tbody></table>
     </div>
   </div>
   <div class="grid-2">
     <div class="card"><div class="card-header"><div class="card-title">Fluxo de Caixa — 2026</div></div>
       <div style="font-size:13px">
-        <div style="display:grid;grid-template-columns:80px 1fr 1fr 1fr;gap:1px;background:var(--border);border-radius:var(--r-sm);overflow:hidden">
-          <div style="background:var(--surface2);padding:8px;font-weight:700;font-size:11px;color:var(--text3)">Mês</div>
-          <div style="background:var(--surface2);padding:8px;font-weight:700;font-size:11px;color:var(--text3);text-align:right">Receitas</div>
-          <div style="background:var(--surface2);padding:8px;font-weight:700;font-size:11px;color:var(--text3);text-align:right">Despesas</div>
-          <div style="background:var(--surface2);padding:8px;font-weight:700;font-size:11px;color:var(--text3);text-align:right">Saldo</div>
-          <div style="background:var(--surface);padding:8px;font-size:12px">Jan</div><div style="background:var(--surface);padding:8px;text-align:right;color:var(--green)">R$9.200</div><div style="background:var(--surface);padding:8px;text-align:right;color:var(--red)">R$5.800</div><div style="background:var(--surface);padding:8px;text-align:right;font-weight:700">R$3.400</div>
-          <div style="background:var(--surface2);padding:8px;font-size:12px">Fev</div><div style="background:var(--surface2);padding:8px;text-align:right;color:var(--green)">R$8.450</div><div style="background:var(--surface2);padding:8px;text-align:right;color:var(--red)">R$5.200</div><div style="background:var(--surface2);padding:8px;text-align:right;font-weight:700">R$3.250</div>
-          <div style="background:var(--surface);padding:8px;font-size:12px">Mar</div><div style="background:var(--surface);padding:8px;text-align:right;color:var(--green)">R$10.100</div><div style="background:var(--surface);padding:8px;text-align:right;color:var(--red)">R$5.400</div><div style="background:var(--surface);padding:8px;text-align:right;font-weight:700">R$4.700</div>
-          <div style="background:var(--surface2);padding:8px;font-size:12px">Abr</div><div style="background:var(--surface2);padding:8px;text-align:right;color:var(--green)">R$7.800</div><div style="background:var(--surface2);padding:8px;text-align:right;color:var(--red)">R$5.100</div><div style="background:var(--surface2);padding:8px;text-align:right;font-weight:700">R$2.700</div>
-          <div style="background:var(--surface);padding:8px;font-size:12px">Mai</div><div style="background:var(--surface);padding:8px;text-align:right;color:var(--green)">R$8.200</div><div style="background:var(--surface);padding:8px;text-align:right;color:var(--red)">R$4.900</div><div style="background:var(--surface);padding:8px;text-align:right;font-weight:700">R$3.300</div>
-          <div style="background:var(--surface2);padding:8px;font-size:12px">Jun</div><div style="background:var(--surface2);padding:8px;text-align:right;color:var(--green)">R$8.450</div><div style="background:var(--surface2);padding:8px;text-align:right;color:var(--red)">R$5.000</div><div style="background:var(--surface2);padding:8px;text-align:right;font-weight:700">R$3.450</div>
+        <div style="display:grid;grid-template-columns:60px 1fr 1fr 1fr;gap:1px;background:var(--border);border-radius:var(--r-sm);overflow:hidden;font-size:12px">
+          <div style="background:var(--surface2);padding:7px;font-weight:700;font-size:10px;color:var(--text3)">Mês</div>
+          <div style="background:var(--surface2);padding:7px;font-weight:700;font-size:10px;color:var(--text3);text-align:right">Receitas</div>
+          <div style="background:var(--surface2);padding:7px;font-weight:700;font-size:10px;color:var(--text3);text-align:right">Despesas</div>
+          <div style="background:var(--surface2);padding:7px;font-weight:700;font-size:10px;color:var(--text3);text-align:right">Saldo</div>
+          <div style="background:var(--surface);padding:7px">Jan</div><div style="background:var(--surface);padding:7px;text-align:right;color:var(--green)">R$9.200</div><div style="background:var(--surface);padding:7px;text-align:right;color:var(--red)">R$5.800</div><div style="background:var(--surface);padding:7px;text-align:right;font-weight:700">R$3.400</div>
+          <div style="background:var(--surface2);padding:7px">Fev</div><div style="background:var(--surface2);padding:7px;text-align:right;color:var(--green)">R$8.450</div><div style="background:var(--surface2);padding:7px;text-align:right;color:var(--red)">R$5.200</div><div style="background:var(--surface2);padding:7px;text-align:right;font-weight:700">R$3.250</div>
+          <div style="background:var(--surface);padding:7px">Mar</div><div style="background:var(--surface);padding:7px;text-align:right;color:var(--green)">R$10.100</div><div style="background:var(--surface);padding:7px;text-align:right;color:var(--red)">R$5.400</div><div style="background:var(--surface);padding:7px;text-align:right;font-weight:700">R$4.700</div>
+          <div style="background:var(--surface2);padding:7px">Abr</div><div style="background:var(--surface2);padding:7px;text-align:right;color:var(--green)">R$7.800</div><div style="background:var(--surface2);padding:7px;text-align:right;color:var(--red)">R$5.100</div><div style="background:var(--surface2);padding:7px;text-align:right;font-weight:700">R$2.700</div>
+          <div style="background:var(--surface);padding:7px">Mai</div><div style="background:var(--surface);padding:7px;text-align:right;color:var(--green)">R$8.200</div><div style="background:var(--surface);padding:7px;text-align:right;color:var(--red)">R$4.900</div><div style="background:var(--surface);padding:7px;text-align:right;font-weight:700">R$3.300</div>
+          <div style="background:var(--surface2);padding:7px">Jun</div><div style="background:var(--surface2);padding:7px;text-align:right;color:var(--green)">R$8.450</div><div style="background:var(--surface2);padding:7px;text-align:right;color:var(--red)">R$5.000</div><div style="background:var(--surface2);padding:7px;text-align:right;font-weight:700">R$3.450</div>
         </div>
       </div>
     </div>
     <div class="card"><div class="card-header"><div class="card-title">Centros de Custo</div></div>
-      <div style="display:flex;flex-direction:column;gap:10px;font-size:13px">
-        <div class="prog-row"><div class="prog-meta"><span>Pessoal / Colaboradores</span><span>R$12.800 (41%)</span></div><div class="prog-bar"><div class="prog-fill" style="width:41%"></div></div></div>
-        <div class="prog-row"><div class="prog-meta"><span>Alimentação</span><span>R$7.200 (23%)</span></div><div class="prog-bar"><div class="prog-fill" style="width:23%"></div></div></div>
-        <div class="prog-row"><div class="prog-meta"><span>Material pedagógico</span><span>R$4.800 (15%)</span></div><div class="prog-bar"><div class="prog-fill" style="width:15%"></div></div></div>
-        <div class="prog-row"><div class="prog-meta"><span>Infraestrutura / Aluguel</span><span>R$4.200 (13%)</span></div><div class="prog-bar"><div class="prog-fill" style="width:13%"></div></div></div>
-        <div class="prog-row"><div class="prog-meta"><span>Outros</span><span>R$2.400 (8%)</span></div><div class="prog-bar"><div class="prog-fill" style="width:8%"></div></div></div>
-      </div>
-      <div style="margin-top:14px;padding:12px;background:var(--surface2);border-radius:var(--r-sm)">
-        <button class="btn btn-outline btn-sm" onclick="toast('📄 DRE gerada!')">📄 Gerar DRE Simplificada</button>
-        <button class="btn btn-outline btn-sm" style="margin-left:8px" onclick="toast('📊 Exportando...')">📊 Exportar Excel</button>
+      <div class="prog-row"><div class="prog-meta"><span>Pessoal / Colaboradores</span><span>41% — R$12.800</span></div><div class="prog-bar"><div class="prog-fill" style="width:41%"></div></div></div>
+      <div class="prog-row"><div class="prog-meta"><span>Alimentação</span><span>23% — R$7.200</span></div><div class="prog-bar"><div class="prog-fill" style="width:23%"></div></div></div>
+      <div class="prog-row"><div class="prog-meta"><span>Material pedagógico</span><span>15% — R$4.800</span></div><div class="prog-bar"><div class="prog-fill" style="width:15%"></div></div></div>
+      <div class="prog-row"><div class="prog-meta"><span>Infraestrutura / Aluguel</span><span>13% — R$4.200</span></div><div class="prog-bar"><div class="prog-fill" style="width:13%"></div></div></div>
+      <div class="prog-row"><div class="prog-meta"><span>Outros</span><span>8% — R$2.400</span></div><div class="prog-bar"><div class="prog-fill" style="width:8%"></div></div></div>
+      <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-outline btn-sm" onclick="toast('📄 DRE gerada!')">📄 Gerar DRE</button>
+        <button class="btn btn-outline btn-sm" onclick="toast('📊 Exportando...')">📊 Excel</button>
       </div>
     </div>
   </div>
@@ -1014,120 +988,74 @@ textarea.form-control{resize:vertical;min-height:78px}
 <!-- ════ LGPD & PERMISSÕES ════ -->
 <div id="sec-lgpd" class="section">
   <div class="sec-header">
-    <div><h2>LGPD & Permissões</h2><p>Proteção de dados, perfis de acesso e auditoria do sistema</p></div>
+    <div><h2>LGPD & Permissões</h2><p>Proteção de dados, perfis de acesso e histórico de auditoria</p></div>
     <div class="actions"><button class="btn btn-primary" onclick="openM('m-usuario')">+ Novo Usuário</button></div>
   </div>
-
   <div class="grid-2" style="margin-bottom:16px">
     <div class="card"><div class="card-header"><div class="card-title">Perfis de Acesso</div></div>
-      <div class="tbl-wrap"><table>
-        <thead><tr><th>Perfil</th><th>Usuários</th><th>Acesso</th></tr></thead>
-        <tbody>
-          <tr><td><strong>👑 Administrador</strong></td><td>1</td><td><span class="chip chip-red">Total</span></td></tr>
-          <tr><td><strong>📋 Coordenador</strong></td><td>2</td><td><span class="chip chip-yellow">Quase total</span></td></tr>
-          <tr><td><strong>🩺 Assistente Social</strong></td><td>1</td><td><span class="chip chip-blue">Social + Prontuário</span></td></tr>
-          <tr><td><strong>🎓 Educador</strong></td><td>4</td><td><span class="chip chip-green">Oficinas + Presenças</span></td></tr>
-          <tr><td><strong>🙌 Voluntário</strong></td><td>8</td><td><span class="chip chip-gray">Somente leitura</span></td></tr>
-          <tr><td><strong>🏡 Família</strong></td><td>87</td><td><span class="chip chip-gray">Portal próprio</span></td></tr>
-          <tr><td><strong>🤝 Patrocinador</strong></td><td>4</td><td><span class="chip chip-gray">Portal próprio</span></td></tr>
-        </tbody>
-      </table></div>
+      <table><thead><tr><th>Perfil</th><th>Usuários</th><th>Nível</th></tr></thead><tbody>
+        <tr><td><strong>👑 Administrador</strong></td><td>1</td><td><span class="chip chip-red">Total</span></td></tr>
+        <tr><td><strong>📋 Coordenador</strong></td><td>2</td><td><span class="chip chip-yellow">Quase total</span></td></tr>
+        <tr><td><strong>🩺 Assistente Social</strong></td><td>1</td><td><span class="chip chip-blue">Social</span></td></tr>
+        <tr><td><strong>🎓 Educador</strong></td><td>4</td><td><span class="chip chip-green">Oficinas</span></td></tr>
+        <tr><td><strong>🙌 Voluntário</strong></td><td>8</td><td><span class="chip chip-gray">Somente leitura</span></td></tr>
+        <tr><td><strong>🏡 Família</strong></td><td>87</td><td><span class="chip chip-gray">Portal próprio</span></td></tr>
+        <tr><td><strong>🤝 Patrocinador</strong></td><td>4</td><td><span class="chip chip-gray">Portal próprio</span></td></tr>
+      </tbody></table>
     </div>
-    <div class="card"><div class="card-header"><div class="card-title">Permissões por Módulo</div></div>
-      <div style="font-size:12.5px;overflow-x:auto">
-        <table>
-          <thead><tr><th>Módulo</th><th>Admin</th><th>Coord.</th><th>Ass.Social</th><th>Educador</th></tr></thead>
-          <tbody>
-            <tr><td>Dashboard</td><td style="color:var(--green);text-align:center">✅</td><td style="color:var(--green);text-align:center">✅</td><td style="color:var(--green);text-align:center">✅</td><td style="color:var(--yellow);text-align:center">👁️</td></tr>
-            <tr><td>Prontuário Social</td><td style="color:var(--green);text-align:center">✅</td><td style="color:var(--green);text-align:center">✅</td><td style="color:var(--green);text-align:center">✅</td><td style="color:var(--red);text-align:center">❌</td></tr>
-            <tr><td>Financeiro</td><td style="color:var(--green);text-align:center">✅</td><td style="color:var(--green);text-align:center">✅</td><td style="color:var(--red);text-align:center">❌</td><td style="color:var(--red);text-align:center">❌</td></tr>
-            <tr><td>Alunos</td><td style="color:var(--green);text-align:center">✅</td><td style="color:var(--green);text-align:center">✅</td><td style="color:var(--green);text-align:center">✅</td><td style="color:var(--yellow);text-align:center">👁️</td></tr>
-            <tr><td>Presenças</td><td style="color:var(--green);text-align:center">✅</td><td style="color:var(--green);text-align:center">✅</td><td style="color:var(--yellow);text-align:center">👁️</td><td style="color:var(--green);text-align:center">✅</td></tr>
-            <tr><td>Patrocinadores</td><td style="color:var(--green);text-align:center">✅</td><td style="color:var(--green);text-align:center">✅</td><td style="color:var(--red);text-align:center">❌</td><td style="color:var(--red);text-align:center">❌</td></tr>
-          </tbody>
-        </table>
-        <div style="font-size:11px;color:var(--text4);margin-top:8px">✅ Editar · 👁️ Somente ver · ❌ Sem acesso</div>
-      </div>
+    <div class="card"><div class="card-header"><div class="card-title">Conformidade LGPD</div></div>
+      <div class="prog-row"><div class="prog-meta"><span>Autorização de imagem</span><span>104/112</span></div><div class="prog-bar"><div class="prog-fill" style="width:93%"></div></div></div>
+      <div class="prog-row"><div class="prog-meta"><span>Autorização de dados</span><span>112/112</span></div><div class="prog-bar"><div class="prog-fill" style="width:100%"></div></div></div>
+      <div class="prog-row"><div class="prog-meta"><span>Termo de matrícula</span><span>110/112</span></div><div class="prog-bar"><div class="prog-fill" style="width:98%"></div></div></div>
+      <div class="prog-row"><div class="prog-meta"><span>Autorização de participação</span><span>110/112</span></div><div class="prog-bar"><div class="prog-fill" style="width:98%"></div></div></div>
+      <button class="btn btn-outline btn-sm" style="margin-top:12px" onclick="toast('📋 Relatório LGPD gerado!')">📋 Relatório de Conformidade</button>
     </div>
   </div>
-
-  <div class="grid-2">
-    <div class="card"><div class="card-header"><div class="card-title">Autorizações LGPD — Alunos</div></div>
-      <div class="prog-row"><div class="prog-meta"><span>Autorização de imagem</span><span>104/112</span></div><div class="prog-bar"><div class="prog-fill" style="width:93%"></div></div></div>
-      <div class="prog-row"><div class="prog-meta"><span>Autorização de uso de dados</span><span>112/112</span></div><div class="prog-bar"><div class="prog-fill" style="width:100%"></div></div></div>
-      <div class="prog-row"><div class="prog-meta"><span>Autorização de participação</span><span>110/112</span></div><div class="prog-bar"><div class="prog-fill" style="width:98%"></div></div></div>
-      <div class="prog-row"><div class="prog-meta"><span>Termo de matrícula</span><span>110/112</span></div><div class="prog-bar"><div class="prog-fill" style="width:98%"></div></div></div>
-      <div style="margin-top:12px"><button class="btn btn-outline btn-sm" onclick="toast('📋 Relatório LGPD gerado!')">📋 Relatório de Conformidade LGPD</button></div>
-    </div>
-    <div class="card"><div class="card-header"><div class="card-title">Histórico de Auditoria</div></div>
-      <div style="font-size:13px">
-        <div style="display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--border)"><span style="color:var(--text4);font-size:11px;white-space:nowrap">10/06 09:32</span><div><strong>Sara Adler</strong> editou prontuário de <em>João Pereira</em></div></div>
-        <div style="display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--border)"><span style="color:var(--text4);font-size:11px;white-space:nowrap">10/06 08:15</span><div><strong>Ana Ferreira</strong> registrou presença — Oficina Informática</div></div>
-        <div style="display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--border)"><span style="color:var(--text4);font-size:11px;white-space:nowrap">09/06 17:44</span><div><strong>Carla Dias</strong> adicionou encaminhamento — <em>Ana Lima</em></div></div>
-        <div style="display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--border)"><span style="color:var(--text4);font-size:11px;white-space:nowrap">09/06 14:20</span><div><strong>Roberto Silva</strong> registrou ocorrência — <em>Lucas Silva</em></div></div>
-        <div style="display:flex;gap:10px;align-items:flex-start;padding:8px 0"><span style="color:var(--text4);font-size:11px;white-space:nowrap">08/06 10:05</span><div><strong>Sara Adler</strong> cadastrou nova doação — <em>Empresa ABC</em></div></div>
-      </div>
+  <div class="card"><div class="card-header"><div class="card-title">Histórico de Auditoria</div></div>
+    <div style="font-size:13px">
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--border)"><span style="color:var(--text4);font-size:11px;white-space:nowrap;flex-shrink:0">10/06 09:32</span><div><strong>Sara Adler</strong> editou prontuário de <em>João Pereira</em> — aba Família</div></div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--border)"><span style="color:var(--text4);font-size:11px;white-space:nowrap;flex-shrink:0">10/06 08:15</span><div><strong>Ana Ferreira</strong> registrou presença — Oficina Informática (28 alunos)</div></div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--border)"><span style="color:var(--text4);font-size:11px;white-space:nowrap;flex-shrink:0">09/06 17:44</span><div><strong>Carla Dias</strong> adicionou encaminhamento — <em>Ana Lima → CRAS</em></div></div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--border)"><span style="color:var(--text4);font-size:11px;white-space:nowrap;flex-shrink:0">09/06 14:20</span><div><strong>Roberto Silva</strong> registrou ocorrência — <em>Lucas Silva — Evasão</em></div></div>
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:8px 0"><span style="color:var(--text4);font-size:11px;white-space:nowrap;flex-shrink:0">08/06 10:05</span><div><strong>Sara Adler</strong> cadastrou doação — <em>R$ 2.000 — Empresa ABC</em></div></div>
     </div>
   </div>
 </div>
 </div></div><!-- /content /main -->
 
 
-<!-- MODAL SAÚDE -->
-<div class="overlay" id="m-saude"><div class="modal modal-lg"><div class="modal-head"><h3>🏥 Registro de Saúde</h3><button class="modal-close" onclick="closeM('m-saude')">×</button></div><div class="modal-body">
-  <div class="form-row"><div class="form-group"><label>Aluno</label><select class="form-control"><option>João Pereira</option><option>Maria Oliveira</option><option>Lucas Silva</option></select></div><div class="form-group"><label>Tipo Sanguíneo</label><select class="form-control"><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>O+</option><option>O-</option><option>AB+</option><option>AB-</option></select></div></div>
-  <div class="form-group"><label>Alergias</label><input class="form-control" placeholder="Ex: amendoim, penicilina, látex..."></div>
-  <div class="form-group"><label>Medicamentos em uso</label><input class="form-control" placeholder="Nome, dosagem e horário"></div>
-  <div class="form-group"><label>Restrições físicas / médicas</label><input class="form-control" placeholder="Ex: não pode correr, uso de óculos..."></div>
-  <div class="form-group"><label>Vacinas em dia?</label><select class="form-control"><option>✅ Sim — carteirinha apresentada</option><option>⚠️ Parcialmente</option><option>❌ Não — pendente verificação</option></select></div>
-  <div class="form-row"><div class="form-group"><label>Contato de Emergência</label><input class="form-control" placeholder="Nome e parentesco"></div><div class="form-group"><label>Telefone Emergência</label><input class="form-control" placeholder="(51) 99999-0000"></div></div>
-  <div class="form-group"><label>Plano de Saúde</label><input class="form-control" placeholder="Nome do plano ou SUS"></div>
-  <div class="form-group"><label>Observações médicas</label><textarea class="form-control" rows="2" placeholder="Informações adicionais relevantes..."></textarea></div>
-</div><div class="modal-foot"><button class="btn btn-outline" onclick="closeM('m-saude')">Cancelar</button><button class="btn btn-primary" onclick="toast('✅ Registro de saúde salvo!');closeM('m-saude')">💾 Salvar</button></div></div></div>
-
-<!-- MODAL VER SAÚDE -->
-<div class="overlay" id="m-ver-saude"><div class="modal"><div class="modal-head"><h3>🏥 Saúde — João Pereira</h3><button class="modal-close" onclick="closeM('m-ver-saude')">×</button></div><div class="modal-body">
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
-    <div style="background:var(--surface2);border-radius:var(--r-sm);padding:12px"><div style="font-size:10px;color:var(--text4);font-weight:700;text-transform:uppercase">Tipo sanguíneo</div><div style="font-size:16px;font-weight:700;color:var(--red);margin-top:4px">O+</div></div>
-    <div style="background:var(--red-bg);border-radius:var(--r-sm);padding:12px"><div style="font-size:10px;color:var(--red);font-weight:700;text-transform:uppercase">⚠️ Alergia</div><div style="font-size:14px;font-weight:700;color:var(--red);margin-top:4px">Amendoim</div></div>
+<!-- MODAL AVALIAÇÃO -->
+<div class="overlay" id="m-avaliacao"><div class="modal modal-lg"><div class="modal-head"><h3>📝 Nova Avaliação</h3><button class="modal-close" onclick="closeM('m-avaliacao')">×</button></div><div class="modal-body">
+  <div class="form-row"><div class="form-group"><label>Aluno</label><select class="form-control"><option>João Pereira</option><option>Maria Oliveira</option><option>Lucas Silva</option><option>Ana Lima</option><option>Carlos Santos</option></select></div><div class="form-group"><label>Oficina</label><select class="form-control"><option>Futebol</option><option>Jiu-Jitsu</option><option>Informática</option><option>Leitura</option><option>Acolhimento</option><option>Teatro & Expressão</option><option>Música</option><option>Reforço Escolar</option><option>Outros</option></select></div></div>
+  <div class="form-row"><div class="form-group"><label>Período</label><select class="form-control"><option>1º Semestre 2026</option><option>2º Semestre 2025</option></select></div><div class="form-group"><label>Educador</label><input class="form-control" placeholder="Nome do educador"></div></div>
+  <div style="background:var(--surface2);border-radius:var(--r);padding:14px;margin-bottom:13px">
+    <div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);margin-bottom:11px">Critérios de Desenvolvimento Individual</div>
+    <div class="form-row"><div class="form-group"><label>Comportamento</label><select class="form-control"><option>Ótimo</option><option>Bom</option><option>Regular</option><option>Precisa melhorar</option></select></div><div class="form-group"><label>Participação</label><select class="form-control"><option>Ótimo</option><option>Bom</option><option>Regular</option><option>Baixa</option></select></div></div>
+    <div class="form-row"><div class="form-group"><label>Evolução Individual</label><select class="form-control"><option>Excelente</option><option>Muito boa</option><option>Boa</option><option>Regular</option><option>Sem evolução visível</option></select></div><div class="form-group"><label>Cooperação com colegas</label><select class="form-control"><option>Ótimo</option><option>Bom</option><option>Regular</option><option>Precisa melhorar</option></select></div></div>
+    <div class="form-row"><div class="form-group"><label>Frequência</label><select class="form-control"><option>Acima de 90%</option><option>75%–90%</option><option>60%–75%</option><option>Abaixo de 60%</option></select></div><div class="form-group"><label>Nota Geral (0–10)</label><input type="number" class="form-control" min="0" max="10" step="0.1" placeholder="8.5"></div></div>
   </div>
-  <div style="font-size:13px">
-    <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border)"><span style="color:var(--text3)">Medicamentos</span><strong>Nenhum</strong></div>
-    <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border)"><span style="color:var(--text3)">Restrições físicas</span><strong>Nenhuma</strong></div>
-    <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border)"><span style="color:var(--text3)">Vacinas</span><strong style="color:var(--green)">✅ Em dia</strong></div>
-    <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border)"><span style="color:var(--text3)">Contato emergência</span><strong>Maria Pereira (mãe)</strong></div>
-    <div style="display:flex;justify-content:space-between;padding:7px 0"><span style="color:var(--text3)">Telefone emergência</span><strong>(51) 99999-0001</strong></div>
-  </div>
-</div><div class="modal-foot"><button class="btn btn-outline" onclick="closeM('m-ver-saude')">Fechar</button><button class="btn btn-primary" onclick="toast('✅ Atualizado!');closeM('m-ver-saude')">Editar</button></div></div></div>
+  <div class="form-group"><label>Pontos Positivos</label><textarea class="form-control" rows="2" placeholder="O que o aluno demonstrou de bom neste período..."></textarea></div>
+  <div class="form-group"><label>Pontos de Atenção / Recomendações</label><textarea class="form-control" rows="2" placeholder="O que precisa ser trabalhado, sugestões de acompanhamento..."></textarea></div>
+</div><div class="modal-foot"><button class="btn btn-outline" onclick="closeM('m-avaliacao')">Cancelar</button><button class="btn btn-primary" onclick="toast('✅ Avaliação salva!');closeM('m-avaliacao')">💾 Salvar</button></div></div></div>
 
-<!-- MODAL CARDÁPIO -->
-<div class="overlay" id="m-cardapio"><div class="modal"><div class="modal-head"><h3>🍽️ Novo Cardápio</h3><button class="modal-close" onclick="closeM('m-cardapio')">×</button></div><div class="modal-body">
-  <div class="form-row"><div class="form-group"><label>Semana</label><input type="week" class="form-control"></div><div class="form-group"><label>Responsável</label><input class="form-control" placeholder="Quem preparará"></div></div>
-  <div class="form-group"><label>Segunda-feira</label><input class="form-control" placeholder="Lanche do dia"></div>
-  <div class="form-group"><label>Terça-feira</label><input class="form-control" placeholder="Lanche do dia"></div>
-  <div class="form-group"><label>Quarta-feira</label><input class="form-control" placeholder="Lanche do dia"></div>
-  <div class="form-group"><label>Quinta-feira</label><input class="form-control" placeholder="Lanche do dia"></div>
-  <div class="form-group"><label>Sexta-feira</label><input class="form-control" placeholder="Lanche do dia"></div>
-  <div class="form-group"><label>Custo estimado</label><input class="form-control" placeholder="R$ 0,00"></div>
-</div><div class="modal-foot"><button class="btn btn-outline" onclick="closeM('m-cardapio')">Cancelar</button><button class="btn btn-primary" onclick="toast('✅ Cardápio salvo!');closeM('m-cardapio')">💾 Salvar</button></div></div></div>
+<!-- MODAL OCORRÊNCIA -->
+<div class="overlay" id="m-ocorrencia"><div class="modal modal-lg"><div class="modal-head"><h3>🚨 Registrar Ocorrência</h3><button class="modal-close" onclick="closeM('m-ocorrencia')">×</button></div><div class="modal-body">
+  <div class="form-row"><div class="form-group"><label>Aluno</label><select class="form-control"><option>João Pereira</option><option>Lucas Silva</option><option>Ana Lima</option><option>Carlos Santos</option></select></div><div class="form-group"><label>Tipo</label><select class="form-control"><option>Disciplinar</option><option>Familiar</option><option>Acidente / Saúde</option><option>Evasão</option><option>Conflito entre alunos</option><option>Outros</option></select></div></div>
+  <div class="form-row"><div class="form-group"><label>Data</label><input type="date" class="form-control" value="2026-06-12"></div><div class="form-group"><label>Gravidade</label><select class="form-control"><option>🟢 Baixa</option><option>🟡 Média</option><option>🔴 Alta</option></select></div></div>
+  <div class="form-group"><label>Descrição</label><textarea class="form-control" rows="4" placeholder="Descreva detalhadamente o que ocorreu..."></textarea></div>
+  <div class="form-group"><label>Medidas Tomadas</label><textarea class="form-control" rows="2" placeholder="Ex: Família comunicada, encaminhado para CRAS..."></textarea></div>
+  <div class="form-row"><div class="form-group"><label>Registrado por</label><input class="form-control" placeholder="Nome do educador/coordenador"></div><div class="form-group"><label>Status</label><select class="form-control"><option>🔴 Aberta</option><option>🟡 Em andamento</option><option>🟢 Resolvida</option></select></div></div>
+  <div class="form-group"><label>Notificar família via WhatsApp?</label><select class="form-control"><option>Sim — enviar notificação</option><option>Não — registrar apenas</option></select></div>
+</div><div class="modal-foot"><button class="btn btn-outline" onclick="closeM('m-ocorrencia')">Cancelar</button><button class="btn btn-primary" onclick="toast('✅ Ocorrência registrada!');closeM('m-ocorrencia')">💾 Registrar</button></div></div></div>
 
-<!-- MODAL TRANSPORTE -->
-<div class="overlay" id="m-transporte"><div class="modal modal-lg"><div class="modal-head"><h3>🚌 Cadastrar Transporte</h3><button class="modal-close" onclick="closeM('m-transporte')">×</button></div><div class="modal-body">
-  <div class="form-row"><div class="form-group"><label>Aluno</label><select class="form-control"><option>João Pereira</option><option>Lucas Silva</option><option>Sofia Ramos</option></select></div><div class="form-group"><label>Como vem ao projeto</label><select class="form-control"><option>A pé (sozinho)</option><option>A pé (com responsável)</option><option>Bicicleta</option><option>Ônibus</option><option>Carro do responsável</option><option>Transporte escolar</option></select></div></div>
-  <div class="form-group"><label>Quem pode buscar</label><input class="form-control" placeholder="Ex: mãe, avó, pai — separados por vírgula"></div>
-  <div class="form-group"><label>Risco no trajeto</label><select class="form-control"><option>🟢 Baixo — trajeto seguro</option><option>🟡 Médio — área com risco moderado</option><option>🔴 Alto — área de risco / violência</option></select></div>
-  <div class="form-group"><label>Autorização de saída sozinho</label><select class="form-control"><option>✅ Autorizado pelos responsáveis</option><option>❌ Não autorizado — responsável deve buscar</option></select></div>
-  <div class="form-group"><label>Observações</label><textarea class="form-control" rows="2" placeholder="Detalhes do trajeto, pontos de referência..."></textarea></div>
-</div><div class="modal-foot"><button class="btn btn-outline" onclick="closeM('m-transporte')">Cancelar</button><button class="btn btn-primary" onclick="toast('✅ Transporte cadastrado!');closeM('m-transporte')">💾 Salvar</button></div></div></div>
-
-<!-- MODAL COLABORADOR -->
-<div class="overlay" id="m-colaborador"><div class="modal modal-lg"><div class="modal-head"><h3>👔 Novo Colaborador</h3><button class="modal-close" onclick="closeM('m-colaborador')">×</button></div><div class="modal-body">
-  <div class="form-row"><div class="form-group"><label>Nome completo</label><input class="form-control"></div><div class="form-group"><label>Cargo</label><select class="form-control"><option>Coordenador Geral</option><option>Assistente Social</option><option>Educador</option><option>Aux. Administrativo</option><option>Outro</option></select></div></div>
-  <div class="form-row"><div class="form-group"><label>CPF</label><input class="form-control" placeholder="000.000.000-00"></div><div class="form-group"><label>Data de Admissão</label><input type="date" class="form-control"></div></div>
-  <div class="form-row"><div class="form-group"><label>Tipo de Contrato</label><select class="form-control"><option>CLT</option><option>Contrato PJ</option><option>Voluntário</option><option>Estágio</option></select></div><div class="form-group"><label>Salário / Valor</label><input class="form-control" placeholder="R$ 0,00"></div></div>
-  <div class="form-group"><label>WhatsApp</label><input class="form-control" placeholder="(51) 99999-0000"></div>
-  <div class="form-group"><label>Perfil de Acesso ao Sistema</label><select class="form-control"><option>Administrador</option><option>Coordenador</option><option>Assistente Social</option><option>Educador</option><option>Voluntário</option></select></div>
-</div><div class="modal-foot"><button class="btn btn-outline" onclick="closeM('m-colaborador')">Cancelar</button><button class="btn btn-primary" onclick="toast('✅ Colaborador cadastrado!');closeM('m-colaborador')">💾 Salvar</button></div></div></div>
+<!-- MODAL EVENTO AGENDA -->
+<div class="overlay" id="m-evento"><div class="modal"><div class="modal-head"><h3>📅 Novo Evento</h3><button class="modal-close" onclick="closeM('m-evento')">×</button></div><div class="modal-body">
+  <div class="form-group"><label>Título</label><input class="form-control" placeholder="Ex: Formatura Informática"></div>
+  <div class="form-row"><div class="form-group"><label>Data</label><input type="date" class="form-control"></div><div class="form-group"><label>Horário</label><input type="time" class="form-control"></div></div>
+  <div class="form-row"><div class="form-group"><label>Tipo</label><select class="form-control"><option>Atividade regular</option><option>Evento especial</option><option>Reunião</option><option>Prazo / Vencimento</option><option>Visita / Passeio</option><option>Administrativo</option></select></div><div class="form-group"><label>Local</label><input class="form-control" placeholder="Ex: Sede do projeto"></div></div>
+  <div class="form-group"><label>Descrição</label><textarea class="form-control" rows="3"></textarea></div>
+  <div class="form-group"><label>Notificar famílias?</label><select class="form-control"><option>Sim — avisar pelo WhatsApp</option><option>Não — apenas registrar</option></select></div>
+</div><div class="modal-foot"><button class="btn btn-outline" onclick="closeM('m-evento')">Cancelar</button><button class="btn btn-primary" onclick="toast('✅ Evento adicionado!');closeM('m-evento')">💾 Salvar</button></div></div></div>
 
 <!-- MODAL RECEITA -->
 <div class="overlay" id="m-receita"><div class="modal"><div class="modal-head"><h3>📈 Nova Receita</h3><button class="modal-close" onclick="closeM('m-receita')">×</button></div><div class="modal-body">
@@ -1141,17 +1069,16 @@ textarea.form-control{resize:vertical;min-height:78px}
 <div class="overlay" id="m-despesa"><div class="modal"><div class="modal-head"><h3>📉 Nova Despesa</h3><button class="modal-close" onclick="closeM('m-despesa')">×</button></div><div class="modal-body">
   <div class="form-row"><div class="form-group"><label>Descrição</label><input class="form-control" placeholder="Ex: Aluguel da sede"></div><div class="form-group"><label>Valor</label><input class="form-control" placeholder="R$ 0,00"></div></div>
   <div class="form-row"><div class="form-group"><label>Categoria</label><select class="form-control"><option>Pessoal</option><option>Alimentação</option><option>Material</option><option>Infraestrutura</option><option>Transporte</option><option>Outros</option></select></div><div class="form-group"><label>Vencimento</label><input type="date" class="form-control"></div></div>
-  <div class="form-row"><div class="form-group"><label>Centro de Custo</label><select class="form-control"><option>Geral</option><option>Projeto Informática</option><option>Projeto Esportivo</option><option>Projeto Leitura</option><option>Alimentação</option></select></div><div class="form-group"><label>Status</label><select class="form-control"><option>Planejada</option><option>Paga</option><option>Vencida</option></select></div></div>
-  <div class="form-group"><label>Comprovante</label><div class="upload-zone" onclick="toast('Selecionando comprovante...')"><div style="font-size:28px">📄</div><p>Clique para anexar nota fiscal</p></div></div>
+  <div class="form-row"><div class="form-group"><label>Centro de Custo</label><select class="form-control"><option>Geral</option><option>Projeto Informática</option><option>Projeto Esportivo</option><option>Projeto Leitura</option></select></div><div class="form-group"><label>Status</label><select class="form-control"><option>Planejada</option><option>Paga</option><option>Vencida</option></select></div></div>
+  <div class="form-group"><label>Nota Fiscal / Comprovante</label><div class="upload-zone" onclick="toast('Selecionando arquivo...')"><div style="font-size:28px">📄</div><p>Clique para anexar nota fiscal</p></div></div>
 </div><div class="modal-foot"><button class="btn btn-outline" onclick="closeM('m-despesa')">Cancelar</button><button class="btn btn-primary" onclick="toast('✅ Despesa registrada!');closeM('m-despesa')">💾 Salvar</button></div></div></div>
 
 <!-- MODAL USUÁRIO LGPD -->
 <div class="overlay" id="m-usuario"><div class="modal"><div class="modal-head"><h3>👤 Novo Usuário do Sistema</h3><button class="modal-close" onclick="closeM('m-usuario')">×</button></div><div class="modal-body">
   <div class="form-row"><div class="form-group"><label>Nome</label><input class="form-control"></div><div class="form-group"><label>E-mail (login)</label><input type="email" class="form-control" placeholder="nome@email.com"></div></div>
-  <div class="form-row"><div class="form-group"><label>Perfil de Acesso</label><select class="form-control"><option>Administrador</option><option>Coordenador</option><option>Assistente Social</option><option>Educador</option><option>Voluntário</option></select></div><div class="form-group"><label>Senha temporária</label><input type="password" class="form-control" placeholder="Mínimo 8 caracteres"></div></div>
-  <div class="form-group"><label>WhatsApp</label><input class="form-control" placeholder="(51) 99999-0000"></div>
-  <div class="alert alert-info"><strong>🔒 LGPD</strong><p>O usuário receberá e-mail para aceitar os termos de uso e política de privacidade antes de acessar o sistema.</p></div>
-</div><div class="modal-foot"><button class="btn btn-outline" onclick="closeM('m-usuario')">Cancelar</button><button class="btn btn-primary" onclick="toast('✅ Usuário criado! E-mail de acesso enviado.');closeM('m-usuario')">✅ Criar Usuário</button></div></div></div>
+  <div class="form-row"><div class="form-group"><label>Perfil</label><select class="form-control"><option>Administrador</option><option>Coordenador</option><option>Assistente Social</option><option>Educador</option><option>Voluntário</option></select></div><div class="form-group"><label>WhatsApp</label><input class="form-control" placeholder="(51) 99999-0000"></div></div>
+  <div class="alert alert-info" style="margin-top:10px"><strong>🔒 LGPD</strong><p>O usuário receberá e-mail para aceitar os termos antes de acessar o sistema.</p></div>
+</div><div class="modal-foot"><button class="btn btn-outline" onclick="closeM('m-usuario')">Cancelar</button><button class="btn btn-primary" onclick="toast('✅ Usuário criado! E-mail enviado.');closeM('m-usuario')">✅ Criar Usuário</button></div></div></div>
 
 <!-- TOAST -->
 <div id="toast-wrap"></div>
@@ -1161,15 +1088,31 @@ textarea.form-control{resize:vertical;min-height:78px}
 <!-- PRONTUÁRIO -->
 <div class="overlay" id="m-prontuario">
   <div class="modal modal-xl">
-    <div class="modal-head"><h3>📋 Prontuário — <span id="pron-nome"></span></h3><button class="modal-close" onclick="closeM('m-prontuario')">×</button></div>
+    <div class="modal-head">
+      <div style="display:flex;align-items:center;gap:14px">
+        <div id="pron-foto" style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#2d6fa8);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;color:#fff">👤</div>
+        <div>
+          <h3 style="font-size:16px">📋 Prontuário Social</h3>
+          <div id="pron-nome" style="font-size:13px;color:var(--text3);font-weight:400;margin-top:1px"></div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <button class="btn btn-outline btn-sm" onclick="imprimirFicha()">🖨️ Imprimir</button>
+        <button class="modal-close" onclick="closeM('m-prontuario')">×</button>
+      </div>
+    </div>
     <div class="modal-body">
       <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab(this,'pt-dados')">Dados</button>
-        <button class="tab-btn" onclick="switchTab(this,'pt-familia')">Família</button>
-        <button class="tab-btn" onclick="switchTab(this,'pt-escola')">Escola</button>
-        <button class="tab-btn" onclick="switchTab(this,'pt-vuln')">Vulnerabilidades</button>
-        <button class="tab-btn" onclick="switchTab(this,'pt-hist')">Histórico</button>
-        <button class="tab-btn" onclick="switchTab(this,'pt-encam')">Encaminhamentos</button>
+        <button class="tab-btn active" onclick="switchTab(this,'pt-dados')">📋 Dados</button>
+        <button class="tab-btn" onclick="switchTab(this,'pt-familia')">👨‍👩‍👧 Família</button>
+        <button class="tab-btn" onclick="switchTab(this,'pt-escola')">🏫 Escola</button>
+        <button class="tab-btn" onclick="switchTab(this,'pt-saude')">🏥 Saúde</button>
+        <button class="tab-btn" onclick="switchTab(this,'pt-transporte')">🚌 Transporte</button>
+        <button class="tab-btn" onclick="switchTab(this,'pt-alimentacao')">🍽️ Alimentação</button>
+        <button class="tab-btn" onclick="switchTab(this,'pt-vuln')">⚠️ Vulnerab.</button>
+        <button class="tab-btn" onclick="switchTab(this,'pt-hist')">📅 Histórico</button>
+        <button class="tab-btn" onclick="switchTab(this,'pt-encam')">📍 Encaminh.</button>
+        <button class="tab-btn" onclick="switchTab(this,'pt-docs')">📁 Documentos</button>
       </div>
       <div id="pt-dados" class="tab-pane active">
         <div class="form-row"><div class="form-group"><label>Nome</label><input class="form-control" value="João Pereira"></div><div class="form-group"><label>Nascimento</label><input type="date" class="form-control" value="2012-03-15"></div></div>
@@ -1215,6 +1158,150 @@ textarea.form-control{resize:vertical;min-height:78px}
         <div class="alert alert-warning"><strong>⏳ Jovem Aprendiz</strong><p>Em processo — jun/2026</p></div>
         <button class="btn btn-outline btn-sm" style="margin-top:10px" onclick="toast('✅ Encaminhamento adicionado!')">+ Encaminhamento</button>
       </div>
+
+      <!-- ABA SAÚDE -->
+      <div id="pt-saude" class="tab-pane">
+        <div style="background:var(--red-bg);border-radius:var(--r-sm);padding:10px 14px;margin-bottom:14px;font-size:12.5px;color:var(--red)">
+          ⚠️ Estas informações são confidenciais e visíveis apenas para coordenação e assistente social.
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Tipo Sanguíneo</label>
+            <select class="form-control"><option>Não informado</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>O+</option><option>O-</option><option>AB+</option><option>AB-</option></select>
+          </div>
+          <div class="form-group"><label>Plano de Saúde</label>
+            <select class="form-control"><option>SUS</option><option>Plano de saúde</option><option>Sem cobertura</option></select>
+          </div>
+        </div>
+        <div class="form-group"><label>Alergias (alimentares, medicamentos, outros)</label>
+          <input class="form-control" placeholder="Ex: amendoim, penicilina, látex... ou Nenhuma">
+        </div>
+        <div class="form-group"><label>Medicamentos em uso contínuo</label>
+          <input class="form-control" placeholder="Nome, dosagem e horário. Ex: Ritalina 10mg — almoço">
+        </div>
+        <div class="form-group"><label>Restrições físicas ou médicas</label>
+          <input class="form-control" placeholder="Ex: não pode fazer impacto, usa óculos, joelho frágil... ou Nenhuma">
+        </div>
+        <div class="form-group"><label>Vacinas em dia?</label>
+          <select class="form-control"><option>✅ Sim — carteirinha apresentada</option><option>⚠️ Parcialmente — aguardando atualização</option><option>❌ Não verificado</option></select>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Contato de Emergência — Nome</label>
+            <input class="form-control" placeholder="Nome e grau de parentesco">
+          </div>
+          <div class="form-group"><label>Telefone de Emergência</label>
+            <input class="form-control" placeholder="(51) 99999-0000">
+          </div>
+        </div>
+        <div class="form-group"><label>Necessidades especiais / TEA / Deficiências</label>
+          <textarea class="form-control" rows="2" placeholder="Descreva se houver diagnóstico, laudo ou necessidade específica..."></textarea>
+        </div>
+        <div class="form-group"><label>Histórico de acidentes no projeto</label>
+          <textarea class="form-control" rows="2" placeholder="Registros de acidentes ou atendimentos médicos durante atividades..."></textarea>
+        </div>
+      </div>
+
+      <!-- ABA TRANSPORTE -->
+      <div id="pt-transporte" class="tab-pane">
+        <div class="form-row">
+          <div class="form-group"><label>Como vem ao projeto</label>
+            <select class="form-control">
+              <option>A pé (sozinho)</option><option>A pé (acompanhado)</option>
+              <option>Bicicleta</option><option>Ônibus</option>
+              <option>Carro do responsável</option><option>Transporte escolar</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Tempo estimado de deslocamento</label>
+            <select class="form-control"><option>Até 10 minutos</option><option>10–20 minutos</option><option>20–30 minutos</option><option>Mais de 30 minutos</option></select>
+          </div>
+        </div>
+        <div class="form-group"><label>Quem pode buscar a criança</label>
+          <input class="form-control" placeholder="Ex: Mãe (Maria), Avó (Rosa), Pai (João) — separados por vírgula">
+        </div>
+        <div class="form-group"><label>Autorização para sair sozinho</label>
+          <select class="form-control">
+            <option>✅ Autorizado — responsável assinou termo</option>
+            <option>❌ Não autorizado — responsável deve buscar obrigatoriamente</option>
+            <option>⚠️ Depende do horário — verificar</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Nível de risco no trajeto</label>
+          <select class="form-control">
+            <option>🟢 Baixo — trajeto seguro</option>
+            <option>🟡 Médio — área com algum risco</option>
+            <option>🔴 Alto — área de violência / risco elevado</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Observações sobre o trajeto</label>
+          <textarea class="form-control" rows="2" placeholder="Pontos de referência, situações específicas, cuidados necessários..."></textarea>
+        </div>
+      </div>
+
+      <!-- ABA ALIMENTAÇÃO -->
+      <div id="pt-alimentacao" class="tab-pane">
+        <div class="form-group"><label>Recebe lanche no projeto?</label>
+          <select class="form-control"><option>✅ Sim</option><option>❌ Não</option></select>
+        </div>
+        <div class="form-group"><label>Restrições alimentares</label>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:6px">
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0"><input type="checkbox"> Lactose</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0"><input type="checkbox"> Glúten</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0"><input type="checkbox"> Amendoim</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0"><input type="checkbox"> Frutos do mar</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0"><input type="checkbox"> Corantes artificiais</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0"><input type="checkbox"> Restrição religiosa</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0"><input type="checkbox"> Outra</label>
+          </div>
+        </div>
+        <div class="form-group"><label>Detalhe a restrição alimentar</label>
+          <input class="form-control" placeholder="Ex: alergia grave a amendoim — risco de anafilaxia, sem laticínios...">
+        </div>
+        <div class="form-group"><label>Situação de segurança alimentar em casa</label>
+          <select class="form-control">
+            <option>✅ Segurança alimentar adequada</option>
+            <option>⚠️ Insegurança alimentar leve</option>
+            <option>🔴 Insegurança alimentar grave / fome</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Recebe benefícios alimentares (Bolsa Família, cesta básica...)</label>
+          <select class="form-control"><option>Sim</option><option>Não</option><option>Não informado</option></select>
+        </div>
+        <div class="form-group"><label>Observações</label>
+          <textarea class="form-control" rows="2" placeholder="Informações adicionais sobre alimentação e nutrição..."></textarea>
+        </div>
+      </div>
+
+      <!-- ABA DOCUMENTOS -->
+      <div id="pt-docs" class="tab-pane">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 13px;background:var(--surface2);border-radius:var(--r-sm);border:1px solid var(--border)">
+            <div><div style="font-weight:600;font-size:13px">📋 Ficha de Matrícula</div><div style="font-size:11px;color:var(--text4)">Assinada em 10/01/2024</div></div>
+            <div style="display:flex;gap:6px"><span class="chip chip-green">✅ OK</span><button class="btn btn-xs btn-ghost" onclick="toast('Abrindo...')">Ver</button></div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 13px;background:var(--surface2);border-radius:var(--r-sm);border:1px solid var(--border)">
+            <div><div style="font-weight:600;font-size:13px">📸 Autorização de Imagem</div><div style="font-size:11px;color:var(--text4)">Assinada digitalmente</div></div>
+            <div style="display:flex;gap:6px"><span class="chip chip-green">✅ OK</span><button class="btn btn-xs btn-ghost" onclick="toast('Abrindo...')">Ver</button></div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 13px;background:var(--surface2);border-radius:var(--r-sm);border:1px solid var(--border)">
+            <div><div style="font-weight:600;font-size:13px">🪪 RG do Aluno</div><div style="font-size:11px;color:var(--text4)">Pendente de envio</div></div>
+            <div style="display:flex;gap:6px"><span class="chip chip-yellow">⚠️ Pendente</span><button class="btn btn-xs btn-outline" onclick="toast('Enviando solicitação...')">Solicitar</button></div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 13px;background:var(--surface2);border-radius:var(--r-sm);border:1px solid var(--border)">
+            <div><div style="font-weight:600;font-size:13px">🏠 Comprovante de Residência</div><div style="font-size:11px;color:var(--text4)">Pendente de envio</div></div>
+            <div style="display:flex;gap:6px"><span class="chip chip-yellow">⚠️ Pendente</span><button class="btn btn-xs btn-outline" onclick="toast('Enviando solicitação...')">Solicitar</button></div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 13px;background:var(--surface2);border-radius:var(--r-sm);border:1px solid var(--border)">
+            <div><div style="font-weight:600;font-size:13px">🏥 Cartão SUS</div><div style="font-size:11px;color:var(--text4)">Número registrado</div></div>
+            <div style="display:flex;gap:6px"><span class="chip chip-green">✅ OK</span></div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 13px;background:var(--surface2);border-radius:var(--r-sm);border:1px solid var(--border)">
+            <div><div style="font-weight:600;font-size:13px">🚌 Autorização de Saída</div><div style="font-size:11px;color:var(--text4)">Assinada pelos responsáveis</div></div>
+            <div style="display:flex;gap:6px"><span class="chip chip-green">✅ OK</span><button class="btn btn-xs btn-ghost" onclick="toast('Abrindo...')">Ver</button></div>
+          </div>
+        </div>
+        <div style="margin-top:14px">
+          <button class="btn btn-outline btn-sm" onclick="toast('Enviando para upload...')">📎 Anexar Novo Documento</button>
+        </div>
+      </div>
     </div>
     <div class="modal-foot">
       <button class="btn btn-outline" onclick="closeM('m-prontuario')">Fechar</button>
@@ -1225,7 +1312,185 @@ textarea.form-control{resize:vertical;min-height:78px}
 </div>
 
 <!-- MODAIS SIMPLES -->
-<div class="overlay" id="m-aluno"><div class="modal modal-lg"><div class="modal-head"><h3>👤 Novo Aluno</h3><button class="modal-close" onclick="closeM('m-aluno')">×</button></div><div class="modal-body"><div class="form-row"><div class="form-group"><label>Nome</label><input class="form-control"></div><div class="form-group"><label>Nascimento</label><input type="date" class="form-control"></div></div><div class="form-row"><div class="form-group"><label>Responsável</label><input class="form-control"></div><div class="form-group"><label>WhatsApp</label><input class="form-control" placeholder="(51) 99999-0000"></div></div><div class="form-row"><div class="form-group"><label>Escola</label><input class="form-control"></div><div class="form-group"><label>Série</label><select class="form-control"><option>5º Ano EF</option><option>6º Ano EF</option><option>7º Ano EF</option><option>8º Ano EF</option><option>9º Ano EF</option><option>1º Médio</option></select></div></div><div class="form-group"><label>Oficinas</label><select multiple class="form-control" style="height:80px"><option>Futebol</option><option>Jiu-Jitsu</option><option>Informática</option><option>Leitura</option><option>Acolhimento</option></select></div><div class="form-group"><label>Observações Iniciais</label><textarea class="form-control" rows="3"></textarea></div></div><div class="modal-foot"><button class="btn btn-outline" onclick="closeM('m-aluno')">Cancelar</button><button class="btn btn-primary" onclick="toast('✅ Aluno cadastrado!');closeM('m-aluno')">💾 Salvar</button></div></div></div>
+<div class="overlay" id="m-aluno">
+  <div class="modal modal-xl">
+    <div class="modal-head"><h3>👤 Cadastro de Aluno</h3><button class="modal-close" onclick="closeM('m-aluno')">×</button></div>
+    <div class="modal-body">
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab(this,'na-dados')">📋 Dados</button>
+        <button class="tab-btn" onclick="switchTab(this,'na-familia')">👨‍👩‍👧 Família</button>
+        <button class="tab-btn" onclick="switchTab(this,'na-escola')">🏫 Escola</button>
+        <button class="tab-btn" onclick="switchTab(this,'na-saude')">🏥 Saúde</button>
+        <button class="tab-btn" onclick="switchTab(this,'na-transporte')">🚌 Transporte</button>
+        <button class="tab-btn" onclick="switchTab(this,'na-oficinas')">🎓 Oficinas</button>
+      </div>
+
+      <div id="na-dados" class="tab-pane active">
+        <div style="border:2px dashed var(--border2);border-radius:var(--r-sm);padding:14px;text-align:center;margin-bottom:14px;cursor:pointer" onclick="toast('Abrindo câmera/galeria...')">
+          <div style="font-size:36px">📸</div>
+          <div style="font-size:12.5px;color:var(--text3);margin-top:4px">Clique para adicionar foto do aluno</div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Nome Completo</label><input class="form-control" placeholder="Nome e sobrenome"></div>
+          <div class="form-group"><label>Data de Nascimento</label><input type="date" class="form-control"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>CPF (se tiver)</label><input class="form-control" placeholder="000.000.000-00"></div>
+          <div class="form-group"><label>RG (se tiver)</label><input class="form-control" placeholder="Número do RG"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Certidão de Nascimento nº</label><input class="form-control" placeholder="Número da certidão"></div>
+          <div class="form-group"><label>Cartão SUS nº</label><input class="form-control" placeholder="Número do cartão SUS"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Endereço</label><input class="form-control" placeholder="Rua, número, bairro"></div>
+          <div class="form-group"><label>CEP</label><input class="form-control" placeholder="00000-000"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Data de Entrada no Projeto</label><input type="date" class="form-control"></div>
+          <div class="form-group"><label>Como soube do projeto?</label>
+            <select class="form-control"><option>Indicação de amigo/vizinho</option><option>Escola</option><option>Igreja</option><option>Redes sociais</option><option>CRAS / CREAS</option><option>Outro</option></select>
+          </div>
+        </div>
+      </div>
+
+      <div id="na-familia" class="tab-pane">
+        <div class="form-row">
+          <div class="form-group"><label>Nome do Responsável Principal</label><input class="form-control" placeholder="Nome completo"></div>
+          <div class="form-group"><label>Grau de Parentesco</label>
+            <select class="form-control"><option>Mãe</option><option>Pai</option><option>Avó</option><option>Avô</option><option>Tia/Tio</option><option>Irmão/Irmã</option><option>Responsável legal</option><option>Outro</option></select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>CPF do Responsável</label><input class="form-control" placeholder="000.000.000-00"></div>
+          <div class="form-group"><label>WhatsApp do Responsável</label><input class="form-control" placeholder="(51) 99999-0000"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>2º Responsável (opcional)</label><input class="form-control" placeholder="Nome e parentesco"></div>
+          <div class="form-group"><label>WhatsApp do 2º Responsável</label><input class="form-control" placeholder="(51) 99999-0000"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Composição Familiar</label><input class="form-control" placeholder="Ex: 5 pessoas — mãe, pai, 3 filhos"></div>
+          <div class="form-group"><label>Renda Familiar Aproximada</label>
+            <select class="form-control"><option>Menos de R$ 600</option><option>R$ 600 – R$ 1.200</option><option>R$ 1.200 – R$ 2.400</option><option>Acima de R$ 2.400</option></select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Situação Habitacional</label>
+            <select class="form-control"><option>Casa própria</option><option>Aluguel</option><option>Cedida</option><option>Ocupação irregular</option><option>Abrigo / Situação de rua</option></select>
+          </div>
+          <div class="form-group"><label>Benefícios Sociais</label>
+            <select class="form-control"><option>Nenhum</option><option>Bolsa Família / CadÚnico</option><option>BPC</option><option>Outros</option></select>
+          </div>
+        </div>
+        <div class="form-group"><label>Situação de Emprego dos Responsáveis</label>
+          <select class="form-control"><option>Ambos empregados</option><option>Um empregado</option><option>Desempregados</option><option>Autônomos / Informais</option></select>
+        </div>
+      </div>
+
+      <div id="na-escola" class="tab-pane">
+        <div class="form-row">
+          <div class="form-group"><label>Nome da Escola</label><input class="form-control" placeholder="E.E. / E.M. / Escola Particular"></div>
+          <div class="form-group"><label>Série / Ano</label>
+            <select class="form-control"><option>Pré-escola</option><option>1º Ano EF</option><option>2º Ano EF</option><option>3º Ano EF</option><option>4º Ano EF</option><option>5º Ano EF</option><option>6º Ano EF</option><option>7º Ano EF</option><option>8º Ano EF</option><option>9º Ano EF</option><option>1º Médio</option><option>2º Médio</option><option>3º Médio</option><option>Fora da escola</option></select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Turno</label>
+            <select class="form-control"><option>Manhã</option><option>Tarde</option><option>Noite</option><option>Integral</option></select>
+          </div>
+          <div class="form-group"><label>Situação Escolar</label>
+            <select class="form-control"><option>Regular — bom desempenho</option><option>Regular — desempenho médio</option><option>Com dificuldades de aprendizagem</option><option>Risco de reprovação</option><option>Retido / Reprovado</option><option>Evadido da escola</option><option>Nunca estudou</option></select>
+          </div>
+        </div>
+        <div class="form-group"><label>Dificuldades de Aprendizagem Identificadas</label>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px">
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0"><input type="checkbox"> Leitura / Dislexia</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0"><input type="checkbox"> Escrita</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0"><input type="checkbox"> Matemática</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0"><input type="checkbox"> Atenção / TDAH</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0"><input type="checkbox"> Comportamento</label>
+          </div>
+        </div>
+        <div class="form-group"><label>Observações Pedagógicas</label>
+          <textarea class="form-control" rows="3" placeholder="Notas, comportamento, necessidades especiais, encaminhamentos pedagógicos..."></textarea>
+        </div>
+      </div>
+
+      <div id="na-saude" class="tab-pane">
+        <div class="form-row">
+          <div class="form-group"><label>Tipo Sanguíneo</label>
+            <select class="form-control"><option>Não informado</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>O+</option><option>O-</option><option>AB+</option><option>AB-</option></select>
+          </div>
+          <div class="form-group"><label>Cobertura de Saúde</label>
+            <select class="form-control"><option>SUS</option><option>Plano de saúde</option><option>Sem cobertura</option></select>
+          </div>
+        </div>
+        <div class="form-group"><label>Alergias</label><input class="form-control" placeholder="Ex: amendoim, penicilina, látex... ou Nenhuma"></div>
+        <div class="form-group"><label>Medicamentos em uso</label><input class="form-control" placeholder="Nome e dosagem. Ex: Ritalina 10mg — 1x ao dia... ou Nenhum"></div>
+        <div class="form-group"><label>Restrições físicas ou médicas</label><input class="form-control" placeholder="Ex: não pode fazer impacto, usa óculos... ou Nenhuma"></div>
+        <div class="form-group"><label>Necessidades Especiais / TEA / Deficiência</label>
+          <textarea class="form-control" rows="2" placeholder="Descreva diagnóstico, laudo ou necessidade específica se houver..."></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Contato de Emergência</label><input class="form-control" placeholder="Nome e parentesco"></div>
+          <div class="form-group"><label>Telefone de Emergência</label><input class="form-control" placeholder="(51) 99999-0000"></div>
+        </div>
+        <div class="form-group"><label>Vacinas em dia?</label>
+          <select class="form-control"><option>✅ Sim</option><option>⚠️ Parcialmente</option><option>❌ Não verificado</option></select>
+        </div>
+      </div>
+
+      <div id="na-transporte" class="tab-pane">
+        <div class="form-row">
+          <div class="form-group"><label>Como vem ao projeto</label>
+            <select class="form-control"><option>A pé (sozinho)</option><option>A pé (acompanhado)</option><option>Bicicleta</option><option>Ônibus</option><option>Carro do responsável</option></select>
+          </div>
+          <div class="form-group"><label>Tempo de deslocamento</label>
+            <select class="form-control"><option>Até 10 min</option><option>10–20 min</option><option>20–30 min</option><option>Mais de 30 min</option></select>
+          </div>
+        </div>
+        <div class="form-group"><label>Quem pode buscar a criança</label>
+          <input class="form-control" placeholder="Ex: Mãe (Maria), Avó (Rosa) — separados por vírgula">
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Autorização para sair sozinho</label>
+            <select class="form-control"><option>✅ Autorizado</option><option>❌ Não autorizado</option><option>⚠️ Depende do horário</option></select>
+          </div>
+          <div class="form-group"><label>Risco no trajeto</label>
+            <select class="form-control"><option>🟢 Baixo</option><option>🟡 Médio</option><option>🔴 Alto</option></select>
+          </div>
+        </div>
+        <div class="form-group"><label>Observações sobre o trajeto</label>
+          <textarea class="form-control" rows="2" placeholder="Pontos de referência, cuidados especiais..."></textarea>
+        </div>
+      </div>
+
+      <div id="na-oficinas" class="tab-pane">
+        <div class="form-group"><label>Oficinas de Interesse</label>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px">
+            <label style="display:flex;align-items:center;gap:8px;padding:10px;background:var(--surface2);border-radius:var(--r-sm);border:1px solid var(--border);cursor:pointer;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0"><input type="checkbox"> ⚽ Futebol</label>
+            <label style="display:flex;align-items:center;gap:8px;padding:10px;background:var(--surface2);border-radius:var(--r-sm);border:1px solid var(--border);cursor:pointer;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0"><input type="checkbox"> 🥋 Jiu-Jitsu</label>
+            <label style="display:flex;align-items:center;gap:8px;padding:10px;background:var(--surface2);border-radius:var(--r-sm);border:1px solid var(--border);cursor:pointer;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0"><input type="checkbox"> 💻 Informática</label>
+            <label style="display:flex;align-items:center;gap:8px;padding:10px;background:var(--surface2);border-radius:var(--r-sm);border:1px solid var(--border);cursor:pointer;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0"><input type="checkbox"> 📚 Leitura</label>
+            <label style="display:flex;align-items:center;gap:8px;padding:10px;background:var(--surface2);border-radius:var(--r-sm);border:1px solid var(--border);cursor:pointer;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0"><input type="checkbox"> 💛 Acolhimento</label>
+            <label style="display:flex;align-items:center;gap:8px;padding:10px;background:var(--surface2);border-radius:var(--r-sm);border:1px solid var(--border);cursor:pointer;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0"><input type="checkbox"> ➕ Outras oficinas</label>
+          </div>
+        </div>
+        <div class="form-group" style="margin-top:6px"><label>Observações / Outras oficinas desejadas</label>
+          <input class="form-control" placeholder="Ex: quer participar de música quando houver...">
+        </div>
+        <div class="form-group"><label>Observações Gerais do Cadastro</label>
+          <textarea class="form-control" rows="3" placeholder="Contexto da família, situação inicial, necessidades identificadas..."></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="closeM('m-aluno')">Cancelar</button>
+      <button class="btn btn-primary" onclick="toast('✅ Aluno cadastrado com sucesso!');closeM('m-aluno')">💾 Finalizar Cadastro</button>
+    </div>
+  </div>
+</div>
 
 <div class="overlay" id="m-assinatura"><div class="modal"><div class="modal-head"><h3>✍️ Assinatura Digital</h3><button class="modal-close" onclick="closeM('m-assinatura')">×</button></div><div class="modal-body"><p style="font-size:13px;color:var(--text3);margin-bottom:12px">Autorização de Imagem — João Pereira</p><canvas id="sig-canvas" width="500" height="150"></canvas><button class="btn btn-ghost btn-sm" style="margin-top:7px" onclick="clearSig()">🗑️ Limpar</button></div><div class="modal-foot"><button class="btn btn-outline" onclick="closeM('m-assinatura')">Cancelar</button><button class="btn btn-primary" onclick="toast('✅ Assinatura registrada!');closeM('m-assinatura')">Confirmar</button></div></div></div>
 
@@ -1261,7 +1526,7 @@ textarea.form-control{resize:vertical;min-height:78px}
 
 <script>
 // NAVEGAÇÃO
-const TITLES={dashboard:'Dashboard',mural:'Mural do Impacto',metas:'Metas 2026',alunos:'Alunos & Prontuário',risco:'Mapa de Risco',presenca:'Presenças',voluntarios:'Voluntários',destaques:'Destaques',oficinas:'Oficinas',['outras-oficinas']:'Outras Oficinas',oportunidades:'Banco de Oportunidades',biblioteca:'Biblioteca',doacoes:'Doações & Estoque',patrimonio:'Patrimônio',parceiros:'CRM de Parceiros',prestacao:'Prestação de Contas',editais:'Editais',portal:'Portal Famílias',documentos:'Documentos',fotos:'Fotos & Evidências',assinaturas:'Assinaturas Digitais',whatsapp:'WhatsApp & Avisos',saude:'Saúde',alimentacao:'Alimentação',transporte:'Transporte',colaboradores:'Colaboradores',financeiro:'Financeiro',lgpd:'LGPD & Permissões'};
+const TITLES={dashboard:'Dashboard',mural:'Mural do Impacto',metas:'Metas 2026',alunos:'Alunos & Prontuário',risco:'Mapa de Risco',presenca:'Presenças',voluntarios:'Voluntários',destaques:'Destaques',oficinas:'Oficinas',['outras-oficinas']:'Outras Oficinas',oportunidades:'Banco de Oportunidades',biblioteca:'Biblioteca',doacoes:'Doações & Estoque',patrimonio:'Patrimônio',parceiros:'CRM de Parceiros',prestacao:'Prestação de Contas',editais:'Editais',portal:'Portal Famílias',documentos:'Documentos',fotos:'Fotos & Evidências',assinaturas:'Assinaturas Digitais',whatsapp:'WhatsApp & Avisos',avaliacoes:'Avaliações',ocorrencias:'Ocorrências',agenda:'Agenda',financeiro:'Financeiro',lgpd:'LGPD & Permissões'};
 function go(id){
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
@@ -1296,10 +1561,23 @@ function toast(msg){
 }
 
 // PRONTUÁRIO
-function openPron(nome){document.getElementById('pron-nome').textContent=nome;openM('m-prontuario');}
+function openPron(nome){
+  document.getElementById('pron-nome').textContent=nome+' · Prontuário completo';
+  // Set avatar color based on name
+  const colors=[['#1c4e80','#2d6fa8'],['#1a6b3c','#2e9e5b'],['#b8860b','#d4a017'],['#6b3fa0','#9b59b6'],['#c0392b','#e74c3c']];
+  const c=colors[nome.length%colors.length];
+  const foto=document.getElementById('pron-foto');
+  if(foto){foto.style.background=`linear-gradient(135deg,${c[0]},${c[1]})`;foto.textContent=nome.charAt(0);}
+  openM('m-prontuario');
+}
 
 // WHATSAPP
 function openWA(tipo){
+  if(tipo==='aniversario'){
+    const msg='🎂 Parabéns pelo seu aniversário! O Projeto Getsêmani deseja tudo de melhor pra você! Muito obrigado por fazer parte da nossa família. 💚';
+    window.open('https://wa.me/5551999990001?text='+encodeURIComponent(msg),'_blank');
+    return;
+  }
   let msg=tipo==='urgente'?'Olá! Notamos que seu filho não comparecem há algum tempo. Podemos conversar?':tipo==='link'?'Olá! Link do Portal Getsêmani: getsemani.app/familia/pereira-abc123':'Olá! Entramos em contato do Projeto Getsêmani.';
   window.open('https://wa.me/5551999990001?text='+encodeURIComponent(msg),'_blank');
 }
@@ -1307,14 +1585,40 @@ function fillMsg(msg){const el=document.getElementById('wa-msg');if(el)el.value=
 
 // PRESENÇA
 const ALUNOS=[{n:'João P.',e:'👦'},{n:'Maria O.',e:'👧'},{n:'Lucas S.',e:'👦'},{n:'Ana L.',e:'👧'},{n:'Carlos S.',e:'👦'},{n:'Felipe R.',e:'👦'},{n:'Beatriz M.',e:'👧'},{n:'Thiago N.',e:'👦'},{n:'Larissa C.',e:'👧'},{n:'Rafael M.',e:'👦'},{n:'Sofia T.',e:'👧'},{n:'Gabriel F.',e:'👦'}];
+function marcarTodos(estado){
+  document.querySelectorAll('.pres-item').forEach(d=>{
+    d.classList.remove('present','absent');
+    if(estado)d.classList.add(estado);
+  });
+  atualizarContador();
+}
+
+function atualizarContador(){
+  const presentes=document.querySelectorAll('.pres-item.present').length;
+  const ausentes=document.querySelectorAll('.pres-item.absent').length;
+  const total=presentes+ausentes;
+  const cp=document.getElementById('count-presentes');
+  const ca=document.getElementById('count-ausentes');
+  const ct=document.getElementById('count-total');
+  if(cp)cp.textContent=presentes;
+  if(ca)ca.textContent=ausentes;
+  if(ct)ct.textContent=total+' marcados de '+ALUNOS.length;
+}
+
 function renderPres(){
   const g=document.getElementById('pres-grid');g.innerHTML='';
   ALUNOS.forEach(a=>{
     const d=document.createElement('div');d.className='pres-item';
     d.innerHTML=`<div class="pi">${a.e}</div><div class="pn">${a.n}</div>`;
-    d.onclick=()=>{if(d.classList.contains('present'))d.classList.remove('present');else if(d.classList.contains('absent'))d.classList.remove('absent');else d.classList.add('present');};
+    d.onclick=()=>{
+      if(d.classList.contains('present'))d.classList.remove('present');
+      else if(d.classList.contains('absent'))d.classList.remove('absent');
+      else d.classList.add('present');
+      atualizarContador();
+    };
     g.appendChild(d);
   });
+  atualizarContador();
 }
 
 // ASSINATURA
@@ -1356,6 +1660,80 @@ function sugerirOf(str){
 
 // INIT
 renderPres();
+renderCal();
+
+// ── IMPRIMIR FICHA ──
+function imprimirFicha(){
+  const nome = document.getElementById('pron-nome').textContent.split('·')[0].trim();
+  const win = window.open('','_blank');
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Ficha — ${nome}</title>
+  <style>
+    body{font-family:Arial,sans-serif;font-size:13px;color:#111;padding:30px;max-width:700px;margin:0 auto}
+    h1{font-size:20px;border-bottom:2px solid #1c4e80;padding-bottom:8px;color:#1c4e80}
+    h2{font-size:14px;margin-top:20px;margin-bottom:6px;color:#444;text-transform:uppercase;letter-spacing:.5px}
+    .field{display:flex;gap:8px;padding:5px 0;border-bottom:1px solid #eee}
+    .label{color:#888;min-width:160px;font-size:12px}
+    .alerta{background:#fdecea;border-left:3px solid #c0392b;padding:8px 12px;margin:8px 0;font-size:12px}
+    .rodape{margin-top:30px;font-size:11px;color:#aaa;text-align:center}
+    @media print{button{display:none}}
+  </style></head><body>
+  <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px">
+    <div style="width:60px;height:60px;border-radius:50%;background:#1c4e80;display:flex;align-items:center;justify-content:center;font-size:28px;color:#fff">${nome.charAt(0)}</div>
+    <div><h1 style="border:none;padding:0;margin:0">${nome}</h1><div style="color:#888;font-size:12px">Projeto Getsêmani · Prontuário Social · ${new Date().toLocaleDateString('pt-BR')}</div></div>
+  </div>
+  <h2>Dados Pessoais</h2>
+  <div class="field"><span class="label">Nome completo</span><span>${nome}</span></div>
+  <div class="field"><span class="label">Entrada no projeto</span><span>Janeiro de 2021</span></div>
+  <div class="field"><span class="label">Oficinas</span><span>Informática · Futebol</span></div>
+  <h2>Família</h2>
+  <div class="field"><span class="label">Responsável</span><span>Maria Silva Pereira (Mãe)</span></div>
+  <div class="field"><span class="label">WhatsApp</span><span>(51) 99999-0001</span></div>
+  <div class="field"><span class="label">Renda familiar</span><span>Até R$ 1.200</span></div>
+  <h2>Escola</h2>
+  <div class="field"><span class="label">Escola</span><span>E.E. Santos Dumont</span></div>
+  <div class="field"><span class="label">Série</span><span>8º Ano EF</span></div>
+  <div class="field"><span class="label">Situação escolar</span><span>Regular</span></div>
+  <h2>Saúde</h2>
+  <div class="alerta">⚠️ Alergia: Amendoim — informar coordenação na merenda</div>
+  <div class="field"><span class="label">Tipo sanguíneo</span><span>O+</span></div>
+  <div class="field"><span class="label">Contato emergência</span><span>Maria Pereira · (51) 99999-0001</span></div>
+  <h2>Transporte</h2>
+  <div class="field"><span class="label">Como vem</span><span>A pé (sozinho)</span></div>
+  <div class="field"><span class="label">Quem pode buscar</span><span>Mãe, Avó</span></div>
+  <div class="field"><span class="label">Autorização saída sozinho</span><span>✅ Autorizado</span></div>
+  <div class="rodape">Impresso em ${new Date().toLocaleString('pt-BR')} · Sistema Getsêmani · Documento confidencial</div>
+  <br><button onclick="window.print()" style="background:#1c4e80;color:#fff;border:none;padding:10px 20px;border-radius:6px;cursor:pointer;font-size:14px">🖨️ Imprimir</button>
+  </body></html>`);
+  win.document.close();
+}
+
+// ── AGENDA CALENDÁRIO ──
+let calMes=5,calAno=2026;
+const MESES_CAL=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const EVENTOS_CAL={'2026-06-12':[{t:'Informática',c:'var(--accent)'}],'2026-06-20':[{t:'Reunião ABC',c:'var(--gold)'}],'2026-06-24':[{t:'Prazo BNDES',c:'var(--red)'}],'2026-06-28':[{t:'Formatura',c:'var(--green)'}],'2026-06-30':[{t:'Matrículas',c:'var(--accent)'}]};
+function renderCal(){
+  const cal=document.getElementById('calendario');if(!cal)return;
+  document.getElementById('cal-titulo').textContent=MESES_CAL[calMes]+' '+calAno;
+  const dias=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  let h=dias.map(d=>`<div style="text-align:center;font-size:10px;font-weight:700;color:var(--text4);text-transform:uppercase;padding:5px 0">${d}</div>`).join('');
+  const primeiro=new Date(calAno,calMes,1).getDay();
+  const total=new Date(calAno,calMes+1,0).getDate();
+  const hoje=new Date();
+  for(let i=0;i<primeiro;i++)h+='<div></div>';
+  for(let d=1;d<=total;d++){
+    const key=calAno+'-'+String(calMes+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    const evs=EVENTOS_CAL[key]||[];
+    const isH=d===hoje.getDate()&&calMes===hoje.getMonth()&&calAno===hoje.getFullYear();
+    h+=`<div style="padding:5px 3px;border-radius:5px;background:${isH?'var(--accent)':'var(--surface2)'};text-align:center;cursor:pointer;min-height:48px" onclick="toast('📅 '+${d}+'/'+${calMes+1})">
+      <div style="font-size:12px;font-weight:${isH?'700':'400'};color:${isH?'#fff':'var(--text2)'}">${d}</div>
+      ${evs.map(e=>`<div style="font-size:9px;background:${e.c};color:#fff;border-radius:3px;padding:1px 3px;margin-top:2px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">${e.t}</div>`).join('')}
+    </div>`;
+  }
+  cal.innerHTML=h;
+}
+function mesAnterior(){if(calMes===0){calMes=11;calAno--;}else calMes--;renderCal();}
+function mesSeguinte(){if(calMes===11){calMes=0;calAno++;}else calMes++;renderCal();}
+
 </script>
 </body>
 </html>
