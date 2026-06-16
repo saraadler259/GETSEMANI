@@ -529,10 +529,84 @@ textarea.form-control{resize:vertical;min-height:78px}
 
 <!-- ════ PRESENÇA ════ -->
 <div id="sec-presenca" class="section">
-  <div class="sec-header"><div><h2>Controle de Presenças</h2><p>Registro diário por oficina</p></div><div class="actions"><button class="btn btn-primary" onclick="toast('✅ Presenças salvas!')">💾 Salvar</button></div></div>
-  <div class="card" style="margin-bottom:13px"><div class="form-row"><div class="form-group" style="margin:0"><label>Data</label><input type="date" class="form-control" value="2026-06-12"></div><div class="form-group" style="margin:0"><label>Oficina</label><select class="form-control" id="sel-oficina-presenca"><option>Futebol</option><option>Jiu-Jitsu</option><option>Informática</option><option>Leitura</option><option>Acolhimento</option><option>Teatro & Expressão</option><option>Música</option><option>Reforço Escolar</option><option>Outras Oficinas</option></select></div></div></div>
-  <div class="card"><div class="card-header"><div class="card-title">Clique para marcar</div></div><div class="pres-grid" id="pres-grid"></div><div style="display:flex;gap:14px;margin-top:12px;font-size:12px;color:var(--text4)"><span style="display:flex;align-items:center;gap:5px"><span style="width:11px;height:11px;background:var(--green2);border-radius:3px;display:inline-block"></span>Presente</span><span style="display:flex;align-items:center;gap:5px"><span style="width:11px;height:11px;background:var(--red2);border-radius:3px;display:inline-block"></span>Ausente</span></div></div>
+  <div class="sec-header"><div><h2>Controle de Presenças</h2><p>Registro diário por oficina · QR Code</p></div><div class="actions"><button class="btn btn-outline" onclick="openM('m-qrscan')" style="margin-right:8px">📷 Ler QR Code</button><button class="btn btn-primary" onclick="toast('✅ Presenças salvas!')">💾 Salvar</button></div></div>
+
+  <!-- QR Check-in Banner -->
+  <div class="card" style="margin-bottom:13px;background:linear-gradient(135deg,#1c4e80,#2d6fa8);color:#fff;display:flex;align-items:center;gap:16px;padding:16px 20px">
+    <div style="font-size:40px">📷</div>
+    <div style="flex:1">
+      <div style="font-weight:700;font-size:15px">Check-in por QR Code</div>
+      <div style="font-size:12px;opacity:.85;margin-top:3px">Cada aluno tem uma carteirinha com QR Code único. Escaneie para marcar presença automaticamente.</div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-sm" style="background:#fff;color:#1c4e80;font-weight:700" onclick="openCarteirinhas()">🪪 Ver Carteirinhas</button>
+      <button class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4)" onclick="openM('m-qrscan')">📷 Escanear</button>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:13px"><div class="form-row"><div class="form-group" style="margin:0"><label>Data</label><input type="date" class="form-control" id="pres-data" value="2026-06-16"></div><div class="form-group" style="margin:0"><label>Oficina</label><select class="form-control" id="sel-oficina-presenca"><option>Futebol</option><option>Jiu-Jitsu</option><option>Informática</option><option>Leitura</option><option>Acolhimento</option><option>Teatro & Expressão</option><option>Música</option><option>Reforço Escolar</option><option>Outras Oficinas</option></select></div></div></div>
+
+  <!-- Contador -->
+  <div class="card" style="margin-bottom:13px;padding:14px 18px">
+    <div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap">
+      <div style="text-align:center"><div style="font-size:26px;font-weight:800;color:var(--green)" id="count-presentes">0</div><div style="font-size:11px;color:var(--text4)">Presentes</div></div>
+      <div style="text-align:center"><div style="font-size:26px;font-weight:800;color:var(--red)" id="count-ausentes">0</div><div style="font-size:11px;color:var(--text4)">Ausentes</div></div>
+      <div style="flex:1;font-size:13px;color:var(--text3)" id="count-total">0 marcados de 12</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-sm btn-outline" onclick="marcarTodos('present')">✅ Todos</button>
+        <button class="btn btn-sm btn-outline" onclick="marcarTodos('')">🔄 Limpar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card"><div class="card-header"><div class="card-title">Clique para marcar · ou use o QR Code</div></div><div class="pres-grid" id="pres-grid"></div><div style="display:flex;gap:14px;margin-top:12px;font-size:12px;color:var(--text4)"><span style="display:flex;align-items:center;gap:5px"><span style="width:11px;height:11px;background:var(--green2);border-radius:3px;display:inline-block"></span>Presente</span><span style="display:flex;align-items:center;gap:5px"><span style="width:11px;height:11px;background:var(--red2);border-radius:3px;display:inline-block"></span>Ausente</span></div></div>
 </div>
+
+<!-- MODAL: CARTEIRINHAS QR -->
+<div class="overlay" id="m-carteirinhas">
+  <div class="modal modal-xl">
+    <div class="modal-head"><h3>🪪 Carteirinhas com QR Code</h3><button class="modal-close" onclick="closeM('m-carteirinhas')">×</button></div>
+    <div class="modal-body">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+        <p style="color:var(--text3);font-size:13px;margin:0">Imprima e entregue a cada aluno. O QR Code permite check-in instantâneo.</p>
+        <button class="btn btn-primary" onclick="imprimirCarteirinhas()">🖨️ Imprimir Todas</button>
+      </div>
+      <div id="grid-carteirinhas" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: QR SCANNER SIMULADO -->
+<div class="overlay" id="m-qrscan">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-head"><h3>📷 Escanear QR Code</h3><button class="modal-close" onclick="closeM('m-qrscan')">×</button></div>
+    <div class="modal-body" style="text-align:center">
+      <div style="background:#000;border-radius:12px;padding:20px;margin-bottom:16px;position:relative">
+        <div style="border:3px solid #00ff88;border-radius:8px;padding:40px;position:relative">
+          <div style="font-size:50px">📱</div>
+          <div style="color:#00ff88;font-size:13px;margin-top:8px">Aponte para o QR Code do aluno</div>
+          <!-- Scan line animation -->
+          <div id="scan-line" style="position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#00ff88,transparent);top:50%;animation:scanAnim 2s infinite linear"></div>
+        </div>
+      </div>
+      <p style="font-size:12px;color:var(--text4);margin-bottom:16px">Em produção, use a câmera do celular ou leitor USB de QR Code conectado ao sistema.</p>
+      <div style="background:var(--surface2);border-radius:8px;padding:12px;margin-bottom:14px">
+        <div style="font-size:12px;color:var(--text4);margin-bottom:6px">Simular check-in manual:</div>
+        <select class="form-control" id="qr-aluno-sel" style="margin-bottom:8px">
+          <option value="">Selecione o aluno...</option>
+          <option>João P.</option><option>Maria O.</option><option>Lucas S.</option>
+          <option>Ana L.</option><option>Carlos S.</option><option>Felipe R.</option>
+          <option>Beatriz M.</option><option>Thiago N.</option><option>Larissa C.</option>
+          <option>Rafael M.</option><option>Sofia T.</option><option>Gabriel F.</option>
+        </select>
+        <button class="btn btn-primary" style="width:100%" onclick="checkInQR()">✅ Confirmar Check-in</button>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+@keyframes scanAnim{0%{top:10%}50%{top:85%}100%{top:10%}}
+</style>
 
 <!-- ════ VOLUNTÁRIOS ════ -->
 <div id="sec-voluntarios" class="section">
@@ -1677,9 +1751,61 @@ textarea.form-control{resize:vertical;min-height:78px}
         </div>
       </div>
       <div id="pt-escola" class="tab-pane">
-        <div class="form-row"><div class="form-group"><label>Escola</label><input class="form-control" value="E.E. Santos Dumont"></div><div class="form-group"><label>Série</label><select class="form-control"><option>5º Ano EF</option><option>6º Ano EF</option><option>7º Ano EF</option><option selected>8º Ano EF</option><option>9º Ano EF</option><option>1º Médio</option></select></div></div>
-        <div class="form-group"><label>Situação Escolar</label><select class="form-control"><option selected>Regular</option><option>Com dificuldades</option><option>Risco de reprovação</option><option>Evadido</option></select></div>
-        <div class="form-group"><label>Observações</label><textarea class="form-control" rows="3">Bom desempenho após ingresso no projeto.</textarea></div>
+        <div class="form-row">
+          <div class="form-group"><label>Nome da Escola</label><input class="form-control" value="E.E. Santos Dumont" placeholder="Ex: E.E. / E.M. / EMEF..."></div>
+          <div class="form-group"><label>Série / Ano</label>
+            <select class="form-control">
+              <option>Pré-escola</option><option>1º Ano EF</option><option>2º Ano EF</option>
+              <option>3º Ano EF</option><option>4º Ano EF</option><option>5º Ano EF</option>
+              <option>6º Ano EF</option><option>7º Ano EF</option><option selected>8º Ano EF</option>
+              <option>9º Ano EF</option><option>1º Médio</option><option>2º Médio</option>
+              <option>3º Médio</option><option>EJA</option><option>Fora da escola</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Turno Escolar</label>
+            <select class="form-control">
+              <option>🌅 Manhã</option><option>☀️ Tarde</option><option>🌙 Noite</option><option>🕐 Integral</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Turno no Projeto Getsêmani</label>
+            <select class="form-control">
+              <option>🌅 Manhã (8h–12h)</option><option>☀️ Tarde (13h–17h)</option><option>🌙 Noite (18h–21h)</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Situação Escolar</label>
+            <select class="form-control">
+              <option selected>Regular — bom desempenho</option>
+              <option>Regular — desempenho médio</option>
+              <option>Com dificuldades de aprendizagem</option>
+              <option>Risco de reprovação</option>
+              <option>Retido / Reprovado</option>
+              <option>Evadido da escola</option>
+              <option>Nunca estudou</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Tipo de Escola</label>
+            <select class="form-control">
+              <option>Pública Municipal</option><option>Pública Estadual</option>
+              <option>Particular</option><option>Federal</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group"><label>Dificuldades de Aprendizagem</label>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:6px">
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0"><input type="checkbox"> Leitura / Dislexia</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0"><input type="checkbox"> Escrita</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0"><input type="checkbox"> Matemática</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0"><input type="checkbox"> Atenção / TDAH</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0"><input type="checkbox"> Comportamento</label>
+          </div>
+        </div>
+        <div class="form-group"><label>Observações Pedagógicas</label>
+          <textarea class="form-control" rows="3">Bom desempenho após ingresso no projeto. Melhora significativa na leitura.</textarea>
+        </div>
       </div>
       <div id="pt-vuln" class="tab-pane">
         <div class="form-group"><label>Vulnerabilidades</label><div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:6px">
@@ -2055,7 +2181,197 @@ textarea.form-control{resize:vertical;min-height:78px}
 
 <div class="overlay" id="m-meta"><div class="modal"><div class="modal-head"><h3>🎯 Nova Meta</h3><button class="modal-close" onclick="closeM('m-meta')">×</button></div><div class="modal-body"><div class="form-group"><label>Descrição</label><input class="form-control"></div><div class="form-row"><div class="form-group"><label>Atual</label><input type="number" class="form-control"></div><div class="form-group"><label>Meta</label><input type="number" class="form-control"></div></div><div class="form-group"><label>Prazo</label><input type="date" class="form-control"></div></div><div class="modal-foot"><button class="btn btn-outline" onclick="closeM('m-meta')">Cancelar</button><button class="btn btn-primary" onclick="toast('✅ Meta criada!');closeM('m-meta')">Salvar</button></div></div></div>
 
-<div class="overlay" id="m-vol"><div class="modal"><div class="modal-head"><h3>🙌 Novo Voluntário</h3><button class="modal-close" onclick="closeM('m-vol')">×</button></div><div class="modal-body"><div class="form-row"><div class="form-group"><label>Nome</label><input class="form-control"></div><div class="form-group"><label>WhatsApp</label><input class="form-control"></div></div><div class="form-row"><div class="form-group"><label>Área</label><select class="form-control"><option>Informática</option><option>Esportes</option><option>Leitura</option><option>Acolhimento</option></select></div><div class="form-group"><label>CPF</label><input class="form-control"></div></div></div><div class="modal-foot"><button class="btn btn-outline" onclick="closeM('m-vol')">Cancelar</button><button class="btn btn-primary" onclick="toast('✅ Voluntário cadastrado!');closeM('m-vol')">Salvar</button></div></div></div>
+<div class="overlay" id="m-vol">
+  <div class="modal modal-xl">
+    <div class="modal-head"><h3>🙌 Cadastro de Voluntário</h3><button class="modal-close" onclick="closeM('m-vol')">×</button></div>
+    <div class="modal-body">
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab(this,'vt-dados')">👤 Dados Pessoais</button>
+        <button class="tab-btn" onclick="switchTab(this,'vt-projeto')">💡 No Projeto</button>
+        <button class="tab-btn" onclick="switchTab(this,'vt-disponi')">📅 Disponibilidade</button>
+        <button class="tab-btn" onclick="switchTab(this,'vt-docs')">📄 Documentos</button>
+      </div>
+
+      <!-- ABA 1: Dados Pessoais -->
+      <div id="vt-dados" class="tab-pane active">
+        <div style="border:2px dashed var(--border2);border-radius:var(--r-sm);padding:14px;text-align:center;margin-bottom:14px;cursor:pointer" onclick="toast('Abrindo câmera/galeria...')">
+          <div style="font-size:32px">📸</div>
+          <div style="font-size:12px;color:var(--text3);margin-top:4px">Foto do voluntário (opcional)</div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Nome Completo</label><input class="form-control" placeholder="Nome e sobrenome"></div>
+          <div class="form-group"><label>Data de Nascimento</label><input type="date" class="form-control"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>CPF</label><input class="form-control" placeholder="000.000.000-00"></div>
+          <div class="form-group"><label>RG</label><input class="form-control" placeholder="Número do RG"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>WhatsApp</label><input class="form-control" placeholder="(51) 99999-0000"></div>
+          <div class="form-group"><label>E-mail</label><input class="form-control" placeholder="email@exemplo.com"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Endereço</label><input class="form-control" placeholder="Rua, número, bairro"></div>
+          <div class="form-group"><label>CEP</label><input class="form-control" placeholder="00000-000"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Profissão / Ocupação Atual</label><input class="form-control" placeholder="Ex: Estudante, Professora, Desenvolvedor..."></div>
+          <div class="form-group"><label>Escolaridade</label>
+            <select class="form-control">
+              <option>Ensino Fundamental</option><option>Ensino Médio</option>
+              <option>Superior Incompleto</option><option>Superior Completo</option>
+              <option>Pós-graduação</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Como soube do projeto?</label>
+            <select class="form-control">
+              <option>Indicação de amigo</option><option>Redes sociais</option>
+              <option>Igreja</option><option>Escola / Faculdade</option>
+              <option>Procurou por conta própria</option><option>Outro</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Contato de Emergência</label><input class="form-control" placeholder="Nome · (51) 99999-0000"></div>
+        </div>
+      </div>
+
+      <!-- ABA 2: No Projeto -->
+      <div id="vt-projeto" class="tab-pane">
+        <div class="form-group">
+          <label>O que gostaria de fazer no projeto?</label>
+          <textarea class="form-control" rows="3" placeholder="Descreva com suas palavras como gostaria de contribuir, quais atividades te interessam, e o que espera dessa experiência..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Área de Atuação Principal</label>
+          <select class="form-control">
+            <option>Educação / Reforço Escolar</option>
+            <option>Esportes (Futebol)</option>
+            <option>Esportes (Jiu-Jitsu)</option>
+            <option>Informática / Tecnologia</option>
+            <option>Leitura & Literatura</option>
+            <option>Acolhimento & Escuta</option>
+            <option>Teatro & Expressão Artística</option>
+            <option>Música</option>
+            <option>Artes Visuais</option>
+            <option>Assistência Social / Psicologia</option>
+            <option>Administração & Gestão</option>
+            <option>Marketing & Comunicação</option>
+            <option>Captação de Recursos / Editais</option>
+            <option>Saúde & Enfermagem</option>
+            <option>Jurídico</option>
+            <option>Outra</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Áreas Secundárias de Interesse (marque todas que se aplicam)</label>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:8px">
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0"><input type="checkbox"> ⚽ Futebol</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0"><input type="checkbox"> 🥋 Jiu-Jitsu</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0"><input type="checkbox"> 💻 Informática</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0"><input type="checkbox"> 📚 Leitura</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0"><input type="checkbox"> 💛 Acolhimento</label>
+            <label style="display:flex;align-items:center;gap=6px;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0"><input type="checkbox"> 🎭 Teatro</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0"><input type="checkbox"> 🎵 Música</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0"><input type="checkbox"> 📋 Administração</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0"><input type="checkbox"> 📢 Marketing</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0"><input type="checkbox"> 💰 Captação de recursos</label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Habilidades e Competências</label>
+          <textarea class="form-control" rows="2" placeholder="Ex: Domino Excel, falo inglês, tenho experiência com crianças, sei tocar violão, sou formado em Pedagogia..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Motivação para Voluntariado</label>
+          <textarea class="form-control" rows="2" placeholder="Por que quer ser voluntário no Getsêmani? O que te move?"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Já foi voluntário antes?</label>
+            <select class="form-control"><option>Não, é minha primeira vez</option><option>Sim, em outro projeto</option><option>Sim, em projetos sociais</option><option>Sim, aqui no Getsêmani</option></select>
+          </div>
+          <div class="form-group"><label>Meta de Horas Mensais</label>
+            <select class="form-control"><option>4h/mês</option><option>8h/mês</option><option>16h/mês</option><option>20h+/mês</option><option>A combinar</option></select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Possui alguma restrição ou condição especial a informar?</label>
+          <input class="form-control" placeholder="Ex: não pode fazer esforço físico, alergia, necessidade de adaptação...">
+        </div>
+      </div>
+
+      <!-- ABA 3: Disponibilidade -->
+      <div id="vt-disponi" class="tab-pane">
+        <div class="form-group">
+          <label>Dias disponíveis</label>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:8px">
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0"><input type="checkbox"> Segunda-feira</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0"><input type="checkbox"> Terça-feira</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0"><input type="checkbox"> Quarta-feira</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0"><input type="checkbox"> Quinta-feira</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0"><input type="checkbox"> Sexta-feira</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0"><input type="checkbox"> Sábado</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0"><input type="checkbox"> Domingo</label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Turno de Preferência</label>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0"><input type="checkbox"> 🌅 Manhã (8h–12h)</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0"><input type="checkbox"> ☀️ Tarde (13h–17h)</label>
+            <label style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:400;text-transform:none;letter-spacing:0"><input type="checkbox"> 🌙 Noite (18h–21h)</label>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Data de Início</label><input type="date" class="form-control"></div>
+          <div class="form-group"><label>Período de Atuação</label>
+            <select class="form-control">
+              <option>Indeterminado</option><option>1 mês</option><option>3 meses</option>
+              <option>6 meses</option><option>1 ano</option><option>Evento específico</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Observações de Disponibilidade</label>
+          <textarea class="form-control" rows="2" placeholder="Ex: Estou disponível até final de novembro. Em julho tenho férias e posso vir mais vezes..."></textarea>
+        </div>
+      </div>
+
+      <!-- ABA 4: Documentos -->
+      <div id="vt-docs" class="tab-pane">
+        <div style="background:var(--surface2);border-radius:var(--r-sm);padding:14px;margin-bottom:14px;font-size:13px;color:var(--text3)">
+          📋 Os documentos serão coletados antes do início das atividades conforme exigência legal (LGPD e proteção de menores).
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;border:1px solid var(--border);border-radius:var(--r-sm)">
+            <div><div style="font-weight:600;font-size:13px">📄 RG ou CNH</div><div style="font-size:11px;color:var(--text4)">Frente e verso</div></div>
+            <div style="display:flex;gap:8px;align-items:center"><span class="chip chip-yellow">Pendente</span><button class="btn btn-sm btn-outline" onclick="toast('Abrindo upload...')">📎 Anexar</button></div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;border:1px solid var(--border);border-radius:var(--r-sm)">
+            <div><div style="font-weight:600;font-size:13px">✅ Termo de Voluntariado</div><div style="font-size:11px;color:var(--text4)">Assinado pelo voluntário</div></div>
+            <div style="display:flex;gap:8px;align-items:center"><span class="chip chip-yellow">Pendente</span><button class="btn btn-sm btn-outline" onclick="toast('Abrindo upload...')">📎 Anexar</button></div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;border:1px solid var(--border);border-radius:var(--r-sm)">
+            <div><div style="font-weight:600;font-size:13px">🔒 Termo LGPD</div><div style="font-size:11px;color:var(--text4)">Consentimento de dados pessoais</div></div>
+            <div style="display:flex;gap:8px;align-items:center"><span class="chip chip-yellow">Pendente</span><button class="btn btn-sm btn-outline" onclick="toast('Abrindo upload...')">📎 Anexar</button></div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;border:1px solid var(--border);border-radius:var(--r-sm)">
+            <div><div style="font-weight:600;font-size:13px">🧒 Antecedentes Criminais</div><div style="font-size:11px;color:var(--text4)">Obrigatório para trabalho com menores</div></div>
+            <div style="display:flex;gap:8px;align-items:center"><span class="chip chip-yellow">Pendente</span><button class="btn btn-sm btn-outline" onclick="toast('Abrindo upload...')">📎 Anexar</button></div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:12px;border:1px solid var(--border);border-radius:var(--r-sm)">
+            <div><div style="font-weight:600;font-size:13px">📸 Foto 3x4</div><div style="font-size:11px;color:var(--text4)">Para carteirinha de voluntário</div></div>
+            <div style="display:flex;gap:8px;align-items:center"><span class="chip chip-yellow">Pendente</span><button class="btn btn-sm btn-outline" onclick="toast('Abrindo upload...')">📎 Anexar</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="closeM('m-vol')">Cancelar</button>
+      <button class="btn btn-primary" onclick="toast('✅ Voluntário cadastrado com sucesso!');closeM('m-vol')">💾 Finalizar Cadastro</button>
+    </div>
+  </div>
+</div>
 
 <div class="overlay" id="m-destaque"><div class="modal"><div class="modal-head"><h3>⭐ Novo Destaque</h3><button class="modal-close" onclick="closeM('m-destaque')">×</button></div><div class="modal-body"><div class="form-row"><div class="form-group"><label>Aluno</label><input class="form-control"></div><div class="form-group"><label>Área</label><select class="form-control"><option>Futebol</option><option>Jiu-Jitsu</option><option>Informática</option><option>Leitura</option><option>Acolhimento</option></select></div></div><div class="form-group"><label>Motivo</label><textarea class="form-control" rows="3" placeholder="Esforço, participação, evolução..."></textarea></div><div class="form-group"><label>Emoji</label><input class="form-control" placeholder="⭐ 💪 📚"></div></div><div class="modal-foot"><button class="btn btn-outline" onclick="closeM('m-destaque')">Cancelar</button><button class="btn btn-primary" onclick="toast('⭐ Destaque adicionado!');closeM('m-destaque')">Salvar</button></div></div></div>
 
@@ -2207,6 +2523,100 @@ function criarOfExtra(){
 function sugerirOf(str){
   const emoji=str.split(' ')[0];const nome=str.split(' ').slice(1).join(' ');
   document.getElementById('nof-nome').value=nome;document.getElementById('nof-emoji').value=emoji;openM('m-outra-of');
+}
+
+// ── QR CODE ──
+// Gera QR Code simples usando API pública (qrserver.com)
+function gerarQRUrl(texto){
+  return `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(texto)}&format=png&margin=6`;
+}
+
+// Renderiza carteirinhas no modal
+function renderCarteirinhas(){
+  const grid=document.getElementById('grid-carteirinhas');
+  if(!grid)return;
+  grid.innerHTML='';
+  const cores=[['#1c4e80','#2d6fa8'],['#1a6b3c','#2e9e5b'],['#b8860b','#d4a017'],['#6b3fa0','#9b59b6'],['#c0392b','#e74c3c']];
+  ALUNOS.forEach((a,i)=>{
+    const id='GETS-'+String(i+1).padStart(3,'0');
+    const c=cores[i%cores.length];
+    const qrUrl=gerarQRUrl('GETSEMANI:'+id+':'+a.n);
+    const card=document.createElement('div');
+    card.style.cssText=`border:2px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface)`;
+    card.innerHTML=`
+      <div style="background:linear-gradient(135deg,${c[0]},${c[1]});padding:12px;text-align:center">
+        <div style="font-size:22px">${a.e}</div>
+        <div style="color:#fff;font-weight:700;font-size:14px;margin-top:4px">${a.n}</div>
+        <div style="color:rgba(255,255,255,.75);font-size:10px">Projeto Getsêmani · ${id}</div>
+      </div>
+      <div style="padding:12px;text-align:center;background:#fff">
+        <img src="${qrUrl}" alt="QR ${a.n}" style="width:100px;height:100px;border-radius:6px" onerror="this.style.display='none';this.nextSibling.style.display='block'">
+        <div style="display:none;padding:14px;background:#f0f0f0;border-radius:6px;font-size:11px;color:#555">QR Code<br>${id}</div>
+        <div style="font-size:9px;color:#999;margin-top:6px">${id} · Getsêmani 2026</div>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+function imprimirCarteirinhas(){
+  const cores=[['#1c4e80','#2d6fa8'],['#1a6b3c','#2e9e5b'],['#b8860b','#d4a017'],['#6b3fa0','#9b59b6'],['#c0392b','#e74c3c']];
+  let html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Carteirinhas Getsêmani</title>
+  <style>
+    body{font-family:Arial,sans-serif;margin:20px}
+    .grid{display:grid;grid-template-columns:repeat(3,200px);gap:14px}
+    .card{border:2px solid #ddd;border-radius:10px;overflow:hidden;break-inside:avoid}
+    .card-head{padding:10px;text-align:center;color:#fff}
+    .card-body{padding:10px;text-align:center;background:#fff}
+    .card-body img{width:90px;height:90px}
+    .nome{font-weight:700;font-size:13px;margin-top:4px}
+    .id{font-size:9px;color:rgba(255,255,255,.8)}
+    .qrid{font-size:9px;color:#999;margin-top:4px}
+    @media print{button{display:none}}
+  </style></head><body>
+  <h2 style="color:#1c4e80">🪪 Carteirinhas — Projeto Getsêmani 2026</h2>
+  <div class="grid">`;
+  ALUNOS.forEach((a,i)=>{
+    const id='GETS-'+String(i+1).padStart(3,'0');
+    const c=cores[i%cores.length];
+    const qrUrl=gerarQRUrl('GETSEMANI:'+id+':'+a.n);
+    html+=`<div class="card">
+      <div class="card-head" style="background:linear-gradient(135deg,${c[0]},${c[1]})">
+        <div style="font-size:20px">${a.e}</div>
+        <div class="nome">${a.n}</div>
+        <div class="id">${id}</div>
+      </div>
+      <div class="card-body">
+        <img src="${qrUrl}" alt="QR">
+        <div class="qrid">Projeto Getsêmani · ${id}</div>
+      </div>
+    </div>`;
+  });
+  html+=`</div><br><button onclick="window.print()" style="background:#1c4e80;color:#fff;border:none;padding:10px 22px;border-radius:6px;cursor:pointer;font-size:14px">🖨️ Imprimir</button></body></html>`;
+  const w=window.open('','_blank');w.document.write(html);w.document.close();
+}
+
+// Abre carteirinhas populando antes
+document.getElementById('m-carteirinhas').addEventListener('click',()=>{});
+function openCarteirinhas(){renderCarteirinhas();openM('m-carteirinhas');}
+
+// Check-in via QR simulado
+function checkInQR(){
+  const sel=document.getElementById('qr-aluno-sel');
+  const nome=sel.value;
+  if(!nome){toast('⚠️ Selecione um aluno');return;}
+  // Marcar como presente no grid
+  document.querySelectorAll('.pres-item').forEach(d=>{
+    if(d.querySelector('.pn')&&d.querySelector('.pn').textContent===nome){
+      d.classList.remove('absent');
+      d.classList.add('present');
+    }
+  });
+  atualizarContador();
+  toast('✅ Check-in: '+nome+' marcado como PRESENTE!');
+  sel.value='';
+  closeM('m-qrscan');
+  // Navegar para presença se não estiver lá
+  go('presenca');
 }
 
 // INIT
