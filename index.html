@@ -292,7 +292,7 @@ textarea.form-control{resize:vertical;min-height:78px}
     <div class="nav-label">Início</div>
     <div class="nav-item active" onclick="go('dashboard')"><span class="ni">🏠</span>Dashboard</div>
     <div class="nav-item" onclick="go('mural')"><span class="ni">✨</span>Mural do Impacto</div>
-    <div class="nav-item" onclick="go('ranking')"><span class="ni">🏆</span>Ranking dos Alunos</div>
+    <div class="nav-item" onclick="go('ranking')"><span class="ni">🗺️</span>Desenvolvimento</div>
     <div class="nav-item" onclick="go('metas')"><span class="ni">🎯</span>Metas 2026</div>
   </div>
   <div class="nav-section">
@@ -429,6 +429,48 @@ textarea.form-control{resize:vertical;min-height:78px}
           <div style="font-size:11px;color:var(--text4)">Em 6 dias · 16 anos</div>
         </div>
         <button class="btn-wa btn-sm" style="margin-left:auto;padding:5px 10px;font-size:11px" onclick="openWA('aniversario')">💬 Agendar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DOCUMENTOS VENCENDO -->
+  <div class="card" style="margin-bottom:16px;border-left:4px solid var(--red)">
+    <div class="card-header">
+      <div class="card-title">🔔 Documentos Vencendo</div>
+      <span class="chip chip-red">4 alertas</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;align-items:center;gap:12px;padding:9px 12px;background:#fff5f5;border-radius:var(--r-sm);border:1px solid var(--red2)">
+        <span style="font-size:22px">🧒</span>
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:13px">Antecedentes Criminais — Pedro Lima</div>
+          <div style="font-size:11px;color:var(--red)">⚠️ Vence em <strong>2 dias</strong> · 18/06/2026</div>
+        </div>
+        <button class="btn btn-sm" style="background:var(--red);color:#fff;border:none" onclick="toast('Abrindo renovação...')">Renovar</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:9px 12px;background:#fff8ed;border-radius:var(--r-sm);border:1px solid var(--yellow)">
+        <span style="font-size:22px">📄</span>
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:13px">Termo de Voluntariado — Ana Souza</div>
+          <div style="font-size:11px;color:var(--yellow)">⏰ Vence em <strong>8 dias</strong> · 25/06/2026</div>
+        </div>
+        <button class="btn btn-sm btn-outline" onclick="toast('Enviando renovação por WhatsApp...')">WhatsApp</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:9px 12px;background:#fff8ed;border-radius:var(--r-sm);border:1px solid var(--yellow)">
+        <span style="font-size:22px">🧒</span>
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:13px">Antecedentes Criminais — Marcos Oliveira</div>
+          <div style="font-size:11px;color:var(--yellow)">⏰ Vence em <strong>12 dias</strong> · 29/06/2026</div>
+        </div>
+        <button class="btn btn-sm btn-outline" onclick="toast('Enviando lembrete...')">Lembrete</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:9px 12px;background:var(--surface2);border-radius:var(--r-sm)">
+        <span style="font-size:22px">📋</span>
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:13px">Alvará de Funcionamento — Projeto</div>
+          <div style="font-size:11px;color:var(--text3)">📅 Vence em <strong>28 dias</strong> · 15/07/2026</div>
+        </div>
+        <button class="btn btn-sm btn-outline" onclick="go('documentos-inst')">Ver</button>
       </div>
     </div>
   </div>
@@ -1353,9 +1395,121 @@ textarea.form-control{resize:vertical;min-height:78px}
 <!-- ════ RANKING DOS ALUNOS ════ -->
 <div id="sec-ranking" class="section">
   <div class="sec-header">
-    <div><h2>Ranking dos Alunos</h2><p>Pontuação baseada em presença, comportamento, participação e evolução</p></div>
-    <div class="actions"><button class="btn btn-primary" onclick="toast('🏆 Destaques do mês gerados!')">🏆 Gerar Destaques do Mês</button></div>
+    <div><h2>🗺️ Mapa de Desenvolvimento Individual</h2><p>Cada aluno vê o próprio crescimento — sem comparação, sem ranking</p></div>
+    <div class="actions"><button class="btn btn-outline" onclick="openM('m-dev-aluno')" style="margin-right:8px">👤 Ver Aluno</button><button class="btn btn-primary" onclick="toast('📄 Relatório de desenvolvimento gerado!')">📄 Gerar Relatório</button></div>
   </div>
+
+  <!-- Filosofia -->
+  <div class="card" style="margin-bottom:14px;background:linear-gradient(135deg,#eaf4ee,#d4edda);border:1.5px solid var(--green2)">
+    <div style="display:flex;align-items:flex-start;gap:14px">
+      <div style="font-size:32px;margin-top:2px">🌱</div>
+      <div>
+        <div style="font-weight:700;color:var(--green);font-size:14px;margin-bottom:4px">Desenvolvimento, não competição</div>
+        <div style="font-size:13px;color:var(--text2)">Cada criança tem seu próprio ritmo e ponto de partida. Aqui celebramos o progresso de cada um em relação a si mesmo — não uma posição numa lista. O que importa é: <strong>você hoje está melhor do que você ontem?</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dimensões de desenvolvimento -->
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-header"><div class="card-title">Dimensões de Acompanhamento</div><span class="chip chip-gray">Individual por aluno</span></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-top:4px">
+      <div style="background:var(--surface2);border-radius:var(--r-sm);padding:12px;text-align:center">
+        <div style="font-size:24px">📅</div><div style="font-weight:700;font-size:13px;margin-top:5px">Frequência</div>
+        <div style="font-size:11px;color:var(--text4);margin-top:3px">Regularidade de presença</div>
+      </div>
+      <div style="background:var(--surface2);border-radius:var(--r-sm);padding:12px;text-align:center">
+        <div style="font-size:24px">💡</div><div style="font-weight:700;font-size:13px;margin-top:5px">Aprendizado</div>
+        <div style="font-size:11px;color:var(--text4);margin-top:3px">Avanço nas habilidades</div>
+      </div>
+      <div style="background:var(--surface2);border-radius:var(--r-sm);padding:12px;text-align:center">
+        <div style="font-size:24px">🤝</div><div style="font-weight:700;font-size:13px;margin-top:5px">Relações</div>
+        <div style="font-size:11px;color:var(--text4);margin-top:3px">Vínculos e convivência</div>
+      </div>
+      <div style="background:var(--surface2);border-radius:var(--r-sm);padding:12px;text-align:center">
+        <div style="font-size:24px">😊</div><div style="font-weight:700;font-size:13px;margin-top:5px">Bem-estar</div>
+        <div style="font-size:11px;color:var(--text4);margin-top:3px">Saúde emocional</div>
+      </div>
+      <div style="background:var(--surface2);border-radius:var(--r-sm);padding:12px;text-align:center">
+        <div style="font-size:24px">📚</div><div style="font-weight:700;font-size:13px;margin-top:5px">Escola</div>
+        <div style="font-size:11px;color:var(--text4);margin-top:3px">Desempenho escolar</div>
+      </div>
+      <div style="background:var(--surface2);border-radius:var(--r-sm);padding:12px;text-align:center">
+        <div style="font-size:24px">🌟</div><div style="font-weight:700;font-size:13px;margin-top:5px">Autonomia</div>
+        <div style="font-size:11px;color:var(--text4);margin-top:3px">Iniciativa e protagonismo</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Visão geral dos alunos -->
+  <div class="card">
+    <div class="card-header"><div class="card-title">Visão Geral — Junho 2026</div><span class="chip chip-blue">Clique para ver o mapa individual</span></div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Aluno</th><th>Oficina Principal</th><th>Frequência</th><th>Aprendizado</th><th>Relações</th><th>Bem-estar</th><th>Escola</th><th>Tendência</th><th></th></tr></thead>
+      <tbody>
+        <tr><td><div class="tbl-name">Carlos Santos</div></td><td><span class="chip chip-green">Jiu-Jitsu</span></td>
+          <td><div style="display:flex;align-items:center;gap:6px"><div style="flex:1;height:6px;background:var(--border);border-radius:3px"><div style="width:95%;height:100%;background:var(--green);border-radius:3px"></div></div><span style="font-size:11px;color:var(--text3)">95%</span></div></td>
+          <td><span style="color:var(--green);font-weight:700">↑ Alto</span></td><td><span style="color:var(--green);font-weight:700">↑ Alto</span></td><td><span style="color:var(--green)">✔ Estável</span></td><td><span style="color:var(--green)">✔ Regular</span></td>
+          <td><span class="chip chip-green">📈 Crescendo</span></td><td><button class="btn btn-xs btn-outline" onclick="openM('m-dev-aluno')">Ver mapa</button></td></tr>
+        <tr><td><div class="tbl-name">Maria Oliveira</div></td><td><span class="chip chip-gold">Leitura</span></td>
+          <td><div style="display:flex;align-items:center;gap:6px"><div style="flex:1;height:6px;background:var(--border);border-radius:3px"><div style="width:90%;height:100%;background:var(--green);border-radius:3px"></div></div><span style="font-size:11px;color:var(--text3)">90%</span></div></td>
+          <td><span style="color:var(--green);font-weight:700">↑ Alto</span></td><td><span style="color:var(--green);font-weight:700">↑ Alto</span></td><td><span style="color:var(--green)">✔ Estável</span></td><td><span style="color:var(--green)">✔ Regular</span></td>
+          <td><span class="chip chip-green">📈 Crescendo</span></td><td><button class="btn btn-xs btn-outline" onclick="openM('m-dev-aluno')">Ver mapa</button></td></tr>
+        <tr><td><div class="tbl-name">Ana Lima</div></td><td><span class="chip chip-gray">Acolhimento</span></td>
+          <td><div style="display:flex;align-items:center;gap:6px"><div style="flex:1;height:6px;background:var(--border);border-radius:3px"><div style="width:60%;height:100%;background:var(--yellow);border-radius:3px"></div></div><span style="font-size:11px;color:var(--text3)">60%</span></div></td>
+          <td><span style="color:var(--yellow)">→ Médio</span></td><td><span style="color:var(--yellow)">→ Médio</span></td><td><span style="color:var(--yellow)">⚠ Atenção</span></td><td><span style="color:var(--yellow)">⚠ Dificuldade</span></td>
+          <td><span class="chip chip-yellow">→ Estável</span></td><td><button class="btn btn-xs btn-outline" onclick="openM('m-dev-aluno')">Ver mapa</button></td></tr>
+        <tr><td><div class="tbl-name">Lucas Silva</div></td><td><span class="chip chip-green">Futebol</span></td>
+          <td><div style="display:flex;align-items:center;gap:6px"><div style="flex:1;height:6px;background:var(--border);border-radius:3px"><div style="width:30%;height:100%;background:var(--red);border-radius:3px"></div></div><span style="font-size:11px;color:var(--text3)">30%</span></div></td>
+          <td><span style="color:var(--red)">↓ Baixo</span></td><td><span style="color:var(--yellow)">→ Médio</span></td><td><span style="color:var(--red)">⚠ Vulnerável</span></td><td><span style="color:var(--red)">⚠ Risco</span></td>
+          <td><span class="chip chip-red">↓ Atenção urgente</span></td><td><button class="btn btn-xs btn-outline" onclick="openM('m-dev-aluno')">Ver mapa</button></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</div>
+
+<!-- MODAL: MAPA INDIVIDUAL -->
+<div class="overlay" id="m-dev-aluno">
+  <div class="modal modal-xl">
+    <div class="modal-head"><h3>🗺️ Mapa de Desenvolvimento — João Pereira</h3><button class="modal-close" onclick="closeM('m-dev-aluno')">×</button></div>
+    <div class="modal-body">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px;padding:14px;background:var(--surface2);border-radius:var(--r-sm)">
+        <div style="width:52px;height:52px;background:linear-gradient(135deg,#1c4e80,#2d6fa8);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px">👦</div>
+        <div><div style="font-weight:700;font-size:16px">João Pereira</div><div style="font-size:12px;color:var(--text3)">Informática · 8º Ano · 14 anos · No projeto há 8 meses</div></div>
+        <div style="margin-left:auto;text-align:right"><div style="font-size:11px;color:var(--text4)">Última avaliação</div><div style="font-weight:700;color:var(--accent)">01/06/2026</div></div>
+      </div>
+      <!-- Barras de progresso por dimensão -->
+      <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:18px">
+        <div style="font-weight:700;font-size:13px;color:var(--text2);margin-bottom:2px">Progresso por Dimensão</div>
+        ${['📅 Frequência|88|Compareceu 22 de 25 encontros este mês. Melhora em relação ao mês anterior (72%).|green','💡 Aprendizado|75|Evoluiu no uso de planilhas e digitação. Iniciou módulo de programação com interesse.|green','🤝 Relações|82|Boa convivência com colegas. Tem ajudado os mais novos — liderança positiva emergindo.|green','😊 Bem-estar|65|Algumas oscilações emocionais. Conversa em andamento com a equipe de acolhimento.|yellow','📚 Escola|55|Dificuldade em Matemática. Reforço escolar iniciado. Professora contatada pela coordenadora.|yellow','🌟 Autonomia|78|Tomou iniciativa de organizar os computadores da sala sem ser solicitado. Excelente sinal.|green'].map(d=>{
+          const[label,val,obs,cor]=d.split('|');
+          const c=cor==='green'?'var(--green)':'var(--yellow)';
+          return `<div style="background:var(--surface2);border-radius:var(--r-sm);padding:12px">
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+              <span style="font-size:13px;font-weight:600">${label}</span>
+              <span style="font-weight:800;color:${c}">${val}%</span>
+            </div>
+            <div style="height:8px;background:var(--border);border-radius:4px;margin-bottom:7px">
+              <div style="width:${val}%;height:100%;background:${c};border-radius:4px;transition:width .5s"></div>
+            </div>
+            <div style="font-size:11px;color:var(--text3)">${obs}</div>
+          </div>`;}).join('')}
+      </div>
+      <div class="form-group">
+        <label>Observação do Educador — Junho 2026</label>
+        <textarea class="form-control" rows="3" placeholder="Registre aqui observações sobre o desenvolvimento deste aluno neste mês...">João demonstrou crescimento significativo na oficina de informática. Está mais confiante e proativo. Recomendo incentivá-lo a apresentar um trabalho para os colegas no próximo mês.</textarea>
+      </div>
+      <div class="form-group">
+        <label>Próximos passos planejados</label>
+        <textarea class="form-control" rows="2" placeholder="O que será trabalhado com este aluno no próximo período?">Acompanhar evolução no reforço de Matemática. Propor que lidere uma atividade na oficina de informática. Manter escuta ativa sobre as oscilações emocionais.</textarea>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="closeM('m-dev-aluno')">Fechar</button>
+      <button class="btn btn-primary" onclick="toast('✅ Avaliação salva!');closeM('m-dev-aluno')">💾 Salvar Avaliação</button>
+    </div>
+  </div>
+</div>
 
   <div class="card" style="margin-bottom:14px">
     <div class="card-header"><div class="card-title">Como funciona a pontuação</div></div>
@@ -1688,6 +1842,11 @@ textarea.form-control{resize:vertical;min-height:78px}
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:8px">
+        <!-- Badge última atualização -->
+        <div style="text-align:right;margin-right:6px">
+          <div style="font-size:10px;color:var(--text4)">Última atualização</div>
+          <div id="pron-ultima-atualizacao" style="font-size:12px;font-weight:700;color:var(--accent)">16/06/2026 — Carla Dias</div>
+        </div>
         <button class="btn btn-outline btn-sm" onclick="imprimirFicha()">🖨️ Imprimir</button>
         <button class="modal-close" onclick="closeM('m-prontuario')">×</button>
       </div>
@@ -1707,9 +1866,65 @@ textarea.form-control{resize:vertical;min-height:78px}
       </div>
       <div id="pt-dados" class="tab-pane active">
         <div class="form-row"><div class="form-group"><label>Nome</label><input class="form-control" value="João Pereira"></div><div class="form-group"><label>Nascimento</label><input type="date" class="form-control" value="2012-03-15"></div></div>
-        <div class="form-row"><div class="form-group"><label>CPF</label><input class="form-control" placeholder="000.000.000-00"></div><div class="form-group"><label>Entrada</label><input type="date" class="form-control" value="2021-01-10"></div></div>
+        <div class="form-row"><div class="form-group"><label>CPF</label><input class="form-control" placeholder="000.000.000-00"></div><div class="form-group"><label>Entrada no Projeto</label><input type="date" class="form-control" value="2021-01-10"></div></div>
         <div class="form-row"><div class="form-group"><label>Endereço</label><input class="form-control" placeholder="Rua, número, bairro"></div><div class="form-group"><label>CEP</label><input class="form-control" placeholder="00000-000"></div></div>
         <div class="form-group"><label>Oficinas</label><select multiple class="form-control" style="height:80px"><option selected>Futebol</option><option selected>Informática</option><option>Jiu-Jitsu</option><option>Leitura</option><option>Acolhimento</option></select></div>
+
+        <!-- NOVOS CAMPOS -->
+        <div class="form-row">
+          <div class="form-group">
+            <label>👤 Responsável pelo Acolhimento</label>
+            <select class="form-control">
+              <option>Carla Dias (Assistente Social)</option>
+              <option>Ana Souza (Educadora)</option>
+              <option>Pedro Lima (Coordenador)</option>
+              <option>Sara (Diretora)</option>
+              <option>Outro voluntário</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>🌍 Origem / Nacionalidade</label>
+            <select class="form-control">
+              <option selected>🇧🇷 Brasileiro(a)</option>
+              <option>🇻🇪 Venezuelano(a)</option>
+              <option>🇭🇹 Haitiano(a)</option>
+              <option>🇦🇴 Angolano(a)</option>
+              <option>🇵🇹 Português(a)</option>
+              <option>Outro país</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>🗣️ Idioma Principal</label>
+            <select class="form-control">
+              <option selected>Português</option>
+              <option>Espanhol</option>
+              <option>Crioulo Haitiano</option>
+              <option>Inglês</option>
+              <option>Outro</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>💬 Necessita de Intérprete?</label>
+            <select class="form-control">
+              <option selected>Não</option>
+              <option>Sim — Espanhol</option>
+              <option>Sim — Crioulo</option>
+              <option>Sim — outro idioma</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>📅 Última Atualização do Prontuário</label>
+            <input type="date" class="form-control" value="2026-06-16">
+          </div>
+          <div class="form-group">
+            <label>✏️ Atualizado por</label>
+            <input class="form-control" value="Carla Dias">
+          </div>
+        </div>
       </div>
       <div id="pt-familia" class="tab-pane">
         <div class="form-row">
@@ -2440,15 +2655,29 @@ function openPron(nome){
 
 // WHATSAPP
 function openWA(tipo){
+  if(tipo==='urgente'||tipo==='evasao'){
+    // Risco de evasão: abre rascunho editável antes de enviar
+    const draft='Olá! Aqui é a equipe do Projeto Getsêmani. Notamos a ausência do(a) [nome da criança] nos últimos encontros e queremos entender como a família está. Podemos conversar? Estamos aqui para apoiar. 💚';
+    document.getElementById('wa-draft-texto').value=draft;
+    openM('m-wa-draft');
+    return;
+  }
   if(tipo==='aniversario'){
     const msg='🎂 Parabéns pelo seu aniversário! O Projeto Getsêmani deseja tudo de melhor pra você! Muito obrigado por fazer parte da nossa família. 💚';
     window.open('https://wa.me/5551999990001?text='+encodeURIComponent(msg),'_blank');
     return;
   }
-  let msg=tipo==='urgente'?'Olá! Notamos que seu filho não comparecem há algum tempo. Podemos conversar?':tipo==='link'?'Olá! Link do Portal Getsêmani: getsemani.app/familia/pereira-abc123':'Olá! Entramos em contato do Projeto Getsêmani.';
+  let msg=tipo==='link'?'Olá! Link do Portal Getsêmani: getsemani.app/familia/pereira-abc123':'Olá! Entramos em contato do Projeto Getsêmani.';
   window.open('https://wa.me/5551999990001?text='+encodeURIComponent(msg),'_blank');
 }
 function fillMsg(msg){const el=document.getElementById('wa-msg');if(el)el.value=msg;}
+function enviarDraftWA(){
+  const txt=document.getElementById('wa-draft-texto').value;
+  if(!txt.trim()){toast('⚠️ Mensagem vazia');return;}
+  window.open('https://wa.me/5551999990001?text='+encodeURIComponent(txt),'_blank');
+  closeM('m-wa-draft');
+  toast('✅ Abrindo WhatsApp...');
+}
 
 // PRESENÇA
 const ALUNOS=[{n:'João P.',e:'👦'},{n:'Maria O.',e:'👧'},{n:'Lucas S.',e:'👦'},{n:'Ana L.',e:'👧'},{n:'Carlos S.',e:'👦'},{n:'Felipe R.',e:'👦'},{n:'Beatriz M.',e:'👧'},{n:'Thiago N.',e:'👦'},{n:'Larissa C.',e:'👧'},{n:'Rafael M.',e:'👦'},{n:'Sofia T.',e:'👧'},{n:'Gabriel F.',e:'👦'}];
@@ -2696,5 +2925,34 @@ function mesAnterior(){if(calMes===0){calMes=11;calAno--;}else calMes--;renderCa
 function mesSeguinte(){if(calMes===11){calMes=0;calAno++;}else calMes++;renderCal();}
 
 </script>
+
+<!-- MODAL: RASCUNHO WHATSAPP EVASÃO -->
+<div class="overlay" id="m-wa-draft">
+  <div class="modal" style="max-width:500px">
+    <div class="modal-head"><h3>💬 Rascunho — Contato de Evasão</h3><button class="modal-close" onclick="closeM('m-wa-draft')">×</button></div>
+    <div class="modal-body">
+      <div style="background:#fff3cd;border:1px solid var(--yellow);border-radius:var(--r-sm);padding:12px;margin-bottom:14px;font-size:12px;color:#856404">
+        ⚠️ <strong>Atenção:</strong> Esta mensagem é delicada. Revise e personalize antes de enviar — substitua <em>[nome da criança]</em> pelo nome real e ajuste o tom conforme o histórico da família.
+      </div>
+      <div class="form-group" style="margin-bottom:10px"><label>Para (família)</label>
+        <select class="form-control">
+          <option>Família Silva — Lucas (📞 (51) 99999-0002)</option>
+          <option>Família Lima — Ana (📞 (51) 99999-0003)</option>
+          <option>Outra família</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Mensagem — edite antes de enviar</label>
+        <textarea id="wa-draft-texto" class="form-control" rows="7" style="font-size:13px;line-height:1.6"></textarea>
+      </div>
+      <div style="font-size:11px;color:var(--text4);margin-top:-6px">💡 Dica: use linguagem acolhedora, sem cobranças. O objetivo é criar conexão, não pressão.</div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="closeM('m-wa-draft')">Cancelar</button>
+      <button class="btn" style="background:#25d366;color:#fff;border:none" onclick="enviarDraftWA()">📱 Abrir no WhatsApp</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
